@@ -13,7 +13,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
-class PortalApiClient(
+open class PortalApiClient(
     private val supabaseConfig: SupabaseConfig,
     private val tokenStorage: PortalTokenStorage
 ) {
@@ -41,7 +41,7 @@ class PortalApiClient(
 
     // === GoTrue Auth Endpoints ===
 
-    suspend fun signIn(email: String, password: String): Result<GoTrueAuthResponse> {
+    open suspend fun signIn(email: String, password: String): Result<GoTrueAuthResponse> {
         return try {
             val response = httpClient.post("${supabaseConfig.authUrl}/token?grant_type=password") {
                 header("apikey", supabaseConfig.anonKey)
@@ -54,7 +54,7 @@ class PortalApiClient(
         }
     }
 
-    suspend fun signUp(email: String, password: String, displayName: String?): Result<GoTrueAuthResponse> {
+    open suspend fun signUp(email: String, password: String, displayName: String?): Result<GoTrueAuthResponse> {
         return try {
             val response = httpClient.post("${supabaseConfig.authUrl}/signup") {
                 header("apikey", supabaseConfig.anonKey)
@@ -127,7 +127,7 @@ class PortalApiClient(
 
     // === Portal Sync Endpoints (Supabase Edge Functions) ===
 
-    suspend fun pushPortalPayload(payload: PortalSyncPayload): Result<PortalSyncPushResponse> {
+    open suspend fun pushPortalPayload(payload: PortalSyncPayload): Result<PortalSyncPushResponse> {
         return authenticatedRequest { token ->
             httpClient.post("${supabaseConfig.url}/functions/v1/mobile-sync-push") {
                 bearerAuth(token)
@@ -137,7 +137,7 @@ class PortalApiClient(
         }
     }
 
-    suspend fun pullPortalPayload(lastSync: Long, deviceId: String): Result<PortalSyncPullResponse> {
+    open suspend fun pullPortalPayload(lastSync: Long, deviceId: String): Result<PortalSyncPullResponse> {
         return authenticatedRequest { token ->
             httpClient.post("${supabaseConfig.url}/functions/v1/mobile-sync-pull") {
                 bearerAuth(token)
