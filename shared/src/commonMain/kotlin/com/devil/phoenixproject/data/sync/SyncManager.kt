@@ -98,10 +98,6 @@ class SyncManager(
         return Result.success(finalSyncTime)
     }
 
-    suspend fun checkStatus(): Result<SyncStatusResponse> {
-        return Result.failure(PortalApiException("Status check not available during portal migration"))
-    }
-
     // === Private Helpers ===
 
     private suspend fun pushLocalChanges(): Result<PortalSyncPushResponse> {

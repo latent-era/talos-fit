@@ -15,12 +15,8 @@ import kotlinx.serialization.json.Json
 
 class PortalApiClient(
     private val supabaseConfig: SupabaseConfig,
-    private val tokenStorage: PortalTokenStorage,
-    private val syncBaseUrl: String = DEFAULT_SYNC_URL
+    private val tokenStorage: PortalTokenStorage
 ) {
-    companion object {
-        const val DEFAULT_SYNC_URL = "https://phoenix-portal-backend.up.railway.app"
-    }
 
     private val refreshMutex = Mutex()
 
@@ -147,34 +143,6 @@ class PortalApiClient(
                 bearerAuth(token)
                 header("apikey", supabaseConfig.anonKey)
                 setBody(mapOf("deviceId" to deviceId, "lastSync" to lastSync))
-            }
-        }
-    }
-
-    // === Legacy Sync Endpoints (Railway — kept temporarily) ===
-
-    suspend fun getSyncStatus(): Result<SyncStatusResponse> {
-        return authenticatedRequest {
-            httpClient.get("$syncBaseUrl/api/sync/status") {
-                bearerAuth(it)
-            }
-        }
-    }
-
-    suspend fun pushChanges(request: SyncPushRequest): Result<SyncPushResponse> {
-        return authenticatedRequest {
-            httpClient.post("$syncBaseUrl/api/sync/push") {
-                bearerAuth(it)
-                setBody(request)
-            }
-        }
-    }
-
-    suspend fun pullChanges(request: SyncPullRequest): Result<SyncPullResponse> {
-        return authenticatedRequest {
-            httpClient.post("$syncBaseUrl/api/sync/pull") {
-                bearerAuth(it)
-                setBody(request)
             }
         }
     }

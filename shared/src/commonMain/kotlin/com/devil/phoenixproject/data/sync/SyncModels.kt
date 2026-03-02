@@ -52,16 +52,6 @@ data class SyncPullResponse(
     val gamificationStats: GamificationStatsSyncDto? = null
 )
 
-// === Status Response ===
-
-@Serializable
-data class SyncStatusResponse(
-    val lastSync: Long?,
-    val pendingChanges: Int,
-    val subscriptionStatus: String,
-    val subscriptionExpiresAt: String?
-)
-
 // === Auth DTOs ===
 
 @Serializable
