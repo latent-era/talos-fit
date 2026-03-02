@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v0.6.0
 milestone_name: Portal Sync Compatibility
 status: in_progress
-last_updated: "2026-03-02T20:22:44.723Z"
+last_updated: "2026-03-02T23:56:11Z"
 progress:
   total_phases: 6
   completed_phases: 0
@@ -15,19 +15,19 @@ progress:
 
 ## Current Position
 
-Phase: 25 — Edge Functions
-Plan: 02 of 02 — all plans executed
-Status: Phase 25 complete — both Edge Functions created in phoenix-portal
-Last activity: 2026-03-02 — Phase 25 execution complete
+Phase: 28 — Integration Validation
+Plan: 03 of 03 — executing
+Status: Phase 28-03 complete — deployment runbook created, legacy dead code removed
+Last activity: 2026-03-02 — Phase 28-03 execution complete
 
-Progress: [#####.....] ~50% — Phase 23-25 complete (v0.6.0)
+Progress: [########..] ~80% — Phase 23-28 executing (v0.6.0)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Users can connect to their Vitruvian trainer and execute workouts with accurate rep counting, weight control, and progress tracking — reliably, on both platforms.
-**Current focus:** v0.6.0 Portal Sync Compatibility — Phase 26: Mobile Push Wire-Up
+**Current focus:** v0.6.0 Portal Sync Compatibility — Phase 28: Integration Validation
 
 ## Performance Metrics
 
@@ -37,6 +37,7 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 | v0.6.0 (current) | 6 | TBD | — |
 | Phase 23-portal-db-foundation-rls P03 | 2 | 1 tasks | 1 files |
 | Phase 23-portal-db-foundation-rls P01 | 2 | 1 tasks | 1 files |
+| Phase 28-integration-validation P03 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -85,4 +86,4 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 - Pre-commit hook blocks commits: daem0nmcp Python module not installed in pythoncore-3.14-64. Hook calls `python -m daem0nmcp.cli`. Install daem0nmcp in that Python env or fix hook Python path.
 
 ---
-*Last updated: 2026-03-02 — Phase 25 complete: mobile-sync-push + mobile-sync-pull Edge Functions created in phoenix-portal*
+*Last updated: 2026-03-02 — Phase 28-03 complete: deployment runbook + legacy dead code cleanup*

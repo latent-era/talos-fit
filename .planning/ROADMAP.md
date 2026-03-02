@@ -169,7 +169,11 @@ Plans:
   2. Pull sync round-trip verified: create a routine in portal web UI, trigger pull on mobile, routine is usable in the mobile app with all advanced fields preserved
   3. Auth edge cases pass: token expiry during sync triggers silent refresh and sync completes; bad credentials show a clear error rather than a silent failure or crash
   4. Deployment runbook executed in correct order (schema migrations → Edge Functions → mobile release) with no rollback required
-**Plans:** TBD
+**Plans:** 1/3 plans executed
+Plans:
+- [ ] 28-01-PLAN.md — Push/pull adapter unit tests + mapping tests (PortalSyncAdapter, PortalPullAdapter, PortalMappings)
+- [ ] 28-02-PLAN.md — SyncManager integration tests + PortalTokenStorage auth edge case tests
+- [ ] 28-03-PLAN.md — Deployment runbook + checkStatus/getSyncStatus dead code cleanup
 
 ## Progress
 
@@ -181,7 +185,7 @@ Plans:
 | v0.4.7 Mobile Platform Features | 9-12 | 13 | Complete | 2026-02-15 |
 | v0.5.0 Premium Mobile | 13-15 | 7 | Complete | 2026-02-27 |
 | v0.5.1 Board Polish & Premium UI | 16-22 | 16 | Complete | 2026-02-28 |
-| v0.6.0 Portal Sync Compatibility | 23-28 | 10/TBD | In progress | — |
+| v0.6.0 Portal Sync Compatibility | 23-28 | 10/13 | In progress | — |
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -190,9 +194,9 @@ Plans:
 | 25. Edge Functions | 2/2 | Complete | 2026-03-02 |
 | 26. Mobile Push Wire-Up | 0/2 | Planned | - |
 | 27. Mobile Pull Wire-Up | 2/2 | Complete | 2026-03-02 |
-| 28. Integration Validation | 0/TBD | Not started | - |
+| 28. Integration Validation | 1/3 | In Progress|  |
 
 **Last phase number:** 28
 
 ---
-*Last updated: 2026-03-02 — Phase 27 planned (2 plans)*
+*Last updated: 2026-03-02 — Phase 28 planned (3 plans)*
