@@ -31,6 +31,9 @@ class FakeGamificationRepository : GamificationRepository {
     // Badges that will be awarded on next checkAndAwardBadges call
     var pendingBadges = mutableListOf<Badge>()
 
+    // Captured RPG profile from saveRpgProfile calls
+    var savedRpgProfile: RpgProfile? = null
+
     // Test control methods
     fun setStreakInfo(info: StreakInfo) {
         _streakInfoFlow.value = info
@@ -57,6 +60,7 @@ class FakeGamificationRepository : GamificationRepository {
         uncelebratedBadgeIds.clear()
         badgeProgress.clear()
         pendingBadges.clear()
+        savedRpgProfile = null
         _earnedBadgesFlow.value = emptyList()
         _streakInfoFlow.value = StreakInfo.EMPTY
         _gamificationStatsFlow.value = GamificationStats()
@@ -125,7 +129,7 @@ class FakeGamificationRepository : GamificationRepository {
     )
 
     override suspend fun saveRpgProfile(profile: RpgProfile) {
-        // No-op in fake
+        savedRpgProfile = profile
     }
 
     override suspend fun updateStats() {
