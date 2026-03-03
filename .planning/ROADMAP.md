@@ -8,7 +8,7 @@
 - ✅ **v0.4.7 Mobile Platform Features** — Phases 9-12 (shipped 2026-02-15)
 - ✅ **v0.5.0 Premium Mobile** — Phases 13-15 (shipped 2026-02-27)
 - ✅ **v0.5.1 Board Polish & Premium UI** — Phases 16-22 (shipped 2026-02-28)
-- 🔄 **v0.6.0 Portal Sync Compatibility** — Phases 23-28 (in progress)
+- ✅ **v0.6.0 Portal Sync Compatibility** — Phases 23-28 (shipped 2026-03-02)
 
 ## Phases
 
@@ -75,9 +75,9 @@ See `.planning/milestones/v0.5.1-*` for archived phase details.
 - [x] **Phase 23: Portal DB Foundation + RLS** — Schema migrations and INSERT RLS policies that unblock every other phase *(portal)* (completed 2026-03-02)
 - [x] **Phase 24: Supabase Auth Migration** — Replace custom JWT with GoTrue; mobile can now produce valid tokens for Edge Functions *(mobile)* (completed 2026-03-02)
 - [x] **Phase 25: Edge Functions** — Deploy mobile-sync-push and mobile-sync-pull; portal can now receive and serve workout data *(portal)* (completed 2026-03-02)
-- [ ] **Phase 26: Mobile Push Wire-Up** — SyncManager wired to PortalSyncAdapter; workouts flow from mobile to portal *(mobile)*
+- [x] **Phase 26: Mobile Push Wire-Up** — SyncManager wired to PortalSyncAdapter; workouts flow from mobile to portal *(mobile)* (completed 2026-03-02)
 - [x] **Phase 27: Mobile Pull Wire-Up** — Pull DTOs, PortalPullAdapter, routine merge with exercises, SyncManager pull wire-up *(mobile)* (completed 2026-03-02)
-- [ ] **Phase 28: Integration Validation** — End-to-end verification of bidirectional sync across both repos *(both)*
+- [x] **Phase 28: Integration Validation** — End-to-end verification of bidirectional sync across both repos *(both)* (completed 2026-03-02)
 
 ## Phase Details
 
@@ -169,11 +169,11 @@ Plans:
   2. Pull sync round-trip verified: create a routine in portal web UI, trigger pull on mobile, routine is usable in the mobile app with all advanced fields preserved
   3. Auth edge cases pass: token expiry during sync triggers silent refresh and sync completes; bad credentials show a clear error rather than a silent failure or crash
   4. Deployment runbook executed in correct order (schema migrations → Edge Functions → mobile release) with no rollback required
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 28-01-PLAN.md — Push/pull adapter unit tests + mapping tests (PortalSyncAdapter, PortalPullAdapter, PortalMappings)
-- [ ] 28-02-PLAN.md — SyncManager integration tests + PortalTokenStorage auth edge case tests
-- [ ] 28-03-PLAN.md — Deployment runbook + checkStatus/getSyncStatus dead code cleanup
+- [x] 28-01-PLAN.md — Push/pull adapter unit tests + mapping tests (PortalSyncAdapter, PortalPullAdapter, PortalMappings)
+- [x] 28-02-PLAN.md — SyncManager integration tests + PortalTokenStorage auth edge case tests
+- [x] 28-03-PLAN.md — Deployment runbook + checkStatus/getSyncStatus dead code cleanup
 
 ## Progress
 
@@ -185,18 +185,18 @@ Plans:
 | v0.4.7 Mobile Platform Features | 9-12 | 13 | Complete | 2026-02-15 |
 | v0.5.0 Premium Mobile | 13-15 | 7 | Complete | 2026-02-27 |
 | v0.5.1 Board Polish & Premium UI | 16-22 | 16 | Complete | 2026-02-28 |
-| v0.6.0 Portal Sync Compatibility | 23-28 | 10/13 | In progress | — |
+| v0.6.0 Portal Sync Compatibility | 23-28 | 13/13 | Complete | 2026-03-02 |
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 23. Portal DB Foundation + RLS | 3/3 | Complete   | 2026-03-02 |
+| 23. Portal DB Foundation + RLS | 3/3 | Complete | 2026-03-02 |
 | 24. Supabase Auth Migration | 3/3 | Complete | 2026-03-02 |
 | 25. Edge Functions | 2/2 | Complete | 2026-03-02 |
-| 26. Mobile Push Wire-Up | 0/2 | Planned | - |
+| 26. Mobile Push Wire-Up | 2/2 | Complete | 2026-03-02 |
 | 27. Mobile Pull Wire-Up | 2/2 | Complete | 2026-03-02 |
-| 28. Integration Validation | 2/3 | In Progress|  |
+| 28. Integration Validation | 3/3 | Complete | 2026-03-02 |
 
 **Last phase number:** 28
 
 ---
-*Last updated: 2026-03-02 — Phase 28 planned (3 plans)*
+*Last updated: 2026-03-02 — Phase 28 complete, v0.6.0 milestone complete*
