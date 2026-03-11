@@ -134,11 +134,10 @@ sealed class RoutineFlowState {
 }
 
 /**
- * Program modes that use command 0x4F (96-byte frame)
- * Note: Official app uses 0x4F, NOT 0x04
+ * Program modes used by Phoenix workout setup.
  *
- * Echo mode (modeValue 10) uses a different BLE command (0x4E) but is included
- * here for unified mode selection in the UI layer.
+ * Non-Echo modes start with the 96-byte activation/config frame (command 0x04),
+ * followed by a START command (0x03). Echo uses its dedicated 0x4E packet.
  */
 sealed class ProgramMode(val modeValue: Int, val displayName: String) {
     object OldSchool : ProgramMode(0, "Old School")
@@ -247,7 +246,7 @@ data class WorkoutParameters(
     val programMode: ProgramMode,
     val reps: Int,
     val weightPerCableKg: Float = 0f,  // Only used for Program modes
-    val progressionRegressionKg: Float = 0f,  // Only used for Program modes (not TUT/TUTBeast)
+    val progressionRegressionKg: Float = 0f,  // Positive = progression, negative = regression
     val isJustLift: Boolean = false,
     val useAutoStart: Boolean = false, // true for Just Lift, false for others
     val stopAtTop: Boolean = false,  // false = stop at bottom (extended), true = stop at top (contracted)

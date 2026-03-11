@@ -59,6 +59,14 @@ class BleConstantsTest {
         assertEquals(3.toByte(), BleConstants.Commands.DEFAULT_ROM_REP_COUNT)
     }
 
+    @Test
+    fun `activation packet force config offsets match official layout`() {
+        assertEquals(0x50, BleConstants.ActivationPacket.OFFSET_FORCE_MIN)
+        assertEquals(0x54, BleConstants.ActivationPacket.OFFSET_FORCE_MAX)
+        assertEquals(0x58, BleConstants.ActivationPacket.OFFSET_SOFT_MAX)
+        assertEquals(0x5C, BleConstants.ActivationPacket.OFFSET_INCREMENT)
+    }
+
     // ========== Data Protocol Tests ==========
 
     @Test

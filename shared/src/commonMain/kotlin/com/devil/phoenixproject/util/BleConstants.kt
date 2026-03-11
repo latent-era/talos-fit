@@ -61,23 +61,23 @@ object BleConstants {
     }
 
     /**
-     * Activation packet (0x04) byte layout — 96-byte frame matching parent repo.
+     * Activation packet (0x04) byte layout — 96-byte frame matching the official app.
      *
-     * Issue #262: Firmware reads softMax (0x48) and increment (0x4C) from offsets
-     * that overlap the mode profile block (0x30-0x4F). We write these values AFTER
-     * copying the profile so they overwrite the eccentric phase's last 8 bytes.
+     * Layout:
+     * - 0x30-0x3F: concentric activation phase
+     * - 0x40-0x4F: eccentric activation phase
+     * - 0x50-0x53: forceMin
+     * - 0x54-0x57: forceMax
+     * - 0x58-0x5B: softMax
+     * - 0x5C-0x5F: increment
      */
     object ActivationPacket {
         const val SIZE = 96
-        // Mode profile
         const val OFFSET_MODE_PROFILE = 0x30   // 32 bytes (concentric + eccentric phases)
-        // Force config (overlaps end of mode profile — firmware reads these as force params)
-        const val OFFSET_SOFT_MAX = 0x48       // Weight ceiling (float LE) — caps progression
-        const val OFFSET_INCREMENT = 0x4C      // Per-rep progression kg (float LE)
-        // Weight fields
-        const val OFFSET_EFFECTIVE_KG = 0x54   // adjustedWeight + 10.0 (float LE)
-        const val OFFSET_TOTAL_KG = 0x58       // adjustedWeight (float LE)
-        const val OFFSET_PROGRESSION = 0x5C    // progressionRegressionKg (float LE)
+        const val OFFSET_FORCE_MIN = 0x50      // 0.0f in official activation packets
+        const val OFFSET_FORCE_MAX = 0x54      // adjustedWeight + 10.0f
+        const val OFFSET_SOFT_MAX = 0x58       // configured weight ceiling
+        const val OFFSET_INCREMENT = 0x5C      // progressionRegressionKg
     }
 
     // Legacy aliases for backward compatibility

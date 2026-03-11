@@ -25,6 +25,13 @@ class BlePacketFactoryTest {
         return Float.fromBits(bits)
     }
 
+    /** Read a little-endian signed short from a byte array at the given offset. */
+    private fun readShortLE(buffer: ByteArray, offset: Int): Short {
+        val value = (buffer[offset].toInt() and 0xFF) or
+                ((buffer[offset + 1].toInt() and 0xFF) shl 8)
+        return value.toShort()
+    }
+
     // ========== Init Command Tests ==========
 
     @Test
@@ -201,10 +208,39 @@ class BlePacketFactoryTest {
         assertTrue(packet[0x30] != 0.toByte() || packet[0x31] != 0.toByte())
     }
 
-    // ========== Issue #262: softMax and increment at correct offsets ==========
+    // ========== Activation force config offsets ==========
 
     @Test
-    fun `createProgramParams writes softMax at offset 0x48`() {
+    fun `createProgramParams writes forceMin at offset 0x50`() {
+        val params = WorkoutParameters(
+            programMode = ProgramMode.OldSchool,
+            reps = 10,
+            weightPerCableKg = 50f
+        )
+
+        val packet = BlePacketFactory.createProgramParams(params)
+
+        assertEquals(0.0f, readFloatLE(packet, BleConstants.ActivationPacket.OFFSET_FORCE_MIN))
+    }
+
+    @Test
+    fun `createProgramParams writes forceMax at offset 0x54`() {
+        val weight = 50f
+        val progression = 2.5f
+        val params = WorkoutParameters(
+            programMode = ProgramMode.OldSchool,
+            reps = 10,
+            weightPerCableKg = weight,
+            progressionRegressionKg = progression
+        )
+
+        val packet = BlePacketFactory.createProgramParams(params)
+
+        assertEquals(weight - progression + 10.0f, readFloatLE(packet, BleConstants.ActivationPacket.OFFSET_FORCE_MAX))
+    }
+
+    @Test
+    fun `createProgramParams writes softMax at offset 0x58`() {
         val weight = 50f
         val params = WorkoutParameters(
             programMode = ProgramMode.OldSchool,
@@ -218,7 +254,7 @@ class BlePacketFactoryTest {
     }
 
     @Test
-    fun `createProgramParams writes increment at offset 0x4C`() {
+    fun `createProgramParams writes increment at offset 0x5C`() {
         val progression = 2.5f
         val params = WorkoutParameters(
             programMode = ProgramMode.OldSchool,
@@ -231,31 +267,42 @@ class BlePacketFactoryTest {
 
         assertEquals(progression, readFloatLE(packet, BleConstants.ActivationPacket.OFFSET_INCREMENT))
         // Verify LE encoding: 2.5f = 0x40200000 → LE bytes [0x00, 0x00, 0x20, 0x40]
-        assertEquals(0x00.toByte(), packet[0x4C])
-        assertEquals(0x00.toByte(), packet[0x4D])
-        assertEquals(0x20.toByte(), packet[0x4E])
-        assertEquals(0x40.toByte(), packet[0x4F])
+        assertEquals(0x00.toByte(), packet[0x5C])
+        assertEquals(0x00.toByte(), packet[0x5D])
+        assertEquals(0x20.toByte(), packet[0x5E])
+        assertEquals(0x40.toByte(), packet[0x5F])
     }
 
     @Test
-    fun `createProgramParams softMax and increment overwrite mode profile tail`() {
-        // Verify that softMax/increment are written AFTER the mode profile copy,
-        // overwriting the eccentric phase's last 8 bytes (0x48-0x4F)
-        val weight = 35f
-        val progression = 1.5f
+    fun `createProgramParams preserves TUT eccentric tail when progression is enabled`() {
         val params = WorkoutParameters(
-            programMode = ProgramMode.OldSchool,
+            programMode = ProgramMode.TUT,
             reps = 10,
-            weightPerCableKg = weight,
-            progressionRegressionKg = progression
+            weightPerCableKg = 35f,
+            progressionRegressionKg = 1.5f
         )
 
         val packet = BlePacketFactory.createProgramParams(params)
 
-        // softMax should be the target weight, NOT the OldSchool eccentric shorts (-260, -110)
-        assertEquals(weight, readFloatLE(packet, 0x48))
-        // increment should be progression, NOT the OldSchool eccentric smoothing (0.0f)
-        assertEquals(progression, readFloatLE(packet, 0x4C))
+        assertEquals(-100f, readShortLE(packet, 0x48).toFloat())
+        assertEquals(-50f, readShortLE(packet, 0x4A).toFloat())
+        assertEquals(14.0f, readFloatLE(packet, 0x4C))
+    }
+
+    @Test
+    fun `createProgramParams preserves Eccentric Only eccentric tail when progression is enabled`() {
+        val params = WorkoutParameters(
+            programMode = ProgramMode.EccentricOnly,
+            reps = 10,
+            weightPerCableKg = 35f,
+            progressionRegressionKg = 1.5f
+        )
+
+        val packet = BlePacketFactory.createProgramParams(params)
+
+        assertEquals(-100f, readShortLE(packet, 0x48).toFloat())
+        assertEquals(-50f, readShortLE(packet, 0x4A).toFloat())
+        assertEquals(20.0f, readFloatLE(packet, 0x4C))
     }
 
     @Test
@@ -301,25 +348,20 @@ class BlePacketFactoryTest {
     }
 
     @Test
-    fun `createProgramParams still writes weight at legacy offsets`() {
-        val weight = 40f
-        val progression = 3f
+    fun `createProgramParams writes force config to official activation block`() {
         val params = WorkoutParameters(
             programMode = ProgramMode.OldSchool,
             reps = 10,
-            weightPerCableKg = weight,
-            progressionRegressionKg = progression
+            weightPerCableKg = 40f,
+            progressionRegressionKg = 3f
         )
 
         val packet = BlePacketFactory.createProgramParams(params)
 
-        val adjustedWeight = weight - progression
-        // effectiveKg at 0x54
-        assertEquals(adjustedWeight + 10.0f, readFloatLE(packet, 0x54))
-        // totalWeightKg at 0x58
-        assertEquals(adjustedWeight, readFloatLE(packet, 0x58))
-        // progression at 0x5C
-        assertEquals(progression, readFloatLE(packet, 0x5C))
+        assertEquals(0.0f, readFloatLE(packet, 0x50))
+        assertEquals(47.0f, readFloatLE(packet, 0x54))
+        assertEquals(40.0f, readFloatLE(packet, 0x58))
+        assertEquals(3.0f, readFloatLE(packet, 0x5C))
     }
 
     // ========== Echo Mode Tests ==========

@@ -111,6 +111,35 @@ class DWSMWorkoutLifecycleTest {
         harness.cleanup()
     }
 
+    @Test
+    fun `startWorkout uses single activation config for TUT and Eccentric Only`() = runTest {
+        val modes = listOf(ProgramMode.TUT, ProgramMode.EccentricOnly)
+        for (mode in modes) {
+            val harness = DWSMTestHarness(this)
+            harness.fakeBleRepo.simulateConnect("Vee_Test")
+            harness.dwsm.updateWorkoutParameters(
+                WorkoutParameters(
+                    programMode = mode,
+                    reps = 8,
+                    weightPerCableKg = 30f,
+                    progressionRegressionKg = 2f
+                )
+            )
+
+            harness.dwsm.startWorkout(skipCountdown = true)
+            advanceUntilIdle()
+
+            assertEquals(2, harness.fakeBleRepo.commandsReceived.size, "Expected config + start for $mode")
+            assertEquals(0x04.toByte(), harness.fakeBleRepo.commandsReceived[0][0], "Expected activation packet for $mode")
+            assertEquals(0x03.toByte(), harness.fakeBleRepo.commandsReceived[1][0], "Expected start packet for $mode")
+            assertFalse(
+                harness.fakeBleRepo.commandsReceived.any { it.firstOrNull() == 0x4F.toByte() },
+                "Workout start should not send a regular packet for $mode"
+            )
+            harness.cleanup()
+        }
+    }
+
     // ===== B. stopWorkout transitions =====
 
     @Test
