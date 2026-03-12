@@ -10,6 +10,7 @@ import com.devil.phoenixproject.domain.model.WorkoutMetric
 import com.devil.phoenixproject.domain.model.WorkoutState
 import com.devil.phoenixproject.domain.model.currentTimeMillis
 import com.devil.phoenixproject.testutil.DWSMTestHarness
+import com.devil.phoenixproject.testutil.TestFixtures
 import com.devil.phoenixproject.testutil.WorkoutStateFixtures.activeDWSM
 import com.devil.phoenixproject.testutil.WorkoutStateFixtures.createTestRoutine
 import kotlinx.coroutines.flow.first
@@ -643,7 +644,101 @@ class DWSMWorkoutLifecycleTest {
         harness.cleanup()
     }
 
+    @Test
+    fun `set summary volume uses configured load for fixed weight workouts`() = runTest {
+        val harness = DWSMTestHarness(this)
+
+        val summary = harness.activeSessionEngine.calculateSetSummaryMetrics(
+            metrics = listOf(
+                WorkoutMetric(
+                    timestamp = 100L,
+                    loadA = 22f,
+                    loadB = 26f,
+                    positionA = 120f,
+                    positionB = 120f,
+                    velocityA = 80.0,
+                    velocityB = 80.0
+                ),
+                WorkoutMetric(
+                    timestamp = 200L,
+                    loadA = 18f,
+                    loadB = 20f,
+                    positionA = 100f,
+                    positionB = 100f,
+                    velocityA = -60.0,
+                    velocityB = -60.0
+                )
+            ),
+            repCount = 8,
+            fallbackWeightKg = 12f,
+            configuredWeightKgPerCable = 12f,
+            isEchoMode = false
+        )
+
+        assertEquals(24f, summary.heaviestLiftKgPerCable)
+        assertEquals(192f, summary.totalVolumeKg)
+        harness.cleanup()
+    }
+
     // ===== F. saveWorkoutSession side effects =====
+
+    @Test
+    fun `auto completed fixed weight session records PR and volume from configured load`() = runTest {
+        val harness = DWSMTestHarness(this)
+        harness.fakeBleRepo.simulateConnect("Vee_Test")
+        harness.fakeExerciseRepo.addExercise(TestFixtures.benchPress)
+
+        harness.dwsm.updateWorkoutParameters(
+            WorkoutParameters(
+                programMode = ProgramMode.OldSchool,
+                reps = 8,
+                warmupReps = 0,
+                weightPerCableKg = 12f,
+                selectedExerciseId = TestFixtures.benchPress.id
+            )
+        )
+        harness.dwsm.startWorkout(skipCountdown = true)
+        advanceUntilIdle()
+
+        harness.dwsm.coordinator._repCount.value = RepCount(
+            warmupReps = 0,
+            workingReps = 8,
+            totalReps = 8,
+            isWarmupComplete = true
+        )
+        harness.dwsm.coordinator.collectedMetrics.addAll(
+            listOf(
+                WorkoutMetric(
+                    timestamp = 100L,
+                    loadA = 22f,
+                    loadB = 26f,
+                    positionA = 120f,
+                    positionB = 120f,
+                    velocityA = 80.0,
+                    velocityB = 80.0
+                ),
+                WorkoutMetric(
+                    timestamp = 200L,
+                    loadA = 18f,
+                    loadB = 20f,
+                    positionA = 100f,
+                    positionB = 100f,
+                    velocityA = -60.0,
+                    velocityB = -60.0
+                )
+            )
+        )
+
+        harness.activeSessionEngine.handleSetCompletion()
+        advanceUntilIdle()
+
+        assertEquals(12f, harness.fakePRRepo.updateCalls.single().weightPerCableKg)
+
+        val session = harness.fakeWorkoutRepo.getAllSessions().first().first()
+        assertEquals(24f, session.heaviestLiftKg)
+        assertEquals(192f, session.totalVolumeKg)
+        harness.cleanup()
+    }
 
     @Test
     fun `stopWorkout saves session to workout repository`() = runTest {

@@ -326,8 +326,13 @@ class ActiveSessionEngine(
             metrics.maxOf { it.totalLoad / 2f }
         }
 
-        // Volume calculation: for double-cable multiply by 2 (both cables), for single-cable use as-is
-        val totalVolumeKg = heaviestLiftKgPerCable * (if (isSingleCable) 1f else 2f) * repCount
+        val volumeWeightKgPerCable = if (isEchoMode) {
+            heaviestLiftKgPerCable
+        } else {
+            configuredWeightKgPerCable
+        }
+        // Fixed-load modes should log the prescribed working load, while Echo uses measured force.
+        val totalVolumeKg = volumeWeightKgPerCable * (if (isSingleCable) 1f else 2f) * repCount
 
         val concentricMetrics = metrics.filter { it.velocityA > 10 || it.velocityB > 10 }
         val eccentricMetrics = metrics.filter { it.velocityA < -10 || it.velocityB < -10 }
@@ -1541,13 +1546,13 @@ class ActiveSessionEngine(
                  Logger.d("Saved CompletedSet (manual stop): set #$setIndex, ${repCount.workingReps} reps${if (matchedPlannedSetId != null) " (linked to PlannedSet)" else ""}")
              }
 
-             val hasPR = gamificationManager.processPostSaveEvents(
-                 exerciseId = params.selectedExerciseId,
-                 workingReps = repCount.workingReps,
-                 measuredWeightKg = params.weightPerCableKg,
-                 programMode = params.programMode,
-                 isJustLift = isJustLift,
-                 isEchoMode = params.isEchoMode
+              val hasPR = gamificationManager.processPostSaveEvents(
+                  exerciseId = params.selectedExerciseId,
+                  workingReps = repCount.workingReps,
+                  recordedWeightKg = params.weightPerCableKg,
+                  programMode = params.programMode,
+                  isJustLift = isJustLift,
+                  isEchoMode = params.isEchoMode
              )
 
              if (hasPR && completedSetId != null) {
@@ -1703,24 +1708,6 @@ class ActiveSessionEngine(
 
         val metricsSnapshot = coordinator.collectedMetrics.toList()
 
-        // Issue #6 Fix: Detect single-cable exercises for correct weight measurement
-        val peakA = metricsSnapshot.maxOfOrNull { it.loadA } ?: 0f
-        val peakB = metricsSnapshot.maxOfOrNull { it.loadB } ?: 0f
-        val isSingleCable = (peakA > 0f && peakB > 0f &&
-            (peakA / peakB > 5f || peakB / peakA > 5f)) ||
-            (peakA > 0f && peakB == 0f) ||
-            (peakB > 0f && peakA == 0f)
-
-        val measuredPerCableKg = if (metricsSnapshot.isNotEmpty()) {
-            if (isSingleCable) {
-                metricsSnapshot.maxOf { maxOf(it.loadA, it.loadB) }
-            } else {
-                metricsSnapshot.maxOf { it.totalLoad / 2f }
-            }
-        } else {
-            params.weightPerCableKg
-        }
-
         val exerciseName = params.selectedExerciseId?.let { exerciseId ->
             exerciseRepository.getExerciseById(exerciseId)?.name
         }
@@ -1809,7 +1796,7 @@ class ActiveSessionEngine(
         val hasPR = gamificationManager.processPostSaveEvents(
             exerciseId = params.selectedExerciseId,
             workingReps = working,
-            measuredWeightKg = measuredPerCableKg,
+            recordedWeightKg = params.weightPerCableKg,
             programMode = params.programMode,
             isJustLift = params.isJustLift,
             isEchoMode = params.isEchoMode
