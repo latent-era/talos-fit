@@ -833,6 +833,7 @@ class DWSMWorkoutLifecycleTest {
 
         assertEquals(24f, summary.heaviestLiftKgPerCable)
         assertEquals(192f, summary.totalVolumeKg)
+        assertEquals(2, summary.cableCount)
         harness.cleanup()
     }
 
@@ -893,6 +894,7 @@ class DWSMWorkoutLifecycleTest {
         val session = harness.fakeWorkoutRepo.getAllSessions().first().first()
         assertEquals(24f, session.heaviestLiftKg)
         assertEquals(192f, session.totalVolumeKg)
+        assertEquals(2, session.cableCount)
         harness.cleanup()
     }
 

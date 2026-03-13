@@ -1,0 +1,2 @@
+-- Add cable-count context for fallback session volume calculations.
+ALTER TABLE WorkoutSession ADD COLUMN cableCount INTEGER;

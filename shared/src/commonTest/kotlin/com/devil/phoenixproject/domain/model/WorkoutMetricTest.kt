@@ -224,14 +224,39 @@ class WorkoutSessionTest {
     }
 
     @Test
-    fun `effectiveTotalVolumeKg falls back to legacy volume formula when measured is missing`() {
+    fun `effectiveTotalVolumeKg fallback uses single cable when metadata marks unilateral session`() {
         val session = WorkoutSession(
             weightPerCableKg = 40f,
             totalReps = 10,
-            totalVolumeKg = null
+            totalVolumeKg = null,
+            cableCount = 1
+        )
+
+        assertEquals(400f, session.effectiveTotalVolumeKg())
+    }
+
+    @Test
+    fun `effectiveTotalVolumeKg fallback uses dual cable when metadata marks bilateral session`() {
+        val session = WorkoutSession(
+            weightPerCableKg = 40f,
+            totalReps = 10,
+            totalVolumeKg = null,
+            cableCount = 2
         )
 
         assertEquals(800f, session.effectiveTotalVolumeKg())
+    }
+
+    @Test
+    fun `effectiveTotalVolumeKg fallback defaults conservatively for legacy rows without cable metadata`() {
+        val session = WorkoutSession(
+            weightPerCableKg = 40f,
+            totalReps = 10,
+            totalVolumeKg = null,
+            cableCount = null
+        )
+
+        assertEquals(400f, session.effectiveTotalVolumeKg())
     }
 }
 

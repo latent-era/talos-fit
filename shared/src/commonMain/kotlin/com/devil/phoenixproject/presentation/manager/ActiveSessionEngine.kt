@@ -294,6 +294,7 @@ class ActiveSessionEngine(
                 peakPower = 0f,
                 averagePower = 0f,
                 repCount = repCount,
+                cableCount = 1,
                 heaviestLiftKgPerCable = fallbackWeightKg,
                 configuredWeightKgPerCable = configuredWeightKgPerCable
             )
@@ -332,7 +333,8 @@ class ActiveSessionEngine(
             configuredWeightKgPerCable
         }
         // Fixed-load modes should log the prescribed working load, while Echo uses measured force.
-        val totalVolumeKg = volumeWeightKgPerCable * (if (isSingleCable) 1f else 2f) * repCount
+        val cableCount = if (isSingleCable) 1 else 2
+        val totalVolumeKg = volumeWeightKgPerCable * cableCount.toFloat() * repCount
 
         val concentricMetrics = metrics.filter { it.velocityA > 10 || it.velocityB > 10 }
         val eccentricMetrics = metrics.filter { it.velocityA < -10 || it.velocityB < -10 }
@@ -443,6 +445,7 @@ class ActiveSessionEngine(
             repCount = repCount,
             durationMs = durationMs,
             totalVolumeKg = totalVolumeKg,
+            cableCount = cableCount,
             heaviestLiftKgPerCable = heaviestLiftKgPerCable,
             configuredWeightKgPerCable = configuredWeightKgPerCable,
             peakForceConcentricA = peakConcentricA,
@@ -1525,6 +1528,7 @@ class ActiveSessionEngine(
                  avgForceEccentricB = summary.avgForceEccentricB,
                  heaviestLiftKg = summary.heaviestLiftKgPerCable,
                  totalVolumeKg = summary.totalVolumeKg,
+                 cableCount = summary.cableCount,
                  estimatedCalories = summary.estimatedCalories,
                  warmupAvgWeightKg = if (params.isEchoMode) summary.warmupAvgWeightKg else null,
                  workingAvgWeightKg = if (params.isEchoMode) summary.workingAvgWeightKg else null,
@@ -1761,6 +1765,7 @@ class ActiveSessionEngine(
             avgForceEccentricB = summary.avgForceEccentricB,
             heaviestLiftKg = summary.heaviestLiftKgPerCable,
             totalVolumeKg = summary.totalVolumeKg,
+            cableCount = summary.cableCount,
             estimatedCalories = summary.estimatedCalories,
             warmupAvgWeightKg = if (params.isEchoMode) summary.warmupAvgWeightKg else null,
             workingAvgWeightKg = if (params.isEchoMode) summary.workingAvgWeightKg else null,
