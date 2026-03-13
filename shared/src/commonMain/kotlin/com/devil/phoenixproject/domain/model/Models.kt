@@ -63,6 +63,7 @@ sealed class WorkoutState {
         val repCount: Int,
         val durationMs: Long = 0L,
         val totalVolumeKg: Float = 0f,
+        val cableCount: Int = 1,
         val heaviestLiftKgPerCable: Float = 0f,
         val configuredWeightKgPerCable: Float = 0f,
         val peakForceConcentricA: Float = 0f,  // Peak during lifting (velocity > 0)
@@ -416,6 +417,7 @@ data class WorkoutSession(
     val avgForceEccentricB: Float? = null,
     val heaviestLiftKg: Float? = null,
     val totalVolumeKg: Float? = null,
+    val cableCount: Int? = null,
     val estimatedCalories: Float? = null,
     val warmupAvgWeightKg: Float? = null,
     val workingAvgWeightKg: Float? = null,
@@ -441,10 +443,13 @@ fun WorkoutSession.effectiveHeaviestKgPerCable(): Float =
  * Effective total volume (kg) for analytics/display.
  *
  * Uses measured summary volume when available (v0.2.1+), otherwise falls back to
- * legacy approximation: configuredWeightPerCable * 2 cables * reps.
+ * configuredWeightPerCable * cableCount * reps.
+ *
+ * Legacy rows may not have cableCount metadata; in those cases we default to 1 cable
+ * to avoid overcounting historical volume.
  */
 fun WorkoutSession.effectiveTotalVolumeKg(): Float =
-    totalVolumeKg ?: (weightPerCableKg * 2f * totalReps)
+    totalVolumeKg ?: (weightPerCableKg * ((if (cableCount == 2) 2 else 1).toFloat()) * totalReps)
 
 /**
  * Convert WorkoutSession to SetSummary for display in history.
@@ -460,6 +465,7 @@ fun WorkoutSession.toSetSummary(): WorkoutState.SetSummary? {
         repCount = totalReps,
         durationMs = duration,
         totalVolumeKg = effectiveTotalVolumeKg(),
+        cableCount = cableCount ?: 1,
         heaviestLiftKgPerCable = effectiveHeaviestKgPerCable(),
         configuredWeightKgPerCable = weightPerCableKg,
         peakForceConcentricA = peakForceConcentricA ?: 0f,
