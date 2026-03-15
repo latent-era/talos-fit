@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import com.devil.phoenixproject.domain.model.EchoLevel
 import com.devil.phoenixproject.domain.model.ProgramMode
 import com.devil.phoenixproject.domain.model.WorkoutParameters
+import kotlin.concurrent.Volatile
 
 /**
  * BLE Packet Factory - Builds binary protocol frames for Vitruvian device communication
@@ -12,6 +13,14 @@ import com.devil.phoenixproject.domain.model.WorkoutParameters
  * KMP-compatible version using manual byte manipulation (no java.nio.ByteBuffer)
  */
 object BlePacketFactory {
+
+    enum class ForceConfigVariant {
+        NON_OVERLAP,
+        OVERLAP
+    }
+
+    @Volatile
+    var defaultForceConfigVariant: ForceConfigVariant = ForceConfigVariant.NON_OVERLAP
 
     // ========== Little-Endian Byte Helpers ==========
 
@@ -124,10 +133,14 @@ object BlePacketFactory {
      * Build the 96-byte activation/program parameters frame.
      *
      * Activation modes serialize a 32-byte mode profile at 0x30-0x4F, followed by
-     * the force config block (forceMin/forceMax/softMax/increment) at 0x50-0x5F.
-     * Writing progression fields into 0x48-0x4F corrupts the eccentric profile.
+     * the force config block at 0x50-0x5F.
+     * - NON_OVERLAP keeps 0x48-0x4F untouched so profile bytes are preserved.
+     * - OVERLAP writes legacy softMax/increment at 0x48/0x4C when required.
      */
-    fun createProgramParams(params: WorkoutParameters): ByteArray {
+    fun createProgramParams(
+        params: WorkoutParameters,
+        variant: ForceConfigVariant = defaultForceConfigVariant
+    ): ByteArray {
         val frame = ByteArray(96)
 
         // Header section - Command 0x04 for PROGRAM mode
@@ -183,22 +196,38 @@ object BlePacketFactory {
         }
 
         val effectiveKg = adjustedWeightPerCable + 10.0f
+
         val softMax = if (params.isAMRAP || params.isJustLift) 100.0f else params.weightPerCableKg
+
+        if (variant == ForceConfigVariant.OVERLAP) {
+            putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_SOFT_MAX, softMax)
+            putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_INCREMENT, params.progressionRegressionKg)
+        }
+
+        // Force config block at 0x50-0x5F
         putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_FORCE_MIN, 0.0f)
         putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_FORCE_MAX, effectiveKg)
-        putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_SOFT_MAX, softMax)
-        putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_INCREMENT, params.progressionRegressionKg)
+        putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_TARGET_WEIGHT, adjustedWeightPerCable)
+        putFloatLE(frame, BleConstants.ActivationPacket.OFFSET_PROGRESSION, params.progressionRegressionKg)
 
         // Diagnostic logging
         println("BLE-ACTIVATION: === MODE: ${params.programMode}, Weight: ${params.weightPerCableKg}kg ===")
         println("BLE-ACTIVATION: adjustedWeight=${adjustedWeightPerCable}kg, effectiveKg=$effectiveKg")
+        if (variant == ForceConfigVariant.OVERLAP) {
+            println(
+                "BLE-ACTIVATION: softMax[0x48]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_SOFT_MAX)}kg, " +
+                    "increment[0x4C]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_INCREMENT)}kg/rep"
+            )
+        } else {
+            println("BLE-ACTIVATION: non-overlap layout active (0x48..0x4F preserved as profile bytes)")
+        }
         println(
             "BLE-ACTIVATION: forceMin[0x50]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_FORCE_MIN)}kg, " +
                 "forceMax[0x54]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_FORCE_MAX)}kg"
         )
         println(
-            "BLE-ACTIVATION: softMax[0x58]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_SOFT_MAX)}kg, " +
-                "increment[0x5C]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_INCREMENT)}kg/rep"
+            "BLE-ACTIVATION: targetWeight[0x58]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_TARGET_WEIGHT)}kg, " +
+                "progression[0x5C]=${readFloatLE(frame, BleConstants.ActivationPacket.OFFSET_PROGRESSION)}kg/rep"
         )
         val repsHex = frame[0x04].toUByte().toString(16).padStart(2, '0').uppercase()
         println("BLE-ACTIVATION: reps[0x04]=0x$repsHex (isAMRAP=${params.isAMRAP}, isJustLift=${params.isJustLift})")
