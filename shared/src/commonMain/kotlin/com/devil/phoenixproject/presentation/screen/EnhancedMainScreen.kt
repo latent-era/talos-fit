@@ -572,7 +572,8 @@ private fun getScreenTitle(
         route == NavigationRoutes.DailyRoutines.route -> "Daily Routines"
         route == NavigationRoutes.TrainingCycles.route -> "Training Cycles"
         route == NavigationRoutes.Analytics.route -> "Analytics"
-        route == NavigationRoutes.SmartInsights.route -> "Smart Insights"
+        // MVP: Removed for v0.7.0 — SmartInsights tab removed
+        // route == NavigationRoutes.SmartInsights.route -> "Smart Insights"
         route == NavigationRoutes.Settings.route -> "Settings"
         route == NavigationRoutes.JustLift.route -> "Just Lift"
         route == NavigationRoutes.SingleExercise.route -> "Single Exercise"

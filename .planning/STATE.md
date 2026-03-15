@@ -15,14 +15,14 @@ progress:
 
 ## Current Position
 
-Phase: 31 of 31 (planned)
+Phase: 31 of 31 (complete)
 Plan: —
-Status: Phase 31 planned — 4 plans across 2 waves (re-planned with UX fixes)
-Last activity: 2026-03-15 — Phase 31 planning complete
+Status: Phase 31 complete — review passed (2 cycles)
+Last activity: 2026-03-15 — Phase 31 review passed
 
 ## Progress
 ```
-[##########..........] 50% — 4/8 plans complete
+[####################] 100% — 8/8 plans complete
 ```
 
 ## Project Reference
@@ -59,7 +59,7 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Next Action
 
-Run `/legion:build` to execute Phase 31: Polish & Validation
+All phases complete — v0.7.0 milestone ready! Run `/legion:milestone` to mark it done and generate a summary.
 
 ---
 *Last updated: 2026-03-15 — v0.7.0 initialized, awaiting Phase 29 planning*

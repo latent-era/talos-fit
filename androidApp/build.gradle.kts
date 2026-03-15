@@ -67,6 +67,9 @@ android {
 
     buildTypes {
         release {
+            // Release signing is handled by CI (GitHub Actions) via keystore secrets.
+            // Local release builds use debug signing for testing only.
+            // See .github/workflows/ for the production signing pipeline.
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

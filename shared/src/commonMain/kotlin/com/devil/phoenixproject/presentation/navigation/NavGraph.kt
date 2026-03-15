@@ -24,13 +24,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.savedstate.read
-import com.devil.phoenixproject.data.repository.AuthRepository
+// MVP: Removed for v0.7.0 — only used in commented-out features
+// import com.devil.phoenixproject.data.repository.AuthRepository
 import com.devil.phoenixproject.data.repository.ExerciseRepository
 import com.devil.phoenixproject.data.repository.TrainingCycleRepository
 import com.devil.phoenixproject.domain.model.TrainingCycle
-import com.devil.phoenixproject.domain.subscription.SubscriptionManager
+// MVP: Removed for v0.7.0 — only used in commented-out features
+// import com.devil.phoenixproject.domain.subscription.SubscriptionManager
 import com.devil.phoenixproject.presentation.screen.*
-import com.devil.phoenixproject.presentation.viewmodel.AssessmentViewModel
+// MVP: Removed for v0.7.0 — only used in commented-out Strength Assessment routes
+// import com.devil.phoenixproject.presentation.viewmodel.AssessmentViewModel
 import com.devil.phoenixproject.presentation.viewmodel.MainViewModel
 import com.devil.phoenixproject.ui.theme.ThemeMode
 import org.koin.compose.koinInject

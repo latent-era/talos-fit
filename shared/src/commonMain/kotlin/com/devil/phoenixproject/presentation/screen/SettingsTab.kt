@@ -83,9 +83,9 @@ fun SettingsTab(
     // LED Biofeedback (Phoenix tier)
     ledFeedbackEnabled: Boolean = false,
     onLedFeedbackChange: (Boolean) -> Unit = {},
-    // Color-blind mode (WCAG accessibility)
-    colorBlindModeEnabled: Boolean = false,
-    onColorBlindModeChange: (Boolean) -> Unit = {},
+    // MVP: Removed for v0.7.0 — Color-blind mode UI commented out, params kept for re-enablement
+    @Suppress("UNUSED_PARAMETER") colorBlindModeEnabled: Boolean = false,
+    @Suppress("UNUSED_PARAMETER") onColorBlindModeChange: (Boolean) -> Unit = {},
     // HUD preset customization
     hudPreset: String = HudPreset.FULL.key,
     onHudPresetChange: (String) -> Unit = {},

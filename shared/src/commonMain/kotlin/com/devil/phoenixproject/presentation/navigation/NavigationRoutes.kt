@@ -38,13 +38,13 @@ sealed class NavigationRoutes(val route: String) {
     object Paywall : NavigationRoutes("paywall")
     object Account : NavigationRoutes("account")
 
-    // Smart Insights route (Elite-gated)
+    // MVP: Removed for v0.7.0 — Smart Insights moved to portal
     object SmartInsights : NavigationRoutes("smart_insights")
 
     // Cloud Sync routes
     object LinkAccount : NavigationRoutes("link_account")
 
-    // Strength Assessment routes
+    // MVP: Removed for v0.7.0 — Strength Assessment deferred (needs BLE velocity integration)
     object StrengthAssessment : NavigationRoutes("strength_assessment/{exerciseId}") {
         fun createRoute(exerciseId: String) = "strength_assessment/$exerciseId"
     }
