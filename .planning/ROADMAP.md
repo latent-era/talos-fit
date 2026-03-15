@@ -9,7 +9,7 @@
 - ✅ **v0.5.0 Premium Mobile** — Phases 13-15 (shipped 2026-02-27)
 - ✅ **v0.5.1 Board Polish & Premium UI** — Phases 16-22 (shipped 2026-02-28)
 - ✅ **v0.6.0 Portal Sync Compatibility** — Phases 23-28 (shipped 2026-03-02)
-- 🔄 **v0.7.0 MVP Cloud Sync** — Phases 29-31 (in progress)
+- ✅ **v0.7.0 MVP Cloud Sync** — Phases 29-31 (shipped 2026-03-15)
 
 ## Phases
 
@@ -138,7 +138,7 @@ See `.planning/milestones/v0.6.0-*` for archived phase details.
 | v0.5.0 Premium Mobile | 13-15 | 7 | Complete | 2026-02-27 |
 | v0.5.1 Board Polish & Premium UI | 16-22 | 16 | Complete | 2026-02-28 |
 | v0.6.0 Portal Sync Compatibility | 23-28 | 13 | Complete | 2026-03-02 |
-| v0.7.0 MVP Cloud Sync | 29-31 | 8 | In Progress | — |
+| v0.7.0 MVP Cloud Sync | 29-31 | 8 | Complete | 2026-03-15 |
 
 **Last phase number:** 31
 
