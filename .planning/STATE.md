@@ -15,10 +15,10 @@ progress:
 
 ## Current Position
 
-Phase: 29 of 31 (complete)
+Phase: 30 of 31 (planned)
 Plan: —
-Status: Phase 29 complete — review passed (1 cycle)
-Last activity: 2026-03-15 — Phase 29 review passed
+Status: Phase 30 planned — 2 plans across 2 waves
+Last activity: 2026-03-15 — Phase 30 planning complete
 
 ## Progress
 ```
@@ -53,11 +53,12 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 | Phase | Issue | Milestone |
 |-------|-------|-----------|
-| Phase 29: Core Sync UI | [#286](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/286) | v0.7.0 MVP Cloud Sync (#1) |
+| Phase 29: Core Sync UI | [#286](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/286) (closed) | v0.7.0 MVP Cloud Sync (#1) |
+| Phase 30: iOS Sync Launch | [#291](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/291) | v0.7.0 MVP Cloud Sync (#1) |
 
 ## Next Action
 
-Run `/legion:plan 30` to plan Phase 30: iOS Sync Launch
+Run `/legion:build` to execute Phase 30: iOS Sync Launch
 
 ---
 *Last updated: 2026-03-15 — v0.7.0 initialized, awaiting Phase 29 planning*
