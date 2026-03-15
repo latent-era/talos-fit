@@ -15,14 +15,14 @@ progress:
 
 ## Current Position
 
-Phase: 29 of 31 (planned)
+Phase: 29 of 31 (complete)
 Plan: —
-Status: Phase 29 planned — 2 plans across 1 wave
-Last activity: 2026-03-15 — Phase 29 planning complete
+Status: Phase 29 complete — review passed (1 cycle)
+Last activity: 2026-03-15 — Phase 29 review passed
 
 ## Progress
 ```
-[....................] 0% — 0/7 plans complete
+[######..............] 28% — 2/7 plans complete
 ```
 
 ## Project Reference
@@ -57,7 +57,7 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Next Action
 
-Run `/legion:build` to execute Phase 29: Core Sync UI
+Run `/legion:plan 30` to plan Phase 30: iOS Sync Launch
 
 ---
 *Last updated: 2026-03-15 — v0.7.0 initialized, awaiting Phase 29 planning*

@@ -89,7 +89,7 @@ See `.planning/milestones/v0.6.0-*` for archived phase details.
 **Scope:** Mobile-only. Portal planned separately in phoenix-portal repo.
 **Source:** `.planning/exploration-mvp-cloud-sync.md`, `docs/plans/mvp-cloud-sync-mobile.md`
 
-- [ ] Phase 29: Core Sync UI (2 plans) — Enable sync UI on both platforms, ProGuard fix
+- [x] Phase 29: Core Sync UI (2/2 plans) — Enable sync UI on both platforms, ProGuard fix (completed 2026-03-15)
 - [ ] Phase 30: iOS Sync Launch (2 plans) — Credential injection, Darwin engine verification, TestFlight
 - [ ] Phase 31: Polish & Validation (3 plans) — Error indicator, version bump, release builds, E2E test
 
