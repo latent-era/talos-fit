@@ -24,17 +24,52 @@ import androidx.compose.ui.focus.onFocusChanged
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.devil.phoenixproject.presentation.util.LocalWindowSizeClass
+import com.devil.phoenixproject.presentation.util.WindowHeightSizeClass
 import kotlinx.coroutines.launch
 import co.touchlab.kermit.Logger
 import kotlin.math.abs
 import kotlin.math.roundToInt
+
+private data class PickerSizing(
+    val itemHeight: Dp,
+    val containerHeight: Dp,
+    val selectedTextStyle: TextStyle,
+    val unselectedTextStyle: TextStyle
+)
+
+@Composable
+private fun rememberPickerSizing(): PickerSizing {
+    val windowSizeClass = LocalWindowSizeClass.current
+    val fontScale = LocalDensity.current.fontScale
+    val typography = MaterialTheme.typography
+    val compactHeightMode =
+        windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact && fontScale <= 1.05f
+
+    val itemHeight = if (compactHeightMode) 34.dp else 40.dp
+    val selectedTextStyle = when {
+        compactHeightMode -> typography.titleLarge.copy(fontSize = 22.sp, lineHeight = 26.sp)
+        fontScale > 1.15f -> typography.titleLarge
+        else -> typography.headlineMedium
+    }
+
+    return PickerSizing(
+        itemHeight = itemHeight,
+        containerHeight = itemHeight * 3,
+        selectedTextStyle = selectedTextStyle,
+        unselectedTextStyle = if (compactHeightMode) typography.bodyMedium else typography.bodyLarge
+    )
+}
 
 /**
  * iOS implementation using Compose-based scrollable picker.
@@ -98,6 +133,7 @@ actual fun CompactNumberPicker(
     val coroutineScope = rememberCoroutineScope()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     val focusManager = LocalFocusManager.current
+    val pickerSizing = rememberPickerSizing()
 
     // Inline editing state
     var isEditing by remember { mutableStateOf(false) }
@@ -119,6 +155,22 @@ actual fun CompactNumberPicker(
     // the current value, not a stale captured value from composition time
     val currentValue by rememberUpdatedState(value)
     val currentOnValueChange by rememberUpdatedState(onValueChange)
+
+    // True center index derived from current viewport/layout rather than first visible item.
+    val centeredVisibleIndex by remember(listState, values) {
+        derivedStateOf {
+            if (values.isEmpty()) {
+                0
+            } else {
+                val layoutInfo = listState.layoutInfo
+                val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+                val nearestCenteredItem = layoutInfo.visibleItemsInfo.minByOrNull { itemInfo ->
+                    abs((itemInfo.offset + itemInfo.size / 2) - viewportCenter)
+                }
+                (nearestCenteredItem?.index ?: listState.firstVisibleItemIndex).coerceIn(values.indices)
+            }
+        }
+    }
 
     // Keep list position valid and in sync when value/range changes.
     LaunchedEffect(values.size, safeCurrentIndex) {
@@ -168,7 +220,7 @@ actual fun CompactNumberPicker(
             }
         } else {
             // Parse failed - keep current scroll position value instead of defaulting to max
-            val currentScrollIndex = listState.firstVisibleItemIndex.coerceIn(values.indices)
+            val currentScrollIndex = centeredVisibleIndex.coerceIn(values.indices)
             val currentValue = values[currentScrollIndex]
             lastScrollSetValue = currentValue
             onValueChange(currentValue)
@@ -187,7 +239,7 @@ actual fun CompactNumberPicker(
         if (!isUserInteracting && !isEditing) {
             // Check if this is a genuine external value change (not from scroll)
             val externalValueChanged = abs(currentValue - lastScrollSetValue) > 0.001f
-            if (externalValueChanged && listState.firstVisibleItemIndex != currentIndex) {
+            if (externalValueChanged && centeredVisibleIndex != currentIndex) {
                 lastScrollSetValue = currentValue
                 listState.animateScrollToItem(currentIndex.coerceAtLeast(0))
             }
@@ -203,7 +255,7 @@ actual fun CompactNumberPicker(
             editSessionReady = false
             // Issue #166 Fix: Use the current scroll position value, not external value
             val currentScrollIndex = if (values.isNotEmpty()) {
-                listState.firstVisibleItemIndex.coerceIn(values.indices)
+                centeredVisibleIndex.coerceIn(values.indices)
             } else {
                 0
             }
@@ -235,7 +287,7 @@ actual fun CompactNumberPicker(
             isUserInteracting = true
         } else {
             // Scroll stopped - update the value
-            val centerIndex = listState.firstVisibleItemIndex
+            val centerIndex = centeredVisibleIndex.coerceIn(values.indices)
             if (centerIndex in values.indices) {
                 val scrollValue = values[centerIndex]
                 Logger.i { "PICKER_DEBUG[iOS]: centerIndex=$centerIndex, scrollValue=$scrollValue, currentValue=$currentValue, values.size=${values.size}" }
@@ -273,7 +325,7 @@ actual fun CompactNumberPicker(
             IconButton(
                 onClick = {
                     if (values.isNotEmpty()) {
-                        val baseIndex = listState.firstVisibleItemIndex.coerceIn(values.indices)
+                        val baseIndex = centeredVisibleIndex.coerceIn(values.indices)
                         val newIndex = (baseIndex - 1).coerceIn(values.indices)
                         if (newIndex != baseIndex) {
                             val newValue = values[newIndex]
@@ -298,9 +350,8 @@ actual fun CompactNumberPicker(
                 )
             }
 
-            // Scrollable picker - Item height is ~40dp (text + padding)
-            val itemHeight = 40.dp
-            val containerHeight = 120.dp
+            val itemHeight = pickerSizing.itemHeight
+            val containerHeight = pickerSizing.containerHeight
             // Center padding pushes first item to middle of container
             val centerPadding = (containerHeight - itemHeight) / 2
 
@@ -320,7 +371,7 @@ actual fun CompactNumberPicker(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     itemsIndexed(values) { index, floatVal ->
-                        val isSelected = index == listState.firstVisibleItemIndex
+                        val isSelected = index == centeredVisibleIndex
 
                         Box(
                             modifier = Modifier
@@ -350,7 +401,7 @@ actual fun CompactNumberPicker(
                                         value = inputText,
                                         onValueChange = { inputText = it },
                                         textStyle = TextStyle(
-                                            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                                            fontSize = pickerSizing.selectedTextStyle.fontSize,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.Center
@@ -396,9 +447,9 @@ actual fun CompactNumberPicker(
                                 Text(
                                     text = formatValue(floatVal),
                                     style = if (isSelected)
-                                        MaterialTheme.typography.headlineMedium
+                                        pickerSizing.selectedTextStyle
                                     else
-                                        MaterialTheme.typography.bodyLarge,
+                                        pickerSizing.unselectedTextStyle,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center
@@ -409,14 +460,10 @@ actual fun CompactNumberPicker(
                 }
 
                 if (showCenteredOverlay) {
-                    val previewIndex = if (isUserInteracting || listState.isScrollInProgress) {
-                        listState.firstVisibleItemIndex.coerceIn(values.indices)
-                    } else {
-                        safeCurrentIndex
-                    }
+                    val previewIndex = centeredVisibleIndex.coerceIn(values.indices)
                     Text(
                         text = formatValue(values[previewIndex]),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = pickerSizing.selectedTextStyle,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
@@ -429,14 +476,14 @@ actual fun CompactNumberPicker(
                 // Selection indicator lines - positioned to frame center item
                 HorizontalDivider(
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = centerPadding - 2.dp),
+                        .align(Alignment.Center)
+                        .offset(y = -(itemHeight / 2)),
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                 )
                 HorizontalDivider(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = centerPadding - 2.dp),
+                        .align(Alignment.Center)
+                        .offset(y = itemHeight / 2),
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                 )
             }
@@ -445,7 +492,7 @@ actual fun CompactNumberPicker(
             IconButton(
                 onClick = {
                     if (values.isNotEmpty()) {
-                        val baseIndex = listState.firstVisibleItemIndex.coerceIn(values.indices)
+                        val baseIndex = centeredVisibleIndex.coerceIn(values.indices)
                         val newIndex = (baseIndex + 1).coerceIn(values.indices)
                         if (newIndex != baseIndex) {
                             val newValue = values[newIndex]

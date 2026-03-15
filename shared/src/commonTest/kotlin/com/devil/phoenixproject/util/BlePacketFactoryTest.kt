@@ -132,7 +132,10 @@ class BlePacketFactoryTest {
             weightPerCableKg = 20f
         )
 
-        val packet = BlePacketFactory.createProgramParams(params)
+        val packet = BlePacketFactory.createProgramParams(
+            params,
+            variant = BlePacketFactory.ForceConfigVariant.OVERLAP
+        )
 
         assertEquals(96, packet.size)
     }
@@ -145,7 +148,10 @@ class BlePacketFactoryTest {
             weightPerCableKg = 20f
         )
 
-        val packet = BlePacketFactory.createProgramParams(params)
+        val packet = BlePacketFactory.createProgramParams(
+            params,
+            variant = BlePacketFactory.ForceConfigVariant.OVERLAP
+        )
 
         assertEquals(0x04.toByte(), packet[0])
         assertEquals(0x00.toByte(), packet[1])
