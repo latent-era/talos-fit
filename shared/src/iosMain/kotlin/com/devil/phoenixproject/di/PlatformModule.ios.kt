@@ -21,9 +21,10 @@ import platform.Foundation.NSUserDefaults
 
 actual val platformModule: Module = module {
     single {
+        val bundle = platform.Foundation.NSBundle.mainBundle
         SupabaseConfig(
-            url = "",       // TODO: Inject from iOS app (Info.plist or build config)
-            anonKey = ""    // TODO: Inject from iOS app
+            url = bundle.objectForInfoDictionaryKey("SUPABASE_URL") as? String ?: "",
+            anonKey = bundle.objectForInfoDictionaryKey("SUPABASE_ANON_KEY") as? String ?: ""
         )
     }
     single { DriverFactory() }
