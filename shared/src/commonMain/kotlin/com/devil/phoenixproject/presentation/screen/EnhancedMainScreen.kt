@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devil.phoenixproject.data.repository.ExerciseRepository
+import com.devil.phoenixproject.data.sync.SyncManager
+import com.devil.phoenixproject.data.sync.SyncState
 import com.devil.phoenixproject.domain.model.ConnectionState
 import com.devil.phoenixproject.presentation.components.ConnectionLostDialog
 import com.devil.phoenixproject.presentation.components.HapticFeedbackEffect
@@ -97,6 +100,11 @@ fun EnhancedMainScreen(
         profileRepository.ensureDefaultProfile()
     }
 
+    // Sync status
+    val syncManager: SyncManager = koinInject()
+    val syncState by syncManager.syncState.collectAsState()
+    val isAuthenticated by syncManager.isAuthenticated.collectAsState()
+    val lastSyncTime by syncManager.lastSyncTime.collectAsState()
 
     // Determine if we're in dark mode for TopAppBar color
     val isDarkMode = when (themeMode) {
@@ -241,6 +249,18 @@ fun EnhancedMainScreen(
                                 )
                             }
                         }
+
+                        // Cloud sync status icon
+                        SyncStatusIcon(
+                            syncState = syncState,
+                            isAuthenticated = isAuthenticated,
+                            lastSyncTime = lastSyncTime,
+                            onErrorTap = {
+                                navController.navigate(NavigationRoutes.LinkAccount.route) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        )
 
                         // Connection status icon with text label
                         ConnectionStatusIndicator(
@@ -457,6 +477,131 @@ fun EnhancedMainScreen(
             }
         } // CompositionLocalProvider
     } // BoxWithConstraints
+}
+
+/**
+ * Subtle cloud sync status icon for the TopAppBar.
+ * Shows sync state as a small icon with no text.
+ *
+ * Visibility rules:
+ * - Hidden when not authenticated
+ * - Hidden when never synced (lastSyncTime == 0) unless currently syncing
+ * - Visible otherwise with state-dependent icon and color
+ */
+@Composable
+private fun SyncStatusIcon(
+    syncState: SyncState,
+    isAuthenticated: Boolean,
+    lastSyncTime: Long,
+    onErrorTap: () -> Unit
+) {
+    // Track a local display state to handle Success -> Idle transition with delay
+    var displayState by remember { mutableStateOf(syncState) }
+
+    // Keep displayState in sync with external syncState, but delay Success -> Idle
+    LaunchedEffect(syncState) {
+        displayState = syncState
+        if (syncState is SyncState.Success) {
+            kotlinx.coroutines.delay(2000)
+            displayState = SyncState.Idle
+        }
+    }
+
+    // Visibility: hidden when not authenticated, or never synced and not actively syncing
+    val isVisible = isAuthenticated &&
+        (lastSyncTime > 0L || syncState is SyncState.Syncing || syncState is SyncState.Success)
+    if (!isVisible) return
+
+    // Spinning animation for syncing state
+    val infiniteTransition = rememberInfiniteTransition(label = "syncSpin")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "syncRotation"
+    )
+
+    // Success pulse animation (brief green pulse that fades)
+    val successAlpha by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (displayState is SyncState.Success) 1f else 0f,
+        animationSpec = if (displayState is SyncState.Success) {
+            tween(durationMillis = 300)
+        } else {
+            tween(durationMillis = 600)
+        },
+        label = "successPulse"
+    )
+
+    val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+    val accentColor = MaterialTheme.colorScheme.primary
+    val successColor = AccessibilityTheme.colors.success
+    val errorColor = AccessibilityTheme.colors.error
+
+    val icon: ImageVector
+    val tint: Color
+    val applyRotation: Boolean
+    val clickable: Boolean
+
+    when (displayState) {
+        is SyncState.Syncing -> {
+            icon = Icons.Default.Sync
+            tint = accentColor
+            applyRotation = true
+            clickable = false
+        }
+        is SyncState.Success -> {
+            icon = Icons.Default.CloudDone
+            // Interpolate between success green and muted based on pulse
+            tint = if (successAlpha > 0.5f) successColor else mutedColor
+            applyRotation = false
+            clickable = false
+        }
+        is SyncState.Error -> {
+            icon = Icons.Default.CloudOff
+            tint = errorColor
+            applyRotation = false
+            clickable = true
+        }
+        else -> {
+            // Idle, NotAuthenticated, NotPremium -- show muted cloud checkmark
+            icon = Icons.Default.CloudDone
+            tint = mutedColor
+            applyRotation = false
+            clickable = false
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .then(
+                if (clickable) Modifier.clickable(
+                    onClick = onErrorTap,
+                    role = Role.Button
+                ) else Modifier
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = when (displayState) {
+                is SyncState.Syncing -> "Syncing"
+                is SyncState.Success -> "Sync complete"
+                is SyncState.Error -> "Sync error, tap to fix"
+                else -> "Cloud sync"
+            },
+            tint = tint,
+            modifier = Modifier
+                .size(20.dp)
+                .then(
+                    if (applyRotation) Modifier.graphicsLayer { rotationZ = rotation }
+                    else Modifier
+                )
+        )
+    }
 }
 
 /**
