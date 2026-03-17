@@ -144,7 +144,13 @@ private fun LinkedAccountContent(
                         color = MaterialTheme.colorScheme.error
                     )
                 }
-                else -> {
+                is SyncState.NotAuthenticated -> {
+                    Text(
+                        text = "Authentication failed — please sign out and sign back in",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+                is SyncState.Idle -> {
                     if (lastSyncTime > 0) {
                         Text("Last synced: ${formatSyncTimestamp(lastSyncTime)}")
                     } else {
