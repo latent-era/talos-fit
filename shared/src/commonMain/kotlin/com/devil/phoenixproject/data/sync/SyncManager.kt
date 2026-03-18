@@ -130,6 +130,9 @@ class SyncManager(
         val routines = syncRepository.getFullRoutinesModifiedSince(lastSync)
             .filterNot { it.id.startsWith("cycle_routine_") }
 
+        // 4b. Gather training cycles (all — no delta, lacks updatedAt)
+        val cyclesWithContext = syncRepository.getFullCyclesForSync()
+
         // 5. Gather gamification data
         val rpgInput = gamificationRepository.getRpgInput()
         val rpgProfile = RpgAttributeEngine.computeProfile(rpgInput)
@@ -178,13 +181,14 @@ class SyncManager(
             lastSync = lastSync,
             sessions = PortalSyncAdapter.toPortalWorkoutSessions(sessionsWithReps, userId),
             routines = routines.map { PortalSyncAdapter.toPortalRoutine(it, userId) },
+            cycles = cyclesWithContext.map { PortalSyncAdapter.toPortalTrainingCycle(it, userId) },
             rpgAttributes = rpgDto,
             badges = badgeDtos,
             gamificationStats = gamStatsDto
         )
 
         // 7. Send to Edge Function
-        Logger.d("SyncManager") { "Pushing portal payload: ${payload.sessions.size} sessions, ${payload.routines.size} routines, ${payload.badges.size} badges" }
+        Logger.d("SyncManager") { "Pushing portal payload: ${payload.sessions.size} sessions, ${payload.routines.size} routines, ${payload.cycles.size} cycles, ${payload.badges.size} badges" }
         return apiClient.pushPortalPayload(payload)
         // No updateServerIds() -- portal uses client-provided UUIDs
     }
@@ -209,6 +213,7 @@ class SyncManager(
         val pullResponse = pullResult.getOrThrow()
         Logger.d("SyncManager") {
             "Pull response: ${pullResponse.routines.size} routines, " +
+            "${pullResponse.cycles.size} cycles, " +
             "${pullResponse.badges.size} badges, " +
             "sessions=${pullResponse.sessions.size} (skipped)"
         }
@@ -220,6 +225,12 @@ class SyncManager(
         if (pullResponse.routines.isNotEmpty()) {
             syncRepository.mergePortalRoutines(pullResponse.routines, lastSync)
             Logger.d("SyncManager") { "Merged ${pullResponse.routines.size} portal routines" }
+        }
+
+        // 3b. Training cycles — server wins (portal-authoritative for cycles)
+        if (pullResponse.cycles.isNotEmpty()) {
+            syncRepository.mergePortalCycles(pullResponse.cycles)
+            Logger.d("SyncManager") { "Merged ${pullResponse.cycles.size} portal training cycles" }
         }
 
         // 4. Badges — union merge (insert if not exists)
