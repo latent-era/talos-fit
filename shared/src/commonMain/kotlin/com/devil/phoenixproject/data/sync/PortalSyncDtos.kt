@@ -166,6 +166,50 @@ data class PortalRoutineExerciseSyncDto(
     val echoLevel: String? = null
 )
 
+// ─── Training Cycle Sync DTOs ─────────────────────────────────────
+
+/**
+ * Maps to portal's `training_cycles` table.
+ * Mobile TrainingCycle has a simpler schema — computed fields (durationWeeks,
+ * workoutDays, restDays) are derived by the adapter from the days list.
+ */
+@Serializable
+data class PortalTrainingCycleSyncDto(
+    val id: String,
+    val userId: String,
+    val name: String,
+    val description: String? = null,
+    val durationWeeks: Int = 1,
+    val workoutDays: Int = 0,
+    val restDays: Int = 0,
+    val currentWeek: Int = 1,
+    val status: String = "draft",
+    val startedAt: String? = null, // ISO 8601
+    val lastUsedAt: String? = null, // ISO 8601
+    val progressionSettings: String? = null, // JSON
+    val deloadSettings: String? = null, // JSON
+    val days: List<PortalCycleDaySyncDto> = emptyList()
+)
+
+/**
+ * Maps to portal's `cycle_days` table.
+ * Mobile CycleDay uses is_rest_day + echo/eccentric modifiers;
+ * portal uses day_type + weight_adjustment + rest_type.
+ */
+@Serializable
+data class PortalCycleDaySyncDto(
+    val id: String,
+    val cycleId: String,
+    val dayNumber: Int,
+    val dayType: String = "workout", // "workout" or "rest"
+    val routineId: String? = null,
+    val weightAdjustment: Float = 0f,
+    val repModifier: Int = 0,
+    val restOverride: Int? = null,
+    val restType: String? = null,
+    val notes: String? = null
+)
+
 // ─── RPG/Gamification Sync DTOs ─────────────────────────────────────
 
 @Serializable
@@ -217,6 +261,7 @@ data class PortalSyncPushResponse(
     val setsInserted: Int = 0,
     val repSummariesInserted: Int = 0,
     val routinesUpserted: Int = 0,
+    val cyclesUpserted: Int = 0,
     val badgesUpserted: Int = 0,
     val exerciseProgressInserted: Int = 0,
     val personalRecordsInserted: Int = 0
@@ -235,6 +280,7 @@ data class PortalSyncPayload(
     val lastSync: Long,
     val sessions: List<PortalWorkoutSessionDto> = emptyList(),
     val routines: List<PortalRoutineSyncDto> = emptyList(),
+    val cycles: List<PortalTrainingCycleSyncDto> = emptyList(),
     val rpgAttributes: PortalRpgAttributesSyncDto? = null,
     val badges: List<PortalEarnedBadgeSyncDto> = emptyList(),
     val gamificationStats: PortalGamificationStatsSyncDto? = null
@@ -254,6 +300,7 @@ data class PortalSyncPullResponse(
     val syncTime: Long,
     val sessions: List<PullWorkoutSessionDto> = emptyList(), // Skipped during merge (push-only)
     val routines: List<PullRoutineDto> = emptyList(),
+    val cycles: List<PullTrainingCycleDto> = emptyList(),
     val rpgAttributes: PullRpgAttributesDto? = null,
     val badges: List<PullBadgeDto> = emptyList(),
     val gamificationStats: PullGamificationStatsDto? = null
@@ -364,6 +411,41 @@ data class PullRoutineExerciseDto(
     val stallDetection: Boolean = true,
     val eccentricLoad: String? = null,
     val echoLevel: String? = null
+)
+
+/**
+ * Pulled training cycle with nested days.
+ */
+@Serializable
+data class PullTrainingCycleDto(
+    val id: String,
+    val userId: String = "",
+    val name: String,
+    val description: String? = null,
+    val durationWeeks: Int = 1,
+    val workoutDays: Int = 0,
+    val restDays: Int = 0,
+    val currentWeek: Int = 1,
+    val status: String = "draft",
+    val startedAt: String? = null,
+    val lastUsedAt: String? = null,
+    val progressionSettings: String? = null,
+    val deloadSettings: String? = null,
+    val days: List<PullCycleDayDto> = emptyList()
+)
+
+@Serializable
+data class PullCycleDayDto(
+    val id: String,
+    val cycleId: String = "",
+    val dayNumber: Int = 1,
+    val dayType: String = "workout",
+    val routineId: String? = null,
+    val weightAdjustment: Float = 0f,
+    val repModifier: Int = 0,
+    val restOverride: Int? = null,
+    val restType: String? = null,
+    val notes: String? = null
 )
 
 @Serializable
