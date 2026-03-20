@@ -32,6 +32,9 @@
     <!-- Haptic feedback / vibration permission -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- Microphone permission for safe word voice detection -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <!-- Camera permission for Form Check feature -->
     <uses-permission android:name="android.permission.CAMERA" />
 

@@ -68,6 +68,10 @@
     <true/>
     <key>LSSupportsOpeningDocumentsInPlace</key>
     <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Project Phoenix uses the microphone for safe word detection during workouts, enabling hands-free emergency stops.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Project Phoenix uses on-device speech recognition to listen for your safe word during workouts.</string>
     <key>SUPABASE_URL</key>
     <string>$(SUPABASE_URL)</string>
     <key>SUPABASE_ANON_KEY</key>
