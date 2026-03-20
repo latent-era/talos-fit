@@ -347,16 +347,17 @@ data class BackupStats(
     val totalBytes: Long
 ) {
     /**
-     * Human-readable total size (e.g. "12.3 MB", "456 KB").
+     * Human-readable total size using binary units (e.g. "12.3 MB", "456 KB").
+     * Uses 1024-based divisions to match platform file manager conventions.
      */
     val formattedSize: String
         get() = when {
-            totalBytes >= 1_000_000 -> {
-                val tenths = (totalBytes * 10 / 1_000_000)
+            totalBytes >= 1_048_576 -> { // 1024 * 1024
+                val tenths = (totalBytes * 10 / 1_048_576)
                 "${tenths / 10}.${tenths % 10} MB"
             }
-            totalBytes >= 1_000 -> {
-                val tenths = (totalBytes * 10 / 1_000)
+            totalBytes >= 1_024 -> {
+                val tenths = (totalBytes * 10 / 1_024)
                 "${tenths / 10}.${tenths % 10} KB"
             }
             else -> "$totalBytes B"

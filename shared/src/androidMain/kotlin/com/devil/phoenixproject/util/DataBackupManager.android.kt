@@ -103,6 +103,49 @@ class AndroidDataBackupManager(
         }
     }
 
+    override fun pruneOldBackups(keepCount: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val resolver = context.contentResolver
+            // Query all session backups sorted by date_added ascending (oldest first)
+            val toDelete = mutableListOf<android.net.Uri>()
+            resolver.query(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Downloads._ID),
+                "${MediaStore.Downloads.RELATIVE_PATH} = ? AND ${MediaStore.Downloads.DISPLAY_NAME} LIKE ?",
+                arrayOf("Download/PhoenixBackups/", "phoenix-workout-%.json"),
+                "${MediaStore.Downloads.DATE_ADDED} ASC"
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads._ID)
+                val excess = cursor.count - keepCount
+                var deleted = 0
+                while (cursor.moveToNext() && deleted < excess) {
+                    val id = cursor.getLong(idColumn)
+                    toDelete.add(android.content.ContentUris.withAppendedId(
+                        MediaStore.Downloads.EXTERNAL_CONTENT_URI, id
+                    ))
+                    deleted++
+                }
+            }
+            toDelete.forEach { uri ->
+                try { resolver.delete(uri, null, null) } catch (_: Exception) {}
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val dir = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "PhoenixBackups"
+            )
+            val files = dir.listFiles()
+                ?.filter { it.isFile && it.name.startsWith("phoenix-workout-") && it.name.endsWith(".json") }
+                ?.sortedBy { it.lastModified() }
+                ?: return
+            val excess = files.size - keepCount
+            if (excess > 0) {
+                files.take(excess).forEach { it.delete() }
+            }
+        }
+    }
+
     override fun openBackupFolder() {
         try {
             // Open Downloads/PhoenixBackups in system file manager

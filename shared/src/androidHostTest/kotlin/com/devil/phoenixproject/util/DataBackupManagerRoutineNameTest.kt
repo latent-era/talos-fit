@@ -394,6 +394,79 @@ class DataBackupManagerRoutineNameTest {
         assertNull(imported.routineName, "Garbage routine name should be filtered out on import")
     }
 
+    // --- Per-session auto-backup (exportSession) tests ---
+
+    @Test
+    fun `exportSession produces import-compatible BackupData with session and completedSets`() = runTest {
+        // Insert a session
+        workoutRepository.saveSession(
+            WorkoutSession(
+                id = "session-export-test",
+                exerciseId = "exercise-squat",
+                exerciseName = "Squat",
+                timestamp = 1700000000000L,
+                mode = "OLD_SCHOOL",
+                reps = 10,
+                weightPerCableKg = 50f,
+                duration = 120_000L,
+                totalReps = 10,
+                workingReps = 10
+            )
+        )
+
+        // Insert a completed set for that session
+        database.vitruvianDatabaseQueries.insertCompletedSetIgnore(
+            id = "cs-1",
+            session_id = "session-export-test",
+            planned_set_id = null,
+            set_number = 1,
+            set_type = "STANDARD",
+            actual_reps = 10,
+            actual_weight_kg = 50.0,
+            logged_rpe = null,
+            is_pr = 0,
+            completed_at = 1700000060000L
+        )
+
+        // Export just this session
+        val result = backupManager.exportSession("session-export-test")
+        assertTrue(result.isSuccess, "exportSession should succeed")
+
+        val filePath = result.getOrThrow()
+        assertTrue(filePath.contains("phoenix-workout-"), "Filename should follow convention")
+        assertTrue(filePath.contains("session-export-test"), "Filename should contain full sessionId")
+
+        // Read the written file and verify it's valid, import-compatible BackupData
+        val fileContent = File(filePath).readText()
+        val backupData = testJson.decodeFromString<BackupData>(fileContent)
+
+        assertEquals(1, backupData.data.workoutSessions.size, "Should contain exactly 1 session")
+        assertEquals("session-export-test", backupData.data.workoutSessions[0].id)
+        assertEquals(1, backupData.data.completedSets.size, "Should include completedSets for the session")
+        assertEquals("cs-1", backupData.data.completedSets[0].id)
+        assertEquals("session-export-test", backupData.data.completedSets[0].sessionId)
+
+        // Verify it can be re-imported (import compatibility)
+        // First delete the session so import has room
+        database.vitruvianDatabaseQueries.deleteSession("session-export-test")
+        database.vitruvianDatabaseQueries.deleteCompletedSetsBySession("session-export-test")
+
+        val importResult = backupManager.importFromJson(fileContent)
+        assertTrue(importResult.isSuccess, "Should be importable")
+        assertEquals(1, importResult.getOrThrow().sessionsImported)
+        assertEquals(1, importResult.getOrThrow().completedSetsImported)
+
+        // Clean up
+        File(filePath).delete()
+    }
+
+    @Test
+    fun `exportSession returns failure for non-existent session`() = runTest {
+        val result = backupManager.exportSession("non-existent-session")
+        assertTrue(result.isFailure, "Should fail for non-existent session")
+        assertTrue(result.exceptionOrNull()?.message?.contains("Session not found") == true)
+    }
+
     private fun buildRoutine(
         routineId: String,
         routineName: String,
@@ -455,5 +528,6 @@ class DataBackupManagerRoutineNameTest {
         }
 
         override fun openBackupFolder() = Unit
+        override fun pruneOldBackups(keepCount: Int) = Unit
     }
 }

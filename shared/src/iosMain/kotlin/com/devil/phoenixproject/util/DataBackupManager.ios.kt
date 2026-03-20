@@ -86,6 +86,21 @@ class IosDataBackupManager(
      * Present a share sheet for the backup directory so the user can interact with it
      * via any installed file manager or sharing target.
      */
+    override fun pruneOldBackups(keepCount: Int) {
+        val dir = getSessionBackupDirectory()
+        val contents = fileManager.contentsOfDirectoryAtPath(dir, error = null) ?: return
+        val backupFiles = contents
+            .mapNotNull { it as? String }
+            .filter { it.startsWith("phoenix-workout-") && it.endsWith(".json") }
+            .sorted() // Filename starts with date, so lexicographic sort = chronological
+        val excess = backupFiles.size - keepCount
+        if (excess > 0) {
+            backupFiles.take(excess).forEach { fileName ->
+                fileManager.removeItemAtPath("$dir/$fileName", error = null)
+            }
+        }
+    }
+
     override fun openBackupFolder() {
         val dir = getSessionBackupDirectory()
         val fileURL = NSURL.fileURLWithPath(dir)

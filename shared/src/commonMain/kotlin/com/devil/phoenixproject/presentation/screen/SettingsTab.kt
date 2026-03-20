@@ -100,6 +100,11 @@ fun SettingsTab(
     simulatorModeEnabled: Boolean = false,
     onSimulatorModeUnlocked: () -> Unit = {},
     onSimulatorModeToggle: (Boolean) -> Unit = {},
+    // Auto-backup (Phase 36)
+    autoBackupEnabled: Boolean = false,
+    onAutoBackupEnabledChange: (Boolean) -> Unit = {},
+    backupStats: com.devil.phoenixproject.util.BackupStats? = null,
+    onOpenBackupFolder: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showDeleteAllDialog by remember { mutableStateOf(false) }
@@ -128,15 +133,8 @@ fun SettingsTab(
     // Optimistic UI state for immediate visual feedback
     var localWeightUnit by remember(weightUnit) { mutableStateOf(weightUnit) }
 
-    // Inject DataBackupManager and PreferencesManager for auto-backup toggle
+    // Inject DataBackupManager for manual backup/restore operations
     val backupManager: DataBackupManager = koinInject()
-    val preferencesManager: com.devil.phoenixproject.data.preferences.PreferencesManager = koinInject()
-    val autoBackupEnabled by preferencesManager.preferencesFlow.collectAsState()
-    // Backup stats: file count and total size (refreshed when auto-backup toggle changes)
-    var backupStats by remember { mutableStateOf<com.devil.phoenixproject.util.BackupStats?>(null) }
-    LaunchedEffect(autoBackupEnabled.autoBackupEnabled) {
-        backupStats = backupManager.getBackupStats()
-    }
     // Inject SubscriptionManager for tier gating
     val subscriptionManager: SubscriptionManager = koinInject()
     // Inject SyncTriggerManager for sync error indicator
@@ -1274,14 +1272,8 @@ fun SettingsTab(
                         )
                     }
                     Switch(
-                        checked = autoBackupEnabled.autoBackupEnabled,
-                        onCheckedChange = { enabled ->
-                            scope.launch {
-                                preferencesManager.setAutoBackupEnabled(enabled)
-                                // Refresh stats after toggling
-                                backupStats = backupManager.getBackupStats()
-                            }
-                        }
+                        checked = autoBackupEnabled,
+                        onCheckedChange = onAutoBackupEnabledChange
                     )
                 }
 
@@ -1317,7 +1309,7 @@ fun SettingsTab(
 
                         // Open backup folder shortcut
                         OutlinedButton(
-                            onClick = { backupManager.openBackupFolder() },
+                            onClick = onOpenBackupFolder,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.outlinedButtonColors(

@@ -118,6 +118,17 @@ abstract class BaseDataBackupManager(
      */
     protected abstract fun listBackupFileSizes(): List<Long>
 
+    /**
+     * Remove the oldest session backup files, keeping only [keepCount] most recent.
+     * Platform subclasses implement using native file/MediaStore enumeration and deletion.
+     */
+    protected abstract fun pruneOldBackups(keepCount: Int)
+
+    companion object {
+        /** Maximum number of per-session auto-backup files to retain. */
+        const val MAX_SESSION_BACKUPS = 90
+    }
+
     private data class RoutineNameResolutionContext(
         val routineNameById: Map<String, String>,
         val uniqueRoutineNameByExerciseId: Map<String, String>,
@@ -1588,6 +1599,9 @@ abstract class BaseDataBackupManager(
             val filePath = "$backupDir/$fileName"
 
             writeSessionBackupFile(filePath, jsonString)
+
+            // Retention policy: keep only the last MAX_SESSION_BACKUPS files
+            pruneOldBackups(MAX_SESSION_BACKUPS)
 
             Logger.d { "Auto-backup saved: $filePath (${jsonString.length} bytes)" }
             Result.success(filePath)

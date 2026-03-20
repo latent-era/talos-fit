@@ -301,6 +301,9 @@ fun NavGraph(
             val discoModeActive by viewModel.discoModeActive.collectAsState()
             val simulatorModeUnlocked by viewModel.simulatorModeUnlocked.collectAsState()
             val simulatorModeEnabled by viewModel.simulatorModeEnabled.collectAsState()
+            val backupStats by viewModel.backupStats.collectAsState()
+            // Refresh backup stats when Settings screen is displayed
+            androidx.compose.runtime.LaunchedEffect(Unit) { viewModel.refreshBackupStats() }
             SettingsTab(
                 weightUnit = weightUnit,
                 enableVideoPlayback = userPreferences.enableVideoPlayback,
@@ -355,7 +358,12 @@ fun NavGraph(
                 simulatorModeUnlocked = simulatorModeUnlocked,
                 simulatorModeEnabled = simulatorModeEnabled,
                 onSimulatorModeUnlocked = { viewModel.unlockSimulatorMode() },
-                onSimulatorModeToggle = { viewModel.toggleSimulatorMode(it) }
+                onSimulatorModeToggle = { viewModel.toggleSimulatorMode(it) },
+                // Auto-backup (Phase 36)
+                autoBackupEnabled = userPreferences.autoBackupEnabled,
+                onAutoBackupEnabledChange = { viewModel.setAutoBackupEnabled(it) },
+                backupStats = backupStats,
+                onOpenBackupFolder = { viewModel.openBackupFolder() }
             )
         }
 
