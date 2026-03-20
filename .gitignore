@@ -82,3 +82,8 @@ node_modules/
 tmpclaude-*-cwd
 /.gemini/
 /.agent/
+
+# Debug artifacts
+repomix-output.xml
+bugreport-*.zip
+.codex_tmp/
