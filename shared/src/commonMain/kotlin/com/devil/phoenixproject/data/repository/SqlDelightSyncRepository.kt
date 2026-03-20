@@ -28,6 +28,7 @@ import com.devil.phoenixproject.domain.model.Routine
 import com.devil.phoenixproject.domain.model.RoutineExercise
 import com.devil.phoenixproject.domain.model.Superset
 import com.devil.phoenixproject.domain.model.TrainingCycle
+import com.devil.phoenixproject.domain.model.WarmupSet
 import com.devil.phoenixproject.domain.model.WorkoutSession
 import com.devil.phoenixproject.domain.model.currentTimeMillis
 import kotlinx.coroutines.Dispatchers
@@ -420,8 +421,29 @@ class SqlDelightSyncRepository(
                         useCount = existing?.useCount ?: 0L
                     )
 
-                    // Replace routine exercises: delete existing then insert portal versions
+                    // Replace routine exercises and supersets: delete existing then insert portal versions
                     queries.deleteRoutineExercises(portalRoutine.id)
+                    queries.deleteSupersetsByRoutine(portalRoutine.id)
+
+                    // Create Superset rows BEFORE inserting exercises (FK constraint).
+                    // Group exercises by supersetId and create one Superset per group.
+                    val supersetGroups = portalRoutine.exercises
+                        .filter { it.supersetId != null }
+                        .groupBy { it.supersetId!! }
+                    var supersetOrderIdx = 0
+                    for ((ssId, ssExercises) in supersetGroups) {
+                        val colorStr = ssExercises.firstOrNull()?.supersetColor
+                        val colorIndex = colorStr?.toLongOrNull() ?: supersetOrderIdx.toLong()
+                        queries.insertSupersetIgnore(
+                            id = ssId,
+                            routineId = portalRoutine.id,
+                            name = "Superset ${supersetOrderIdx + 1}",
+                            colorIndex = colorIndex,
+                            restBetweenSeconds = 10L, // default
+                            orderIndex = supersetOrderIdx.toLong()
+                        )
+                        supersetOrderIdx++
+                    }
 
                     for (exercise in portalRoutine.exercises) {
                         // Build setReps string: e.g., "10,10,10" for sets=3, reps=10
@@ -455,14 +477,18 @@ class SqlDelightSyncRepository(
 
                         val mobileMode = PortalPullAdapter.portalModeToMobileMode(exercise.mode)
 
+                        // Attempt catalog lookup so equipment and exerciseId are populated.
+                        // Prevents bodyweight misclassification when equipment would default to "".
+                        val catalogExercise = queries.findExerciseByName(exercise.name).executeAsOneOrNull()
+
                         queries.insertRoutineExercise(
                             id = exercise.id,
                             routineId = portalRoutine.id,
                             exerciseName = exercise.name,
                             exerciseMuscleGroup = exercise.muscleGroup,
-                            exerciseEquipment = "",
-                            exerciseDefaultCableConfig = "DOUBLE",
-                            exerciseId = null, // Portal doesn't link to exercise catalog
+                            exerciseEquipment = catalogExercise?.equipment ?: "Cable",
+                            exerciseDefaultCableConfig = catalogExercise?.defaultCableConfig ?: "DOUBLE",
+                            exerciseId = catalogExercise?.id, // Link to catalog when available
                             cableConfig = "DOUBLE",
                             orderIndex = exercise.orderIndex.toLong(),
                             setReps = setReps,
@@ -540,9 +566,25 @@ class SqlDelightSyncRepository(
                             rest_time_override_seconds = day.restOverride?.toLong()
                         )
                     }
+
+                    // Restore CycleProgression from portal's progressionSettings JSON
+                    portalCycle.progressionSettings?.let { jsonStr ->
+                        try {
+                            val map = json.decodeFromString<Map<String, String>>(jsonStr)
+                            queries.upsertCycleProgression(
+                                cycle_id = portalCycle.id,
+                                frequency_cycles = map["frequencyCycles"]?.toLongOrNull() ?: 2L,
+                                weight_increase_percent = map["weightIncreasePercent"]?.toDoubleOrNull(),
+                                echo_level_increase = if (map["echoLevelIncrease"] == "true") 1L else 0L,
+                                eccentric_load_increase_percent = map["eccentricLoadIncreasePercent"]?.toLongOrNull()
+                            )
+                        } catch (e: Exception) {
+                            Logger.w(e) { "Failed to parse progressionSettings for cycle ${portalCycle.id}" }
+                        }
+                    }
                 }
             }
-            Logger.d { "Merged ${cycles.size} portal training cycles with days" }
+            Logger.d { "Merged ${cycles.size} portal training cycles with days and progressions" }
         }
     }
 
@@ -618,6 +660,11 @@ class SqlDelightSyncRepository(
                             else json.decodeFromString<List<Int>>(exRow.setWeightsPercentOfPR)
                         } catch (_: Exception) { emptyList() }
 
+                        val warmupSets: List<WarmupSet> = try {
+                            if (exRow.warmupSets.isBlank()) emptyList()
+                            else json.decodeFromString<List<WarmupSet>>(exRow.warmupSets)
+                        } catch (_: Exception) { emptyList() }
+
                         RoutineExercise(
                             id = exRow.id,
                             exercise = exercise,
@@ -642,7 +689,8 @@ class SqlDelightSyncRepository(
                             usePercentOfPR = exRow.usePercentOfPR == 1L,
                             weightPercentOfPR = exRow.weightPercentOfPR.toInt(),
                             prTypeForScaling = prTypeForScaling,
-                            setWeightsPercentOfPR = setWeightsPercentOfPR
+                            setWeightsPercentOfPR = setWeightsPercentOfPR,
+                            warmupSets = warmupSets
                         )
                     } catch (e: Exception) {
                         Logger.e(e) { "Failed to map routine exercise: ${exRow.exerciseId}" }
