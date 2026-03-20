@@ -142,7 +142,7 @@ fun CycleEditorScreen(
                 IconButton(onClick = { cycleEditorViewModel.showProgressionSheet(true) }) {
                     Icon(
                         Icons.Default.Settings,
-                        contentDescription = "Progression Settings",
+                        contentDescription = stringResource(Res.string.cd_progression_settings),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

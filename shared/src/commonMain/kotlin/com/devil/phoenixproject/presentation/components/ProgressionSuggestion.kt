@@ -285,7 +285,7 @@ private fun ModifyWeightDialog(
                     IconButton(
                         onClick = { weight = (weight - increment).coerceAtLeast(0f) }
                     ) {
-                        Icon(Icons.Default.Remove, contentDescription = "Decrease")
+                        Icon(Icons.Default.Remove, contentDescription = stringResource(Res.string.cd_decrease))
                     }
 
                     Surface(
@@ -305,7 +305,7 @@ private fun ModifyWeightDialog(
                     IconButton(
                         onClick = { weight += increment }
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Increase")
+                        Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_increase))
                     }
                 }
 

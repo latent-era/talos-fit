@@ -647,7 +647,7 @@ private fun WorkoutSetupCard(
                     pressedElevation = 2.dp
                 )
             ) {
-                Icon(Icons.Default.Settings, contentDescription = "Configure workout settings")
+                Icon(Icons.Default.Settings, contentDescription = stringResource(Res.string.cd_configure_workout))
                 Spacer(modifier = Modifier.width(Spacing.small))
                 Text(
                     "Setup Workout",
@@ -680,7 +680,7 @@ private fun ErrorCard(message: String) {
         ) {
             Icon(
                 Icons.Default.Warning,
-                contentDescription = "Workout error",
+                contentDescription = stringResource(Res.string.cd_workout_error),
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(48.dp)
             )
@@ -734,7 +734,7 @@ private fun WorkoutPausedCard(
         ) {
             Icon(
                 Icons.Default.BluetoothDisabled,
-                contentDescription = "Connection lost",
+                contentDescription = stringResource(Res.string.cd_connection_lost),
                 tint = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(48.dp)
             )
@@ -818,7 +818,7 @@ private fun CompletedCard(
         ) {
             Icon(
                 Icons.Default.CheckCircle,
-                contentDescription = "Workout completed",
+                contentDescription = stringResource(Res.string.cd_workout_completed),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
@@ -902,7 +902,7 @@ private fun CompletedCard(
                         pressedElevation = 2.dp
                     )
                 ) {
-                    Icon(Icons.Default.Refresh, contentDescription = "Start new workout")
+                    Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.cd_start_new_workout))
                     Spacer(modifier = Modifier.width(Spacing.small))
                     Text(
                         "Start New Workout",
@@ -948,7 +948,7 @@ private fun ActiveWorkoutCard(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
-                Icon(Icons.Default.Close, contentDescription = "Stop workout")
+                Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_stop_workout))
                 Spacer(modifier = Modifier.width(Spacing.small))
                 Text(stringResource(Res.string.stop_workout))
             }
@@ -1025,7 +1025,7 @@ fun ConnectionCard(
                     ) {
                         Text(stringResource(Res.string.not_connected), color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Button(onClick = onScan) {
-                            Icon(Icons.Default.Search, contentDescription = "Scan for devices")
+                            Icon(Icons.Default.Search, contentDescription = stringResource(Res.string.cd_scan_devices))
                             Spacer(modifier = Modifier.width(Spacing.small))
                             Text(stringResource(Res.string.scan))
                         }
@@ -1101,7 +1101,7 @@ fun ConnectionCard(
                             ) {
                                 Icon(
                                     Icons.Default.BluetoothDisabled,
-                                    contentDescription = "Disconnect",
+                                    contentDescription = stringResource(Res.string.cd_disconnect),
                                     tint = MaterialTheme.colorScheme.onErrorContainer
                                 )
                             }

@@ -219,7 +219,7 @@ fun ExercisePickerDialog(
                         title = { Text(stringResource(Res.string.select_exercise)) },
                         navigationIcon = {
                             IconButton(onClick = onDismiss) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.cd_back))
                             }
                         }
                     )
@@ -430,11 +430,11 @@ fun ExercisePickerContent(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 8.dp),
                 placeholder = { Text(stringResource(Res.string.search_exercises)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(Res.string.cd_search)) },
                 trailingIcon = if (searchQuery.isNotEmpty()) {
                     {
                         IconButton(onClick = { onSearchQueryChange("") }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear search")
+                            Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_clear_search))
                         }
                     }
                 } else null,
@@ -571,7 +571,7 @@ fun ExerciseVideoDialog(
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = onDismiss) {
-                    Icon(Icons.Default.Close, contentDescription = "Close")
+                    Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_close))
                 }
             }
 
@@ -622,7 +622,7 @@ fun ExerciseVideoDialog(
                                     .data(formattedUrl)
                                     .crossfade(true)
                                     .build(),
-                                contentDescription = "Video thumbnail",
+                                contentDescription = stringResource(Res.string.cd_video_thumbnail),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )

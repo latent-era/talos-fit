@@ -271,6 +271,10 @@ class MainViewModel constructor(
         refreshBackupStats()
     }
 
+    fun setLanguage(language: String) {
+        settingsManager.setLanguage(language)
+    }
+
     // Backup stats for Settings UI
     private val _backupStats = kotlinx.coroutines.flow.MutableStateFlow<BackupStats?>(null)
     val backupStats: kotlinx.coroutines.flow.StateFlow<BackupStats?> = _backupStats

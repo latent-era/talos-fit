@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.sp
 import com.devil.phoenixproject.data.repository.AutoStopUiState
 import com.devil.phoenixproject.presentation.util.LocalWindowSizeClass
 import com.devil.phoenixproject.presentation.util.WindowWidthSizeClass
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Pop-over overlay that appears when auto-stop is active (handles are down).
@@ -84,7 +87,7 @@ fun AutoStopOverlay(
                 // Icon with animation
                 Icon(
                     imageVector = Icons.Default.PanTool,
-                    contentDescription = "Hands off handles",
+                    contentDescription = stringResource(Res.string.cd_hands_off_handles),
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.error
                 )
@@ -230,7 +233,7 @@ fun AutoStartOverlay(
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Starting workout",
+                    contentDescription = stringResource(Res.string.cd_starting_workout),
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )

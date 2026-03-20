@@ -16,6 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.data.migration.CycleTemplates
 import com.devil.phoenixproject.domain.model.CycleTemplate
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Bottom sheet for creating training cycles.
@@ -210,7 +213,7 @@ private fun TemplateCard(
 
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Select template",
+                contentDescription = stringResource(Res.string.cd_select_template),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

@@ -82,7 +82,7 @@ fun SelectionActionBar(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "Cancel selection")
+                    Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_cancel_selection))
                 }
 
                 Row(
@@ -96,7 +96,7 @@ fun SelectionActionBar(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer,
                             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                         ) {
-                            Icon(Icons.Default.LinkOff, contentDescription = "Remove from superset")
+                            Icon(Icons.Default.LinkOff, contentDescription = stringResource(Res.string.cd_remove_superset))
                         }
                     }
 
@@ -106,7 +106,7 @@ fun SelectionActionBar(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     ) {
-                        Icon(Icons.Default.ContentCopy, contentDescription = "Copy selected")
+                        Icon(Icons.Default.ContentCopy, contentDescription = stringResource(Res.string.cd_copy_selected))
                     }
 
                     // Add to Superset (if 2+ selected)
@@ -135,7 +135,7 @@ fun SelectionActionBar(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete selected")
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.cd_delete_selected))
                         }
                     }
                 }

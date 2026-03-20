@@ -13,6 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * PR Celebration Dialog - Shows animated celebration when user achieves a new Personal Record
@@ -108,7 +111,7 @@ private fun PRCelebrationContent(
         LottieAnimation(
             animationJson = CelebrationAnimations.confetti,
             size = 300.dp,
-            contentDescription = "Celebration confetti",
+            contentDescription = stringResource(Res.string.cd_confetti),
             modifier = Modifier.alpha(0.8f)
         )
 
@@ -121,7 +124,7 @@ private fun PRCelebrationContent(
             LottieAnimation(
                 animationJson = CelebrationAnimations.trophy,
                 size = 100.dp,
-                contentDescription = "Trophy celebration"
+                contentDescription = stringResource(Res.string.cd_trophy)
             )
 
             // "NEW [MODE] PR!" text with mode context

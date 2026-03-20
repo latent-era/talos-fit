@@ -39,6 +39,9 @@ import androidx.compose.ui.window.DialogProperties
 import com.devil.phoenixproject.domain.model.Badge
 import com.devil.phoenixproject.domain.model.BadgeCategory
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Celebratory dialog shown when a user earns a new badge
@@ -136,7 +139,7 @@ fun BadgeCelebrationDialog(
                     LottieAnimation(
                         animationJson = CelebrationAnimations.trophy,
                         size = 140.dp,
-                        contentDescription = "Trophy celebration"
+                        contentDescription = stringResource(Res.string.cd_trophy)
                     )
 
                     // Main badge icon overlay
@@ -350,7 +353,7 @@ fun BatchedBadgeCelebrationDialog(
                     LottieAnimation(
                         animationJson = CelebrationAnimations.trophy,
                         size = 80.dp,
-                        contentDescription = "Trophy celebration"
+                        contentDescription = stringResource(Res.string.cd_trophy)
                     )
                 }
 

@@ -75,7 +75,7 @@ fun LockedFeatureOverlay(
         ) {
             Icon(
                 imageVector = Icons.Default.Lock,
-                contentDescription = "Locked",
+                contentDescription = stringResource(Res.string.cd_locked),
                 modifier = Modifier.size(48.dp),
                 tint = MaterialTheme.colorScheme.primary
             )

@@ -31,6 +31,9 @@ import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.devil.phoenixproject.domain.model.Exercise
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Enhanced exercise row content with larger thumbnail, inline favorite indicator,
@@ -169,7 +172,7 @@ private fun ExerciseThumbnailEnhanced(
                         .data(thumbnailUrl)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Thumbnail for $exerciseName",
+                    contentDescription = stringResource(Res.string.cd_thumbnail_for, exerciseName),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                     loading = {

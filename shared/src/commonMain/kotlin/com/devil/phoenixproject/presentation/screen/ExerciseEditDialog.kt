@@ -104,7 +104,7 @@ fun ExerciseEditBottomSheet(
                         },
                         enabled = setReps.size > 1
                     ) {
-                        Icon(Icons.Default.Remove, contentDescription = "Remove set")
+                        Icon(Icons.Default.Remove, contentDescription = stringResource(Res.string.cd_remove_set))
                     }
                     Text(
                         text = "${setReps.size}",
@@ -118,7 +118,7 @@ fun ExerciseEditBottomSheet(
                         },
                         enabled = setReps.size < 10
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add set")
+                        Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_add_set))
                     }
                 }
             }

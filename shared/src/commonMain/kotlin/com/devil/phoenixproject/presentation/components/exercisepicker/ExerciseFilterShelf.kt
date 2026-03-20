@@ -67,7 +67,7 @@ fun ExerciseFilterShelf(
                     leadingIcon = {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Clear filters",
+                            contentDescription = stringResource(Res.string.cd_clear_filters),
                             modifier = Modifier.size(18.dp)
                         )
                     },

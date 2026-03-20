@@ -13,6 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.ui.theme.Spacing
 import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Hybrid slider with fine-tuning +/- buttons
@@ -77,7 +80,7 @@ fun SliderWithButtons(
             ) {
                 Icon(
                     Icons.Default.Remove,
-                    contentDescription = "Decrease",
+                    contentDescription = stringResource(Res.string.cd_decrease),
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -112,7 +115,7 @@ fun SliderWithButtons(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = "Increase",
+                    contentDescription = stringResource(Res.string.cd_increase),
                     modifier = Modifier.size(18.dp)
                 )
             }

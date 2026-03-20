@@ -135,6 +135,8 @@ interface PreferencesManager {
     suspend fun setMotionStartEnabled(enabled: Boolean)
     // Issue #293: Per-session auto-backup
     suspend fun setAutoBackupEnabled(enabled: Boolean)
+    // Issue #238: Language/locale preference
+    suspend fun setLanguage(language: String)
 
     suspend fun getSingleExerciseDefaults(exerciseId: String): SingleExerciseDefaults?
     suspend fun saveSingleExerciseDefaults(defaults: SingleExerciseDefaults)
@@ -189,6 +191,7 @@ class SettingsPreferencesManager(
         private const val KEY_REP_SOUND_ENABLED = "rep_sound_enabled"
         private const val KEY_MOTION_START = "motion_start_enabled"
         private const val KEY_AUTO_BACKUP_ENABLED = "auto_backup_enabled"
+        private const val KEY_LANGUAGE = "language"
     }
 
     private val _preferencesFlow = MutableStateFlow(loadPreferences())
@@ -224,7 +227,8 @@ class SettingsPreferencesManager(
             countdownBeepsEnabled = settings.getBoolean(KEY_COUNTDOWN_BEEPS_ENABLED, true),
             repSoundEnabled = settings.getBoolean(KEY_REP_SOUND_ENABLED, true),
             motionStartEnabled = settings.getBoolean(KEY_MOTION_START, false),
-            autoBackupEnabled = settings.getBoolean(KEY_AUTO_BACKUP_ENABLED, false)
+            autoBackupEnabled = settings.getBoolean(KEY_AUTO_BACKUP_ENABLED, false),
+            language = settings.getStringOrNull(KEY_LANGUAGE) ?: "en"
         )
     }
 
@@ -418,5 +422,10 @@ class SettingsPreferencesManager(
     override suspend fun setAutoBackupEnabled(enabled: Boolean) {
         settings.putBoolean(KEY_AUTO_BACKUP_ENABLED, enabled)
         updateAndEmit { copy(autoBackupEnabled = enabled) }
+    }
+
+    override suspend fun setLanguage(language: String) {
+        settings.putString(KEY_LANGUAGE, language)
+        updateAndEmit { copy(language = language) }
     }
 }

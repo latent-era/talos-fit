@@ -54,8 +54,8 @@ fun SmartInsightsTab(
         SmartInsightsContent(modifier = modifier)
     } else {
         LockedFeatureOverlay(
-            featureName = "Smart Insights",
-            featureDescription = "Unlock with Elite tier to get personalized training insights",
+            featureName = stringResource(Res.string.insights_locked_name),
+            featureDescription = stringResource(Res.string.insights_locked_desc),
             onUpgradeClick = { /* Paywall not yet wired */ },
             modifier = modifier.padding(24.dp)
         )
@@ -122,14 +122,14 @@ private fun SmartInsightsContent(
     ) {
         item {
             Text(
-                text = "Smart Insights",
+                text = stringResource(Res.string.insights_title),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Personalized training recommendations",
+                text = stringResource(Res.string.insights_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -166,7 +166,7 @@ private fun SmartInsightsContent(
 
 @Composable
 private fun WeeklyVolumeCard(report: WeeklyVolumeReport) {
-    InsightCard(title = "This Week's Volume") {
+    InsightCard(title = stringResource(Res.string.insights_weekly_volume)) {
         if (report.volumes.isEmpty()) {
             PlaceholderText(stringResource(Res.string.no_workouts_this_week))
         } else {
@@ -178,14 +178,14 @@ private fun WeeklyVolumeCard(report: WeeklyVolumeReport) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Muscle Group",
+                    stringResource(Res.string.insights_col_muscle_group),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1.4f)
                 )
                 Text(
-                    "Sets",
+                    stringResource(Res.string.insights_col_sets),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -193,7 +193,7 @@ private fun WeeklyVolumeCard(report: WeeklyVolumeReport) {
                     textAlign = TextAlign.End
                 )
                 Text(
-                    "Reps",
+                    stringResource(Res.string.insights_col_reps),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -201,7 +201,7 @@ private fun WeeklyVolumeCard(report: WeeklyVolumeReport) {
                     textAlign = TextAlign.End
                 )
                 Text(
-                    "Total kg",
+                    stringResource(Res.string.insights_col_total_kg),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -261,7 +261,7 @@ private fun WeeklyVolumeCard(report: WeeklyVolumeReport) {
 
 @Composable
 private fun BalanceAnalysisCard(analysis: BalanceAnalysis) {
-    InsightCard(title = "Training Balance") {
+    InsightCard(title = stringResource(Res.string.insights_training_balance)) {
         val total = analysis.pushVolume + analysis.pullVolume + analysis.legsVolume
 
         if (total <= 0f) {
@@ -271,17 +271,17 @@ private fun BalanceAnalysisCard(analysis: BalanceAnalysis) {
             val pullPct = (analysis.pullVolume / total * 100).toInt()
             val legsPct = (analysis.legsVolume / total * 100).toInt()
 
-            BalanceBar(label = "Push", percentage = pushPct, fraction = analysis.pushVolume / total)
+            BalanceBar(label = stringResource(Res.string.insights_push), percentage = pushPct, fraction = analysis.pushVolume / total)
             Spacer(modifier = Modifier.height(8.dp))
-            BalanceBar(label = "Pull", percentage = pullPct, fraction = analysis.pullVolume / total)
+            BalanceBar(label = stringResource(Res.string.insights_pull), percentage = pullPct, fraction = analysis.pullVolume / total)
             Spacer(modifier = Modifier.height(8.dp))
-            BalanceBar(label = "Legs", percentage = legsPct, fraction = analysis.legsVolume / total)
+            BalanceBar(label = stringResource(Res.string.insights_legs), percentage = legsPct, fraction = analysis.legsVolume / total)
 
             Spacer(modifier = Modifier.height(12.dp))
 
             if (analysis.imbalances.isEmpty()) {
                 Text(
-                    "Your training is well-balanced",
+                    stringResource(Res.string.insights_well_balanced),
                     style = MaterialTheme.typography.bodyMedium,
                     color = AccessibilityTheme.colors.success,
                     fontWeight = FontWeight.Medium
@@ -355,7 +355,7 @@ private fun BalanceBar(label: String, percentage: Int, fraction: Float) {
 
 @Composable
 private fun NeglectedExercisesCard(neglected: List<NeglectedExercise>) {
-    InsightCard(title = "Exercise Variety") {
+    InsightCard(title = stringResource(Res.string.insights_exercise_variety)) {
         if (neglected.isEmpty()) {
             PlaceholderText(stringResource(Res.string.great_variety))
         } else {
@@ -385,7 +385,7 @@ private fun NeglectedExercisesCard(neglected: List<NeglectedExercise>) {
                         )
                     }
                     Text(
-                        "${exercise.daysSinceLastPerformed} days ago",
+                        stringResource(Res.string.insights_days_ago, exercise.daysSinceLastPerformed),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = color
@@ -400,7 +400,7 @@ private fun NeglectedExercisesCard(neglected: List<NeglectedExercise>) {
 
 @Composable
 private fun PlateauDetectionCard(plateaus: List<PlateauDetection>) {
-    InsightCard(title = "Plateau Alert") {
+    InsightCard(title = stringResource(Res.string.insights_plateau_alert)) {
         if (plateaus.isEmpty()) {
             PlaceholderText(stringResource(Res.string.no_plateaus))
         } else {
@@ -441,11 +441,11 @@ private fun PlateauDetectionCard(plateaus: List<PlateauDetection>) {
 
 @Composable
 private fun TimeOfDayCard(analysis: TimeOfDayAnalysis) {
-    InsightCard(title = "Best Training Window") {
+    InsightCard(title = stringResource(Res.string.insights_best_window)) {
         if (analysis.optimalWindow == null) {
             PlaceholderText(
                 if (analysis.windowCounts.isEmpty())
-                    "Train more to unlock time insights (need 10+ sessions)"
+                    stringResource(Res.string.insights_need_more_sessions)
                 else
                     analysis.suggestion
             )
@@ -453,7 +453,7 @@ private fun TimeOfDayCard(analysis: TimeOfDayAnalysis) {
             val windowLabel = formatWindowName(analysis.optimalWindow)
 
             Text(
-                "You perform best in the",
+                stringResource(Res.string.insights_perform_best_in),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

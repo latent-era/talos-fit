@@ -534,7 +534,7 @@ private fun HudBottomBar(
                     onClick = onNextExercise,
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                    Icon(Icons.Default.SkipNext, contentDescription = "Next Exercise")
+                    Icon(Icons.Default.SkipNext, contentDescription = stringResource(Res.string.cd_next_exercise))
                 }
             }
         }

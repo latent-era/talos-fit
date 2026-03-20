@@ -42,6 +42,9 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Enhanced Set Summary Card - matches official Vitruvian app design
@@ -291,7 +294,7 @@ fun SetSummaryCard(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Filled.Visibility,
-                                contentDescription = "Form Score",
+                                contentDescription = stringResource(Res.string.cd_form_score),
                                 modifier = Modifier.size(18.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -336,7 +339,7 @@ fun SetSummaryCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Speed,
-                                contentDescription = "Ghost Racing",
+                                contentDescription = stringResource(Res.string.cd_ghost_racing),
                                 modifier = Modifier.size(20.dp),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
@@ -821,7 +824,7 @@ private fun VelocitySummaryCard(biomechanics: BiomechanicsSetSummary) {
                 ) {
                     Icon(
                         Icons.Default.Speed,
-                        contentDescription = "Velocity",
+                        contentDescription = stringResource(Res.string.cd_velocity),
                         modifier = Modifier.size(18.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -1258,7 +1261,7 @@ private fun AsymmetrySummaryCard(biomechanics: BiomechanicsSetSummary) {
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.CompareArrows,
-                    contentDescription = "Balance",
+                    contentDescription = stringResource(Res.string.cd_balance),
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -1842,7 +1845,7 @@ private fun WeakestComponentTip(quality: SetQualitySummary) {
         ) {
             Icon(
                 Icons.Default.Lightbulb,
-                contentDescription = "Tip",
+                contentDescription = stringResource(Res.string.cd_tip),
                 modifier = Modifier.size(16.dp),
                 tint = MaterialTheme.colorScheme.secondary
             )

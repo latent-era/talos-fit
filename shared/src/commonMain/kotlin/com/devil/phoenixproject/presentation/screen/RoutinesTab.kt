@@ -104,9 +104,9 @@ fun RoutinesTab(
             if (routines.isEmpty()) {
                 EmptyState(
                     icon = Icons.Default.FitnessCenter,
-                    title = "No Routines Yet",
-                    message = "Create your first workout routine to get started",
-                    actionText = "Create Your First Routine",
+                    title = stringResource(Res.string.empty_no_routines_title),
+                    message = stringResource(Res.string.empty_no_routines_message),
+                    actionText = stringResource(Res.string.create_new_routine),
                     onAction = {
                         onCreateRoutine()
                     }
@@ -217,7 +217,7 @@ fun RoutinesTab(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = "Add new routine",
+                        contentDescription = stringResource(Res.string.cd_add_routine),
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -239,7 +239,7 @@ fun RoutinesTab(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ) {
-                        Icon(Icons.Default.Close, contentDescription = "Cancel selection")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_cancel_selection))
                     }
 
                     // Copy button
@@ -255,7 +255,7 @@ fun RoutinesTab(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = "Copy selected")
+                            Icon(Icons.Default.ContentCopy, contentDescription = stringResource(Res.string.cd_copy_selected))
                         }
                     }
 
@@ -272,7 +272,7 @@ fun RoutinesTab(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete selected")
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.cd_delete_selected))
                         }
                     }
                 }
@@ -480,7 +480,7 @@ fun RoutineCard(
                 if (!isSelectionMode) {
                     Icon(
                         imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse" else "Expand",
+                        contentDescription = if (expanded) stringResource(Res.string.cd_collapse) else stringResource(Res.string.cd_expand),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -530,7 +530,7 @@ fun RoutineCard(
                         Icon(Icons.Default.PlayArrow, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "Start Workout",
+                            stringResource(Res.string.start_workout),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )

@@ -40,6 +40,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
 import kotlin.time.Clock
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Home Screen Redesign - "The Command Deck"
@@ -306,7 +309,7 @@ private fun WeeklyComplianceStrip(
             ) {
                 Icon(
                     Icons.Default.LocalFireDepartment,
-                    contentDescription = "Streak",
+                    contentDescription = stringResource(Res.string.cd_streak),
                     tint = Color(0xFFFF6B00),
                     modifier = Modifier.size(24.dp)
                 )

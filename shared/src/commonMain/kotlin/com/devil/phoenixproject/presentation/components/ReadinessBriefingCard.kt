@@ -20,6 +20,9 @@ import com.devil.phoenixproject.domain.model.ReadinessResult
 import com.devil.phoenixproject.domain.model.ReadinessStatus
 import com.devil.phoenixproject.ui.theme.AccessibilityTheme
 import com.devil.phoenixproject.ui.theme.Spacing
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Readiness Briefing Card -- shown to Elite tier users before their first set.
@@ -179,7 +182,7 @@ private fun ReadyCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Dismiss readiness briefing",
+                    contentDescription = stringResource(Res.string.cd_dismiss_readiness),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -213,7 +216,7 @@ private fun InsufficientDataCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Info,
-                        contentDescription = "Information",
+                        contentDescription = stringResource(Res.string.cd_information),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -255,7 +258,7 @@ private fun InsufficientDataCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Dismiss readiness briefing",
+                    contentDescription = stringResource(Res.string.cd_dismiss_readiness),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

@@ -295,4 +295,230 @@
     <string name="nav_next">►</string>
     <string name="ghost_you">VOUS</string>
     <string name="ghost_best">MEILLEUR</string>
+    <!-- ==================== Issue 1: AnalyticsScreen ==================== -->
+    <string name="analytics_progress">Progrès</string>
+    <string name="analytics_progress_subtitle">Suivez vos gains de force au fil du temps</string>
+    <string name="analytics_personal_records">Records personnels</string>
+    <string name="analytics_no_prs_title">Pas encore de RP</string>
+    <string name="analytics_no_prs_message">Complete workouts to set personal records!</string>
+    <string name="analytics_dashboard">Dashboard</string>
+    <string name="analytics_history">Historique</string>
+
+    <!-- ==================== Issue 2: SmartInsightsTab ==================== -->
+    <string name="insights_title">Analyses intelligentes</string>
+    <string name="insights_subtitle">Recommandations personnalisées</string>
+    <string name="insights_locked_name">Analyses intelligentes</string>
+    <string name="insights_locked_desc">Unlock with Elite tier to get personalized training insights</string>
+    <string name="insights_weekly_volume">This Week\'s Volume</string>
+    <string name="insights_training_balance">Équilibre d'entraînement</string>
+    <string name="insights_exercise_variety">Variété des exercices</string>
+    <string name="insights_plateau_alert">Alerte de plateau</string>
+    <string name="insights_best_window">Meilleure fenêtre</string>
+    <string name="insights_col_muscle_group">Groupe musculaire</string>
+    <string name="insights_col_sets">Sets</string>
+    <string name="insights_col_reps">Reps</string>
+    <string name="insights_col_total_kg">Total kg</string>
+    <string name="insights_push">Push</string>
+    <string name="insights_pull">Pull</string>
+    <string name="insights_legs">Legs</string>
+    <string name="insights_well_balanced">Votre entraînement est bien équilibré</string>
+    <string name="insights_days_ago">Il y a %1$d jours</string>
+    <string name="insights_need_more_sessions">Train more to unlock time insights (need 10+ sessions)</string>
+    <string name="insights_perform_best_in">Vous performez le mieux le</string>
+
+    <!-- ==================== Issue 3: ExerciseConfigModal ==================== -->
+    <string name="config_beast_mode">BEAST MODE</string>
+    <string name="config_extended_difficulty">Extended difficulty</string>
+    <string name="config_standard_tut">Standard TUT</string>
+    <string name="config_echo_level">ECHO LEVEL</string>
+    <string name="config_mode_old_school_desc">Classic resistance training with consistent weight throughout your sets.</string>
+    <string name="config_mode_tut_beast_title">TUT Beast Mode</string>
+    <string name="config_mode_tut_title">Time Under Tension</string>
+    <string name="config_mode_tut_beast_desc">Extended time under tension with increased difficulty. For advanced users.</string>
+    <string name="config_mode_tut_desc">Maintains constant resistance throughout the movement for maximum muscle engagement.</string>
+    <string name="config_mode_pump_title">Pump Mode</string>
+    <string name="config_mode_pump_desc">High volume with sustained tension for maximum blood flow and muscle volume.</string>
+    <string name="config_mode_echo_title">Echo Mode</string>
+    <string name="config_mode_echo_desc">Mirrors your concentric effort in the eccentric phase for balanced loading.</string>
+    <string name="config_mode_eccentric_title">Eccentric Only</string>
+    <string name="config_mode_eccentric_desc">Focus on the lowering phase with heavier loads for strength and hypertrophy.</string>
+    <string name="config_meta_sets">Sets</string>
+    <string name="config_meta_reps">Reps</string>
+    <string name="config_meta_1rm">1RM</string>
+
+    <!-- ==================== Issue 4: EmptyState strings ==================== -->
+    <string name="empty_no_routines_title">Pas encore de routines</string>
+    <string name="empty_no_routines_message">Create your first workout routine to get started</string>
+    <string name="empty_no_routines_action">Create Your First Routine</string>
+    <string name="empty_no_history_title">Pas encore d'historique</string>
+    <string name="empty_no_history_all">Complete your first workout to see it here</string>
+    <string name="empty_no_history_period">No workouts in the last %1$s</string>
+    <string name="empty_no_cycles_title">Pas encore de cycles</string>
+    <string name="empty_no_cycles_message">Create a rolling workout schedule that adapts to your life, not the calendar</string>
+    <string name="empty_no_cycles_action">Create Your First Cycle</string>
+
+    <!-- ==================== Import/Export messages ==================== -->
+    <string name="import_complete_title">Import Complete</string>
+    <string name="import_result_title">Import Result</string>
+    <string name="import_issues">Issues:</string>
+    <string name="import_and_more">… and %1$d more</string>
+    <string name="export_success">Exported to: %1$s</string>
+    <string name="export_failed">Export failed: %1$s</string>
+
+    <!-- ==================== Issue 5: Chart empty states ==================== -->
+    <string name="chart_no_data">Aucune donnée disponible</string>
+    <string name="chart_invalid_target">Invalid target value</string>
+    <string name="chart_invalid_gauge">Invalid gauge data</string>
+    <string name="chart_no_metrics">Aucune métrique disponible</string>
+
+    <!-- ==================== Issue 7: contentDescription strings ==================== -->
+    <!-- Connection -->
+    <string name="cd_cloud_sync">Cloud Sync</string>
+    <string name="cd_bluetooth_lost">Bluetooth connection lost</string>
+    <string name="cd_bluetooth_status">Bluetooth connection status</string>
+    <string name="cd_connection_error">Connection error</string>
+    <string name="cd_connection_lost">Connection lost</string>
+    <string name="cd_connection_logs">Connection logs</string>
+    <string name="cd_scan_devices">Scan for devices</string>
+    <string name="cd_sync_error">Sync Error</string>
+    <string name="cd_link_portal">Link Portal Account</string>
+
+    <!-- Navigation / Actions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_close_menu">Close menu</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_navigate">Navigate</string>
+    <string name="cd_dismiss">Dismiss</string>
+    <string name="cd_expand">Expand</string>
+    <string name="cd_collapse">Collapse</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_decrease">Decrease</string>
+    <string name="cd_increase">Increase</string>
+    <string name="cd_drag">Drag</string>
+    <string name="cd_reorder">Reorder</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_stop">Stop</string>
+    <string name="cd_previous">Previous</string>
+    <string name="cd_next">Next</string>
+    <string name="cd_select">Select</string>
+    <string name="cd_information">Information</string>
+    <string name="cd_tip">Tip</string>
+
+    <!-- Workout -->
+    <string name="cd_start_workout">Start workout</string>
+    <string name="cd_start_new_workout">Start new workout</string>
+    <string name="cd_stop_workout">Stop workout</string>
+    <string name="cd_end_workout">End workout</string>
+    <string name="cd_close_workout">Close workout</string>
+    <string name="cd_hands_off_handles">Hands off handles</string>
+    <string name="cd_starting_workout">Starting workout</string>
+    <string name="cd_workout_hud">Workout HUD</string>
+    <string name="cd_workout_completed">Workout completed</string>
+    <string name="cd_workout_error">Workout error</string>
+    <string name="cd_workout_session_icon">Workout session icon</string>
+    <string name="cd_workout_history">Workout history</string>
+    <string name="cd_configure_workout">Configure workout settings</string>
+
+    <!-- Exercises -->
+    <string name="cd_previous_exercise">Previous exercise</string>
+    <string name="cd_next_exercise">Next exercise</string>
+    <string name="cd_completed">Completed</string>
+    <string name="cd_video_thumbnail">Video thumbnail</string>
+    <string name="cd_thumbnail_for">Thumbnail for %1$s</string>
+    <string name="cd_clear_filters">Clear filters</string>
+    <string name="cd_alphabet_nav">Alphabet navigation. Tap a letter to jump to exercises starting with that letter.</string>
+    <string name="cd_jump_to_letter">Jump to %1$s</string>
+
+    <!-- Profiles -->
+    <string name="cd_add_profile">Add profile</string>
+    <string name="cd_close_profiles">Close profiles</string>
+    <string name="cd_open_profiles">Open profiles</string>
+    <string name="cd_active">Active</string>
+
+    <!-- Settings / Preferences -->
+    <string name="cd_settings">Settings</string>
+    <string name="cd_appearance">Appearance settings</string>
+    <string name="cd_weight_unit">Weight unit settings</string>
+    <string name="cd_advanced_settings">Advanced settings</string>
+    <string name="cd_developer_tools">Developer Tools</string>
+    <string name="cd_app_info">App information</string>
+    <string name="cd_support_developer">Support the developer</string>
+    <string name="cd_led_feedback">LED biofeedback</string>
+    <string name="cd_led_scheme">LED color scheme</string>
+    <string name="cd_leds_off">LEDs Off</string>
+    <string name="cd_test_sounds">Test sounds</string>
+
+    <!-- Weight -->
+    <string name="cd_decrease_weight">Decrease weight</string>
+    <string name="cd_increase_weight">Increase weight</string>
+    <string name="cd_current_weight">Current weight: %1$s</string>
+    <string name="cd_current_weight_tap">Current weight: %1$s per cable. Tap to open weight picker.</string>
+
+    <!-- Data / Export -->
+    <string name="cd_backup_data">Backup data</string>
+    <string name="cd_restore_data">Restore data</string>
+    <string name="cd_export_data">Export data</string>
+    <string name="cd_export_logs">Export logs</string>
+    <string name="cd_clear_logs">Clear logs</string>
+    <string name="cd_open_backup_folder">Open backup folder</string>
+    <string name="cd_delete_workouts">Clear workout history</string>
+
+    <!-- Routines / Cycles -->
+    <string name="cd_add_routine">Add new routine</string>
+    <string name="cd_delete_routine">Delete routine session</string>
+    <string name="cd_cancel_selection">Cancel selection</string>
+    <string name="cd_copy_selected">Copy selected</string>
+    <string name="cd_delete_selected">Delete selected</string>
+    <string name="cd_create_cycle">Create Cycle</string>
+    <string name="cd_reorder_superset">Reorder superset</string>
+    <string name="cd_remove_superset">Remove from superset</string>
+    <string name="cd_progression_settings">Progression Settings</string>
+    <string name="cd_select_template">Select template</string>
+
+    <!-- Sets -->
+    <string name="cd_add_set">Add set</string>
+    <string name="cd_remove_set">Remove set</string>
+    <string name="cd_delete_set">Delete set</string>
+    <string name="cd_add_30_seconds">Add 30 seconds</string>
+    <string name="cd_reset_timer">Reset timer</string>
+    <string name="cd_skip_rest">Skip rest</string>
+    <string name="cd_rest_timer">Rest timer status</string>
+    <string name="cd_rest_day">Rest day</string>
+
+    <!-- Stats / Analytics -->
+    <string name="cd_analytics">Analytics</string>
+    <string name="cd_dashboard">Dashboard overview</string>
+    <string name="cd_progress_tracking">Progress tracking</string>
+    <string name="cd_statistic_icon">Statistic icon</string>
+    <string name="cd_achievements">Achievements</string>
+    <string name="cd_view_badges">View badges</string>
+    <string name="cd_view_all_badges">View all badges</string>
+    <string name="cd_view_details">View details</string>
+    <string name="cd_earned">Earned</string>
+    <string name="cd_streak">Streak</string>
+    <string name="cd_personal_record">Personal Record</string>
+    <string name="cd_form_score">Form Score</string>
+    <string name="cd_ghost_racing">Ghost Racing</string>
+    <string name="cd_balance">Balance</string>
+    <string name="cd_velocity">Velocity</string>
+    <string name="cd_success">Success</string>
+    <string name="cd_missed">Missed</string>
+
+    <!-- Misc -->
+    <string name="cd_empty_state">Empty state</string>
+    <string name="cd_locked">Locked</string>
+    <string name="cd_premium_feature">Premium feature</string>
+    <string name="cd_trophy">Trophy celebration</string>
+    <string name="cd_confetti">Celebration confetti</string>
+    <string name="cd_phoenix_logo">Vitruvian Phoenix Logo</string>
+    <string name="cd_dismiss_readiness">Dismiss readiness briefing</string>
+    <string name="cd_above_pr">Above PR</string>
+    <string name="cd_below_pr">Below PR</string>
+    <string name="cd_delete_workout">Delete workout</string>
+    <string name="cd_toggle_theme">Toggle theme (current: %1$s)</string>
+    <string name="cd_workouts">Workouts</string>
+    <string name="cd_disconnect">Disconnect</string>
 </resources>

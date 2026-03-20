@@ -363,7 +363,10 @@ fun NavGraph(
                 autoBackupEnabled = userPreferences.autoBackupEnabled,
                 onAutoBackupEnabledChange = { viewModel.setAutoBackupEnabled(it) },
                 backupStats = backupStats,
-                onOpenBackupFolder = { viewModel.openBackupFolder() }
+                onOpenBackupFolder = { viewModel.openBackupFolder() },
+                // Language preference
+                selectedLanguage = userPreferences.language,
+                onLanguageChange = { viewModel.setLanguage(it) }
             )
         }
 

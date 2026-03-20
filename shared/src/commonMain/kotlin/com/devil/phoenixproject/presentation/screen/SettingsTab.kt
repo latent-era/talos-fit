@@ -108,6 +108,9 @@ fun SettingsTab(
     onAutoBackupEnabledChange: (Boolean) -> Unit = {},
     backupStats: com.devil.phoenixproject.util.BackupStats? = null,
     onOpenBackupFolder: () -> Unit = {},
+    // Issue #238: Language preference
+    selectedLanguage: String = "en",
+    onLanguageChange: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showDeleteAllDialog by remember { mutableStateOf(false) }
@@ -190,7 +193,7 @@ fun SettingsTab(
                     ) {
                         Icon(
                             Icons.Default.Cloud,
-                            contentDescription = "Cloud Sync",
+                            contentDescription = stringResource(Res.string.cd_cloud_sync),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(24.dp)
                         )
@@ -218,7 +221,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Sync,
-                        contentDescription = "Link Portal Account",
+                        contentDescription = stringResource(Res.string.cd_link_portal),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -244,7 +247,7 @@ fun SettingsTab(
                     ) {
                         Icon(
                             Icons.Default.Warning,
-                            contentDescription = "Sync Error",
+                            contentDescription = stringResource(Res.string.cd_sync_error),
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(16.dp)
                         )
@@ -290,7 +293,7 @@ fun SettingsTab(
                     ) {
                         Icon(
                             Icons.Default.Favorite,
-                            contentDescription = "Support the developer",
+                            contentDescription = stringResource(Res.string.cd_support_developer),
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(24.dp)
                         )
@@ -352,7 +355,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Scale,
-                        contentDescription = "Weight unit settings",
+                        contentDescription = stringResource(Res.string.cd_weight_unit),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )
@@ -447,7 +450,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Palette,
-                        contentDescription = "Appearance settings",
+                        contentDescription = stringResource(Res.string.cd_appearance),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -545,14 +548,10 @@ fun SettingsTab(
                 "es" to stringResource(Res.string.language_spanish),
                 "fr" to stringResource(Res.string.language_french)
             )
-            // Current locale is always "en" for now (system default)
-            // Future: read from UserPreferences and apply via AppCompatDelegate
-            var selectedLanguage by remember { mutableStateOf("en") }
-
             languageOptions.forEach { (code, label) ->
                 FilterChip(
                     selected = selectedLanguage == code,
-                    onClick = { selectedLanguage = code },
+                    onClick = { onLanguageChange(code) },
                     label = { Text(label) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -608,7 +607,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Tune,
-                        contentDescription = "Advanced settings",
+                        contentDescription = stringResource(Res.string.cd_advanced_settings),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )
@@ -932,7 +931,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.ColorLens,
-                        contentDescription = "LED color scheme",
+                        contentDescription = stringResource(Res.string.cd_led_scheme),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -983,7 +982,7 @@ fun SettingsTab(
                         if (isNoneScheme) {
                             Icon(
                                 imageVector = Icons.Default.PowerSettingsNew,
-                                contentDescription = "LEDs Off",
+                                contentDescription = stringResource(Res.string.cd_leds_off),
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -1162,7 +1161,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Dashboard,
-                        contentDescription = "Workout HUD",
+                        contentDescription = stringResource(Res.string.cd_workout_hud),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -1245,7 +1244,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Lightbulb,
-                        contentDescription = "LED biofeedback",
+                        contentDescription = stringResource(Res.string.cd_led_feedback),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -1327,7 +1326,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.DeleteForever,
-                        contentDescription = "Clear workout history",
+                        contentDescription = stringResource(Res.string.cd_delete_workouts),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )
@@ -1409,7 +1408,7 @@ fun SettingsTab(
                         ) {
                             Icon(
                                 Icons.Default.FolderOpen,
-                                contentDescription = "Open backup folder",
+                                contentDescription = stringResource(Res.string.cd_open_backup_folder),
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(Spacing.small))
@@ -1437,7 +1436,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.CloudUpload,
-                        contentDescription = "Backup data",
+                        contentDescription = stringResource(Res.string.cd_backup_data),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -1464,7 +1463,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.CloudDownload,
-                        contentDescription = "Restore data",
+                        contentDescription = stringResource(Res.string.cd_restore_data),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -1491,7 +1490,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete all workouts",
+                        contentDescription = stringResource(Res.string.cd_delete_workouts),
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -1535,7 +1534,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.MilitaryTech,
-                        contentDescription = "Achievements",
+                        contentDescription = stringResource(Res.string.cd_achievements),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -1563,7 +1562,7 @@ fun SettingsTab(
             ) {
                 Icon(
                     Icons.Default.EmojiEvents,
-                    contentDescription = "View badges",
+                    contentDescription = stringResource(Res.string.cd_view_badges),
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(Spacing.small))
@@ -1638,7 +1637,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         if (simulatorModeUnlocked) Icons.Default.Code else Icons.Default.BugReport,
-                        contentDescription = "Developer Tools",
+                        contentDescription = stringResource(Res.string.cd_developer_tools),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )
@@ -1666,7 +1665,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Timeline,
-                        contentDescription = "Connection logs",
+                        contentDescription = stringResource(Res.string.cd_connection_logs),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -1699,7 +1698,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.MusicNote,
-                        contentDescription = "Test sounds",
+                        contentDescription = stringResource(Res.string.cd_test_sounds),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -1798,7 +1797,7 @@ fun SettingsTab(
                 ) {
                     Icon(
                         Icons.Default.Info,
-                        contentDescription = "App information",
+                        contentDescription = stringResource(Res.string.cd_app_info),
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
                     )

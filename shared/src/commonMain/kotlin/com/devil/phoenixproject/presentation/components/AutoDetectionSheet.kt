@@ -101,7 +101,7 @@ fun AutoDetectionSheet(
                 IconButton(onClick = onDismiss) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Dismiss",
+                        contentDescription = stringResource(Res.string.cd_dismiss),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

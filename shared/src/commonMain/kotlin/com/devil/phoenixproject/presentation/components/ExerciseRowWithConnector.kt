@@ -38,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.domain.model.RoutineExercise
 import com.devil.phoenixproject.domain.model.WeightUnit
 import com.devil.phoenixproject.domain.model.ProgramMode
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Exercise row for standalone exercises (not in supersets).
@@ -125,7 +128,7 @@ fun ExerciseRowWithConnector(
         ) {
             Icon(
                 Icons.Default.DragHandle,
-                contentDescription = "Drag",
+                contentDescription = stringResource(Res.string.cd_drag),
                 tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
                 modifier = dragModifier
             )
@@ -220,7 +223,7 @@ fun ExerciseRowWithConnector(
                 }
 
                 IconButton(onClick = onMenuClick) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(Res.string.cd_menu))
                 }
             }
         }

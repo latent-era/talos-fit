@@ -153,7 +153,7 @@ fun WorkoutSetupDialog(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(stringResource(Res.string.echo_mode))
-                                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Navigate")
+                                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = stringResource(Res.string.cd_navigate))
                                 }
                             },
                             onClick = {
@@ -169,7 +169,7 @@ fun WorkoutSetupDialog(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(stringResource(Res.string.mode_tut))
-                                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Navigate")
+                                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = stringResource(Res.string.cd_navigate))
                                 }
                             },
                             onClick = {
@@ -415,7 +415,7 @@ fun WorkoutSetupDialog(
                 onClick = onStartWorkout,
                 enabled = selectedExercise != null
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Start workout")
+                Icon(Icons.Default.PlayArrow, contentDescription = stringResource(Res.string.cd_start_workout))
                 Spacer(modifier = Modifier.width(Spacing.small))
                 Text(stringResource(Res.string.start_workout))
             }
@@ -591,7 +591,7 @@ fun ExercisePickerDialog(
                                     }
                                     Icon(
                                         Icons.Default.ChevronRight,
-                                        contentDescription = "Select",
+                                        contentDescription = stringResource(Res.string.cd_select),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }

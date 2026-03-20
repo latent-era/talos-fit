@@ -213,9 +213,9 @@ fun TrainingCyclesScreen(
             ) {
                 EmptyState(
                     icon = Icons.Default.Loop,
-                    title = "No Training Cycles Yet",
-                    message = "Create a rolling workout schedule that adapts to your life, not the calendar",
-                    actionText = "Create Your First Cycle",
+                    title = stringResource(Res.string.empty_no_cycles_title),
+                    message = stringResource(Res.string.empty_no_cycles_message),
+                    actionText = stringResource(Res.string.create_cycle),
                     onAction = { showCreationSheet = true }
                 )
             }
@@ -351,7 +351,7 @@ fun TrainingCyclesScreen(
                 .padding(20.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Create Cycle")
+            Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_create_cycle))
         }
 
         // Snackbar for cycle completion feedback
@@ -992,7 +992,7 @@ private fun CycleListItem(
 
                 Icon(
                     if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = "Expand",
+                    contentDescription = stringResource(Res.string.cd_expand),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

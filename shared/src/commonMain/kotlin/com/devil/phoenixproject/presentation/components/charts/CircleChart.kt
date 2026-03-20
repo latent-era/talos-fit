@@ -27,6 +27,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Material 3 Expressive Circle Chart (Donut Chart)
@@ -205,12 +208,12 @@ private fun EmptyChartState(
             ) {
                 Icon(
                     imageVector = Icons.Default.PieChart,
-                    contentDescription = "No data available",
+                    contentDescription = stringResource(Res.string.chart_no_data),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.size(48.dp)
                 )
                 Text(
-                    text = "No data available",
+                    text = stringResource(Res.string.chart_no_data),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center

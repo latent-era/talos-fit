@@ -100,7 +100,7 @@ fun AuthScreen(
                 title = { Text(if (authMode == AuthMode.SIGN_IN) "Sign In" else "Create Account") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.cd_back))
                     }
                 }
             )

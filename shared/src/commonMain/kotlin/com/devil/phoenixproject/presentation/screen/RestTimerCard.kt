@@ -27,6 +27,9 @@ import com.devil.phoenixproject.domain.model.ProgramMode
 import com.devil.phoenixproject.domain.model.WeightUnit
 import com.devil.phoenixproject.presentation.components.SliderWithButtons
 import com.devil.phoenixproject.ui.theme.*
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Rest Timer Card Component
@@ -204,7 +207,7 @@ fun RestTimerCard(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = "Add 30 seconds",
+                        contentDescription = stringResource(Res.string.cd_add_30_seconds),
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -246,7 +249,7 @@ fun RestTimerCard(
                 ) {
                     Icon(
                         Icons.Default.Refresh,
-                        contentDescription = "Reset timer",
+                        contentDescription = stringResource(Res.string.cd_reset_timer),
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -442,7 +445,7 @@ fun RestTimerCard(
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
-                        contentDescription = "Skip rest",
+                        contentDescription = stringResource(Res.string.cd_skip_rest),
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(Spacing.small))
@@ -463,7 +466,7 @@ fun RestTimerCard(
                 ) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "End workout",
+                        contentDescription = stringResource(Res.string.cd_end_workout),
                         modifier = Modifier.size(18.dp),
                         tint = MaterialTheme.colorScheme.error
                     )
@@ -503,7 +506,7 @@ fun WorkoutParamItem(
     ) {
         Icon(
             icon,
-            contentDescription = "Rest timer status",
+            contentDescription = stringResource(Res.string.cd_rest_timer),
             modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.primary
         )

@@ -25,6 +25,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Exercise Navigator component for routine navigation.
@@ -100,7 +103,7 @@ fun ExerciseNavigator(
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Previous exercise",
+                        contentDescription = stringResource(Res.string.cd_previous_exercise),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -120,7 +123,7 @@ fun ExerciseNavigator(
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Next exercise",
+                        contentDescription = stringResource(Res.string.cd_next_exercise),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -177,7 +180,7 @@ private fun ExerciseDot(
         if (isCompleted && !isCurrent) {
             Icon(
                 Icons.Default.Check,
-                contentDescription = "Completed",
+                contentDescription = stringResource(Res.string.cd_completed),
                 tint = MaterialTheme.colorScheme.onTertiary,
                 modifier = Modifier.size(8.dp)
             )
@@ -211,7 +214,7 @@ fun CompactExerciseNavigator(
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Previous"
+                contentDescription = stringResource(Res.string.cd_previous)
             )
         }
 
@@ -239,7 +242,7 @@ fun CompactExerciseNavigator(
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Next"
+                contentDescription = stringResource(Res.string.cd_next)
             )
         }
     }

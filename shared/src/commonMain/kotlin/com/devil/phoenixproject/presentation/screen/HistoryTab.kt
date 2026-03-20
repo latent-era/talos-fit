@@ -45,6 +45,9 @@ import com.devil.phoenixproject.util.KmpUtils
 import kotlin.time.Instant
 import kotlinx.datetime.*
 import org.koin.compose.koinInject
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 @Composable
 fun HistoryTab(
@@ -110,11 +113,11 @@ fun HistoryTab(
         if (filteredHistory.isEmpty()) {
             EmptyState(
                 icon = Icons.Default.History,
-                title = "No Workout History Yet",
+                title = stringResource(Res.string.empty_no_history_title),
                 message = if (selectedPeriod == HistoryTimePeriod.ALL)
-                    "Complete your first workout to see it here"
+                    stringResource(Res.string.empty_no_history_all)
                 else
-                    "No workouts in the last ${selectedPeriod.label.lowercase()}"
+                    stringResource(Res.string.empty_no_history_period, selectedPeriod.label.lowercase())
             )
         } else {
             LazyColumn(
@@ -416,7 +419,7 @@ fun WorkoutHistoryCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete workout",
+                        contentDescription = stringResource(Res.string.cd_delete_workout),
                         modifier = Modifier.size(20.dp) // Material 3 Expressive: Larger icon (was 18dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -944,7 +947,7 @@ fun GroupedRoutineCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete routine session",
+                        contentDescription = stringResource(Res.string.cd_delete_routine),
                         modifier = Modifier.size(20.dp) // Material 3 Expressive: Larger icon (was 18dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -1098,7 +1101,7 @@ fun EnhancedMetricItem(
     ) {
         Icon(
             icon,
-            contentDescription = "Workout session icon",
+            contentDescription = stringResource(Res.string.cd_workout_session_icon),
             modifier = Modifier.size(16.dp),
             tint = MaterialTheme.colorScheme.primary
         )

@@ -20,6 +20,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.presentation.util.ResponsiveDimensions
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Material 3 Expressive Area Chart
@@ -41,7 +44,7 @@ fun AreaChart(
     // Data validation
     if (data.isEmpty()) {
         EmptyChartState(
-            message = "No data available",
+            message = stringResource(Res.string.chart_no_data),
             modifier = modifier
         )
         return
@@ -251,7 +254,7 @@ internal fun EmptyChartState(
         ) {
             Icon(
                 imageVector = Icons.Default.BarChart,
-                contentDescription = "No data available",
+                contentDescription = stringResource(Res.string.chart_no_data),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 modifier = Modifier.size(48.dp)
             )

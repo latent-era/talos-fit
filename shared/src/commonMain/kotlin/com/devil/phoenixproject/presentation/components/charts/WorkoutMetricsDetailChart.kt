@@ -48,7 +48,7 @@ fun WorkoutMetricsDetailChart(
     // Data validation
     if (metrics.isEmpty()) {
         MetricsEmptyChartState(
-            message = "No workout metrics available",
+            message = stringResource(Res.string.chart_no_metrics),
             modifier = modifier
         )
         return
@@ -334,7 +334,7 @@ private fun MetricsEmptyChartState(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ShowChart,
-                contentDescription = "No workout metrics available",
+                contentDescription = stringResource(Res.string.chart_no_metrics),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 modifier = Modifier.size(48.dp)
             )

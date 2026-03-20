@@ -152,7 +152,7 @@ fun SetReadyScreen(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Previous"
+                            contentDescription = stringResource(Res.string.cd_previous)
                         )
                     }
 
@@ -191,7 +191,7 @@ fun SetReadyScreen(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Next"
+                            contentDescription = stringResource(Res.string.cd_next)
                         )
                     }
 
@@ -206,7 +206,7 @@ fun SetReadyScreen(
                     ) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Stop"
+                            contentDescription = stringResource(Res.string.cd_stop)
                         )
                     }
                 }

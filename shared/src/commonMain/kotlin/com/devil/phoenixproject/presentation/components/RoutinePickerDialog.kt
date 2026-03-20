@@ -64,7 +64,7 @@ fun RoutinePickerDialog(
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_close))
                     }
                 }
 

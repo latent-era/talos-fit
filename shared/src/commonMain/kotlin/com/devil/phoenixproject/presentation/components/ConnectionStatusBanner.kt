@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.ui.theme.Spacing
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Connection status banner that displays when not connected to the machine.
@@ -49,7 +52,7 @@ fun ConnectionStatusBanner(
             ) {
                 Icon(
                     imageVector = Icons.Default.Bluetooth,
-                    contentDescription = "Bluetooth connection status",
+                    contentDescription = stringResource(Res.string.cd_bluetooth_status),
                     tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(24.dp)
                 )

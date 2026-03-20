@@ -152,6 +152,10 @@ class SettingsManager(
         scope.launch { preferencesManager.setAutoBackupEnabled(enabled) }
     }
 
+    fun setLanguage(language: String) {
+        scope.launch { preferencesManager.setLanguage(language) }
+    }
+
     fun setColorScheme(schemeIndex: Int) {
         scope.launch {
             bleRepository.setColorScheme(schemeIndex)

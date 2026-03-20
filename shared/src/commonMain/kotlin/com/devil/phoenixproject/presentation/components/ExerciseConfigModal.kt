@@ -192,10 +192,10 @@ private fun ExerciseConfigHeader(
         Spacer(modifier = Modifier.height(Spacing.extraSmall))
 
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.medium)) {
-            MetaChip(label = "Sets", value = templateSets.toString())
-            MetaChip(label = "Reps", value = templateReps?.toString() ?: "AMRAP")
+            MetaChip(label = stringResource(Res.string.config_meta_sets), value = templateSets.toString())
+            MetaChip(label = stringResource(Res.string.config_meta_reps), value = templateReps?.toString() ?: "AMRAP")
             oneRepMaxKg?.let {
-                MetaChip(label = "1RM", value = "${it.toInt()}kg")
+                MetaChip(label = stringResource(Res.string.config_meta_1rm), value = "${it.toInt()}kg")
             }
         }
     }
@@ -232,12 +232,12 @@ private fun OldSchoolConfigPanel(
     WeightStepper(
         weight = weight,
         onWeightChange = onWeightChange,
-        label = "Starting Weight",
+        label = stringResource(Res.string.starting_weight),
         prWeight = prWeight
     )
     ModeInfoCard(
-        title = "Old School",
-        description = "Classic resistance training with consistent weight throughout your sets."
+        title = stringResource(Res.string.mode_old_school),
+        description = stringResource(Res.string.config_mode_old_school_desc)
     )
 }
 
@@ -249,7 +249,7 @@ private fun TutConfigPanel(
     onBeastModeChange: (Boolean) -> Unit,
     prWeight: Float? = null
 ) {
-    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = "Starting Weight", prWeight = prWeight)
+    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = stringResource(Res.string.starting_weight), prWeight = prWeight)
 
     // Beast Mode Toggle
     Row(
@@ -259,13 +259,13 @@ private fun TutConfigPanel(
     ) {
         Column {
             Text(
-                text = "BEAST MODE",
+                text = stringResource(Res.string.config_beast_mode),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 1.sp
             )
             Text(
-                text = if (isBeastMode) "Extended difficulty" else "Standard TUT",
+                text = if (isBeastMode) stringResource(Res.string.config_extended_difficulty) else stringResource(Res.string.config_standard_tut),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
@@ -283,11 +283,11 @@ private fun TutConfigPanel(
     }
 
     ModeInfoCard(
-        title = if (isBeastMode) "TUT Beast Mode" else "Time Under Tension",
+        title = if (isBeastMode) stringResource(Res.string.config_mode_tut_beast_title) else stringResource(Res.string.config_mode_tut_title),
         description = if (isBeastMode) {
-            "Extended time under tension with increased difficulty. For advanced users."
+            stringResource(Res.string.config_mode_tut_beast_desc)
         } else {
-            "Maintains constant resistance throughout the movement for maximum muscle engagement."
+            stringResource(Res.string.config_mode_tut_desc)
         }
     )
 }
@@ -298,10 +298,10 @@ private fun PumpConfigPanel(
     onWeightChange: (Float) -> Unit,
     prWeight: Float? = null
 ) {
-    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = "Starting Weight", prWeight = prWeight)
+    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = stringResource(Res.string.starting_weight), prWeight = prWeight)
     ModeInfoCard(
-        title = "Pump Mode",
-        description = "High volume with sustained tension for maximum blood flow and muscle volume."
+        title = stringResource(Res.string.config_mode_pump_title),
+        description = stringResource(Res.string.config_mode_pump_desc)
     )
 }
 
@@ -313,8 +313,8 @@ private fun EccentricConfigPanel(
     onEccentricPercentChange: (Int) -> Unit,
     prWeight: Float? = null
 ) {
-    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = "Starting Weight", prWeight = prWeight)
-    EccentricSlider(percent = eccentricPercent, onPercentChange = onEccentricPercentChange, label = "Eccentric Overload")
+    WeightStepper(weight = weight, onWeightChange = onWeightChange, label = stringResource(Res.string.starting_weight), prWeight = prWeight)
+    EccentricSlider(percent = eccentricPercent, onPercentChange = onEccentricPercentChange, label = stringResource(Res.string.eccentric_overload))
 }
 
 @Composable
@@ -327,7 +327,7 @@ private fun EchoConfigPanel(
     // Echo Level selector
     Column {
         Text(
-            text = "ECHO LEVEL",
+            text = stringResource(Res.string.config_echo_level),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             letterSpacing = 1.sp
@@ -377,7 +377,7 @@ private fun EchoConfigPanel(
         }
     }
 
-    EccentricSlider(percent = eccentricPercent, onPercentChange = onEccentricPercentChange, label = "Eccentric Load")
+    EccentricSlider(percent = eccentricPercent, onPercentChange = onEccentricPercentChange, label = stringResource(Res.string.eccentric_load))
 }
 
 @Composable

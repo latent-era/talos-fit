@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.ui.theme.Spacing
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Reusable empty state component for displaying when lists/screens have no data.
@@ -45,7 +48,7 @@ fun EmptyState(
             // Icon
             Icon(
                 imageVector = icon,
-                contentDescription = "Empty state",
+                contentDescription = stringResource(Res.string.cd_empty_state),
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
             )

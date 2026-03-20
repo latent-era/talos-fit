@@ -98,11 +98,11 @@ fun ConnectionLogsScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             placeholder = { Text(stringResource(Res.string.search_logs)) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(Res.string.cd_search)) },
             trailingIcon = {
                 if (filter.searchQuery.isNotEmpty()) {
                     IconButton(onClick = { logsViewModel.setSearchQuery("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                        Icon(Icons.Default.Clear, contentDescription = stringResource(Res.string.cd_clear_search))
                     }
                 }
             },
@@ -184,12 +184,12 @@ fun ConnectionLogsScreen(
                     exportContent = logsViewModel.exportLogsAsText()
                     showExportDialog = true
                 }) {
-                    Icon(Icons.Default.Share, contentDescription = "Export logs")
+                    Icon(Icons.Default.Share, contentDescription = stringResource(Res.string.cd_export_logs))
                 }
 
                 // Clear button
                 IconButton(onClick = { showClearDialog = true }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Clear logs")
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.cd_clear_logs))
                 }
             }
         }

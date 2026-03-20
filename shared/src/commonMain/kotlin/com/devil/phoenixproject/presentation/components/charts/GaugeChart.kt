@@ -24,6 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.presentation.util.ResponsiveDimensions
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Material 3 Expressive Gauge Chart
@@ -43,7 +46,7 @@ fun GaugeChart(
     // Data validation
     if (targetValue <= 0f) {
         EmptyGaugeState(
-            message = "Invalid target value",
+            message = stringResource(Res.string.chart_invalid_target),
             modifier = modifier
         )
         return
@@ -183,7 +186,7 @@ private fun EmptyGaugeState(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                    contentDescription = "Invalid gauge data",
+                    contentDescription = stringResource(Res.string.chart_invalid_gauge),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.size(48.dp)
                 )

@@ -116,7 +116,7 @@ fun SupersetHeader(
             if (showDragHandle) {
                 Icon(
                     Icons.Default.DragHandle,
-                    contentDescription = "Reorder superset",
+                    contentDescription = stringResource(Res.string.cd_reorder_superset),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp).then(dragModifier)
                 )
@@ -128,7 +128,7 @@ fun SupersetHeader(
             IconButton(onClick = { showMenu = true }) {
                 Icon(
                     Icons.Default.MoreVert,
-                    contentDescription = "Menu",
+                    contentDescription = stringResource(Res.string.cd_menu),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

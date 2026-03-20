@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devil.phoenixproject.ui.theme.Spacing
 import com.devil.phoenixproject.util.format
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Weight input with +/- stepper buttons.
@@ -91,7 +94,7 @@ fun WeightStepper(
                 enabled = weight > minWeight,
                 modifier = Modifier.size(44.dp)
             ) {
-                Icon(Icons.Default.Remove, contentDescription = "Decrease weight")
+                Icon(Icons.Default.Remove, contentDescription = stringResource(Res.string.cd_decrease_weight))
             }
 
             // Weight display
@@ -125,7 +128,7 @@ fun WeightStepper(
                 enabled = weight < maxWeight,
                 modifier = Modifier.size(44.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Increase weight")
+                Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_increase_weight))
             }
         }
 

@@ -49,6 +49,9 @@ import com.devil.phoenixproject.domain.model.StrengthProfile
 import com.devil.phoenixproject.ui.theme.Spacing
 import com.devil.phoenixproject.ui.theme.velocityZoneColor
 import com.devil.phoenixproject.ui.theme.velocityZoneLabel
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 // velocityZoneColor() now provided by shared utility from AccessibilityColors.kt
 
@@ -485,7 +488,7 @@ fun PremiumBiomechanicsUpsell(
         ) {
             Icon(
                 imageVector = Icons.Default.Lock,
-                contentDescription = "Premium feature",
+                contentDescription = stringResource(Res.string.cd_premium_feature),
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.primary
             )

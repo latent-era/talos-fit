@@ -150,7 +150,7 @@ fun ExerciseEditBottomSheet(
                 IconButton(onClick = dismissSheet) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(Res.string.cd_close),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -211,7 +211,7 @@ fun ExerciseEditBottomSheet(
                             ) {
                                 Icon(
                                     Icons.Default.Star,
-                                    contentDescription = "Personal Record",
+                                    contentDescription = stringResource(Res.string.cd_personal_record),
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -676,7 +676,7 @@ fun SetsConfiguration(
         ) {
             Icon(
                 Icons.Default.Add,
-                contentDescription = "Add set",
+                contentDescription = stringResource(Res.string.cd_add_set),
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(Spacing.small))
@@ -735,7 +735,7 @@ fun SetRow(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete set",
+                        contentDescription = stringResource(Res.string.cd_delete_set),
                         tint = if (canDelete) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outlineVariant
                     )
                 }

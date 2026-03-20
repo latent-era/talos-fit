@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
-import vitruvianprojectphoenix.shared.generated.resources.Res
-import vitruvianprojectphoenix.shared.generated.resources.vitphoe_logo
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.*
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -213,7 +213,7 @@ fun SplashScreen(
                 // Phoenix logo with animations
                 Image(
                     painter = painterResource(Res.drawable.vitphoe_logo),
-                    contentDescription = "Vitruvian Phoenix Logo",
+                    contentDescription = stringResource(Res.string.cd_phoenix_logo),
                     modifier = Modifier
                         .fillMaxWidth(0.55f)
                         .aspectRatio(1f)
@@ -383,7 +383,7 @@ fun SimpleSplashScreen(
         ) {
             Image(
                 painter = painterResource(Res.drawable.vitphoe_logo),
-                contentDescription = "Vitruvian Phoenix Logo",
+                contentDescription = stringResource(Res.string.cd_phoenix_logo),
                 modifier = Modifier
                     .fillMaxWidth(0.55f)
                     .aspectRatio(1f),

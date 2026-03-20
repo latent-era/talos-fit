@@ -14,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.data.repository.UserProfile
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Individual profile row for the side panel.
@@ -80,7 +83,7 @@ fun ProfileListItem(
             if (isActive) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "Active",
+                    contentDescription = stringResource(Res.string.cd_active),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp)
                 )

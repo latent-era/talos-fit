@@ -62,7 +62,7 @@ fun PaywallScreen(
                 title = { Text(stringResource(Res.string.phoenix_pro)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.cd_back))
                     }
                 }
             )

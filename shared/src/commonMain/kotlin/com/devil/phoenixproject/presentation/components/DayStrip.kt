@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.domain.model.CycleDay
 import com.devil.phoenixproject.domain.model.CycleProgress
 import com.devil.phoenixproject.ui.theme.Spacing
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Visual state for a day chip in the day strip.
@@ -177,7 +180,7 @@ fun DayChip(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Completed",
+                            contentDescription = stringResource(Res.string.cd_completed),
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
@@ -195,7 +198,7 @@ fun DayChip(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Missed",
+                            contentDescription = stringResource(Res.string.cd_missed),
                             modifier = Modifier.size(14.dp)
                         )
                         Text(

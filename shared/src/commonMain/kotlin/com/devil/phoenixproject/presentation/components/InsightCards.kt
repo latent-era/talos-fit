@@ -40,6 +40,9 @@ import com.devil.phoenixproject.ui.theme.AccessibilityTheme
 import com.devil.phoenixproject.util.KmpLocalDate
 import com.devil.phoenixproject.util.KmpUtils
 import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Insight card components for workout analytics
@@ -976,7 +979,7 @@ fun NextBadgeProgressCard(
                 }
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "View all badges",
+                    contentDescription = stringResource(Res.string.cd_view_all_badges),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

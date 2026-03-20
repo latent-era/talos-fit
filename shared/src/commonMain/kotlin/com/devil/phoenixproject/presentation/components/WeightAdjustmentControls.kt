@@ -76,15 +76,16 @@ fun WeightAdjustmentControls(
                 icon = Icons.Default.Remove,
                 onClick = { onWeightChange((currentWeightKg - incrementKg).coerceAtLeast(0f)) },
                 enabled = enabled && currentWeightKg > 0,
-                contentDescription = "Decrease weight"
+                contentDescription = stringResource(Res.string.cd_decrease_weight)
             )
 
             // Current weight display (tappable)
+            val weightTapDescription = stringResource(Res.string.cd_current_weight_tap, formatWeight(currentWeightKg, weightUnit))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .semantics {
-                        contentDescription = "Current weight: ${formatWeight(currentWeightKg, weightUnit)} per cable. Tap to open weight picker."
+                        contentDescription = weightTapDescription
                         role = Role.Button
                     }
                     .clip(RoundedCornerShape(12.dp))
@@ -112,7 +113,7 @@ fun WeightAdjustmentControls(
                 icon = Icons.Default.Add,
                 onClick = { onWeightChange((currentWeightKg + incrementKg).coerceAtMost(MAX_WEIGHT_KG)) },
                 enabled = enabled && currentWeightKg < MAX_WEIGHT_KG,
-                contentDescription = "Increase weight"
+                contentDescription = stringResource(Res.string.cd_increase_weight)
             )
         }
 
@@ -455,11 +456,12 @@ fun CompactWeightAdjustment(
             ) {
                 Icon(
                     imageVector = Icons.Default.Remove,
-                    contentDescription = "Decrease",
+                    contentDescription = stringResource(Res.string.cd_decrease),
                     modifier = Modifier.size(16.dp)
                 )
             }
 
+            val weightDescription = stringResource(Res.string.cd_current_weight, formatWeight(currentWeightKg, weightUnit))
             Text(
                 text = formatWeight(currentWeightKg, weightUnit),
                 style = MaterialTheme.typography.labelLarge,
@@ -468,7 +470,7 @@ fun CompactWeightAdjustment(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .semantics {
-                        contentDescription = "Current weight: ${formatWeight(currentWeightKg, weightUnit)}"
+                        contentDescription = weightDescription
                     }
             )
 
@@ -479,7 +481,7 @@ fun CompactWeightAdjustment(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Increase",
+                    contentDescription = stringResource(Res.string.cd_increase),
                     modifier = Modifier.size(16.dp)
                 )
             }

@@ -32,7 +32,7 @@ fun ConnectionLostDialog(
         icon = {
             Icon(
                 Icons.Default.BluetoothDisabled,
-                contentDescription = "Bluetooth connection lost",
+                contentDescription = stringResource(Res.string.cd_bluetooth_lost),
                 tint = MaterialTheme.colorScheme.error
             )
         },

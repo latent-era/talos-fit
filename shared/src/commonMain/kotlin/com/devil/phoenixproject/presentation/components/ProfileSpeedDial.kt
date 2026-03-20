@@ -95,7 +95,7 @@ fun ProfileSpeedDial(
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add profile")
+                        Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.cd_add_profile))
                     }
                 }
 
@@ -144,7 +144,7 @@ fun ProfileSpeedDial(
             if (expanded) {
                 Icon(
                     Icons.Default.Close,
-                    contentDescription = "Close menu",
+                    contentDescription = stringResource(Res.string.cd_close_menu),
                     modifier = Modifier.rotate(rotation),
                     tint = MaterialTheme.colorScheme.onSurface
                 )

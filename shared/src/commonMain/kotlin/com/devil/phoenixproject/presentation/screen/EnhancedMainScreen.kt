@@ -230,7 +230,7 @@ fun EnhancedMainScreen(
                             }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back",
+                                    contentDescription = stringResource(Res.string.cd_back),
                                     tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
@@ -295,7 +295,7 @@ fun EnhancedMainScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.BarChart,
-                                contentDescription = "Analytics"
+                                contentDescription = stringResource(Res.string.cd_analytics)
                             )
                         },
                         label = { Text(stringResource(Res.string.nav_analytics)) },
@@ -323,7 +323,7 @@ fun EnhancedMainScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
-                                contentDescription = "Workouts"
+                                contentDescription = stringResource(Res.string.cd_workouts)
                             )
                         },
                         label = { Text(stringResource(Res.string.nav_workouts)) },
@@ -379,7 +379,7 @@ fun EnhancedMainScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = "Settings"
+                                contentDescription = stringResource(Res.string.cd_settings)
                             )
                         },
                         label = { Text(stringResource(Res.string.nav_settings)) },

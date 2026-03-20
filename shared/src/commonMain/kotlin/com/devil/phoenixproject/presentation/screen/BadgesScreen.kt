@@ -500,7 +500,7 @@ private fun BadgeCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Earned",
+                    contentDescription = stringResource(Res.string.cd_earned),
                     tint = tierColor,
                     modifier = Modifier.size(16.dp)
                 )

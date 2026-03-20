@@ -10,6 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Custom Number Picker - Compose-native implementation
@@ -64,7 +67,7 @@ fun CustomNumberPicker(
             ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Decrease",
+                    contentDescription = stringResource(Res.string.cd_decrease),
                     tint = if (value > range.first) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
@@ -95,7 +98,7 @@ fun CustomNumberPicker(
             ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = "Increase",
+                    contentDescription = stringResource(Res.string.cd_increase),
                     tint = if (value < range.last) {
                         MaterialTheme.colorScheme.onSurface
                     } else {

@@ -11,6 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.domain.model.CycleItem
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 @Composable
 fun RestDayRow(
@@ -36,7 +39,7 @@ fun RestDayRow(
             // Drag handle
             Icon(
                 imageVector = Icons.Default.DragHandle,
-                contentDescription = "Reorder",
+                contentDescription = stringResource(Res.string.cd_reorder),
                 modifier = dragModifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -54,7 +57,7 @@ fun RestDayRow(
             // Moon icon
             Icon(
                 imageVector = Icons.Default.NightsStay,
-                contentDescription = "Rest day",
+                contentDescription = stringResource(Res.string.cd_rest_day),
                 tint = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.7f)
             )
         }

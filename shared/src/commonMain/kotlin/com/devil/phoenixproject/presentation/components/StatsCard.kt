@@ -17,6 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Compact stats card matching reference design:
@@ -47,7 +50,7 @@ fun StatsCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = "Statistic icon",
+                contentDescription = stringResource(Res.string.cd_statistic_icon),
                 modifier = Modifier.size(20.dp),
                 tint = iconColor
             )

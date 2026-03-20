@@ -772,7 +772,7 @@ fun ActiveStatusCard(
                         pressedElevation = 2.dp
                     )
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "Close workout")
+                    Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.cd_close_workout))
                     Spacer(modifier = Modifier.width(Spacing.small))
                     Text(
                         "Finish Set",

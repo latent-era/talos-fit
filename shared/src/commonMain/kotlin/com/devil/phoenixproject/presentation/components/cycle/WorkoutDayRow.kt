@@ -13,6 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.domain.model.CycleItem
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 @Composable
 fun WorkoutDayRow(
@@ -38,7 +41,7 @@ fun WorkoutDayRow(
             // Drag handle
             Icon(
                 imageVector = Icons.Default.DragHandle,
-                contentDescription = "Reorder",
+                contentDescription = stringResource(Res.string.cd_reorder),
                 modifier = dragModifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -78,7 +81,7 @@ fun WorkoutDayRow(
             // Chevron
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Edit",
+                contentDescription = stringResource(Res.string.cd_edit),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

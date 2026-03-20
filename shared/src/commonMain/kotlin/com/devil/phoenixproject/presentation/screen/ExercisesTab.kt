@@ -253,7 +253,7 @@ private fun ExerciseSummaryRow(
 
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "View details",
+                    contentDescription = stringResource(Res.string.cd_view_details),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.size(20.dp)
                 )

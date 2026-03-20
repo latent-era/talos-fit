@@ -24,7 +24,7 @@ fun ConnectionErrorDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        icon = { Icon(Icons.Default.Warning, contentDescription = "Connection error") },
+        icon = { Icon(Icons.Default.Warning, contentDescription = stringResource(Res.string.cd_connection_error)) },
         title = { Text(stringResource(Res.string.connection_failed)) },
         text = {
             Column(

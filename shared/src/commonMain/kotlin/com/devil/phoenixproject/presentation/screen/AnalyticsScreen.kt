@@ -63,14 +63,14 @@ fun ProgressTab(
     ) {
         item {
             Text(
-                "Progress",
+                stringResource(Res.string.analytics_progress),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Track your strength gains over time",
+                text = stringResource(Res.string.analytics_progress_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -94,7 +94,7 @@ fun ProgressTab(
 
         item {
             Text(
-                "Personal Records",
+                stringResource(Res.string.analytics_personal_records),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
@@ -105,8 +105,8 @@ fun ProgressTab(
             item {
                 EmptyState(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    title = "No PRs Yet",
-                    message = "Complete workouts to set personal records!"
+                    title = stringResource(Res.string.analytics_no_prs_title),
+                    message = stringResource(Res.string.analytics_no_prs_message)
                 )
             }
         } else {
@@ -311,7 +311,7 @@ fun AnalyticsScreen(
                     onClick = { scope.launch { pagerState.animateScrollToPage(0) } },
                     text = {
                         Text(
-                            "Dashboard",
+                            stringResource(Res.string.analytics_dashboard),
                             style = MaterialTheme.typography.labelSmall,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 0)
@@ -323,7 +323,7 @@ fun AnalyticsScreen(
                     icon = {
                         Icon(
                             Icons.Default.Dashboard,
-                            contentDescription = "Dashboard overview",
+                            contentDescription = stringResource(Res.string.cd_dashboard),
                             tint = if (pagerState.currentPage == 0)
                                 MaterialTheme.colorScheme.primary
                             else
@@ -336,7 +336,7 @@ fun AnalyticsScreen(
                     onClick = { scope.launch { pagerState.animateScrollToPage(1) } },
                     text = {
                         Text(
-                            "Progress",
+                            stringResource(Res.string.analytics_progress),
                             style = MaterialTheme.typography.labelSmall,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 1)
@@ -348,7 +348,7 @@ fun AnalyticsScreen(
                     icon = {
                         Icon(
                             Icons.AutoMirrored.Filled.TrendingUp,
-                            contentDescription = "Progress tracking",
+                            contentDescription = stringResource(Res.string.cd_progress_tracking),
                             tint = if (pagerState.currentPage == 1)
                                 MaterialTheme.colorScheme.primary
                             else
@@ -361,7 +361,7 @@ fun AnalyticsScreen(
                     onClick = { scope.launch { pagerState.animateScrollToPage(2) } },
                     text = {
                         Text(
-                            "History",
+                            stringResource(Res.string.analytics_history),
                             style = MaterialTheme.typography.labelSmall,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 2)
@@ -373,7 +373,7 @@ fun AnalyticsScreen(
                     icon = {
                         Icon(
                             Icons.AutoMirrored.Filled.List,
-                            contentDescription = "Workout history",
+                            contentDescription = stringResource(Res.string.cd_workout_history),
                             tint = if (pagerState.currentPage == 2)
                                 MaterialTheme.colorScheme.primary
                             else
@@ -443,11 +443,15 @@ fun AnalyticsScreen(
         ) {
             Icon(
                 Icons.Default.Share,
-                contentDescription = "Export data",
+                contentDescription = stringResource(Res.string.cd_export_data),
                 modifier = Modifier.size(fabIconSize) // Material 3 Expressive: Responsive icon size
             )
         }
     }
+
+    // Hoist format strings for use in coroutine callbacks (not composable scope)
+    val exportSuccessFormat = stringResource(Res.string.export_success, "__PLACEHOLDER__").replace("__PLACEHOLDER__", "%s")
+    val exportFailedFormat = stringResource(Res.string.export_failed, "__PLACEHOLDER__").replace("__PLACEHOLDER__", "%s")
 
     // Export / Import options dialog
     if (showExportMenu) {
@@ -475,11 +479,11 @@ fun AnalyticsScreen(
                                 isExporting = false
                                 result.fold(
                                     onSuccess = { path ->
-                                        exportMessage = "Exported to: $path"
+                                        exportMessage = exportSuccessFormat.format(path)
                                         csvExporter.shareCSV(path, "personal_records.csv")
                                     },
                                     onFailure = { error ->
-                                        exportMessage = "Export failed: ${error.message}"
+                                        exportMessage = exportFailedFormat.format(error.message ?: "")
                                     }
                                 )
                                 showExportMenu = false
@@ -521,11 +525,11 @@ fun AnalyticsScreen(
                                 isExporting = false
                                 result.fold(
                                     onSuccess = { path ->
-                                        exportMessage = "Exported to: $path"
+                                        exportMessage = exportSuccessFormat.format(path)
                                         csvExporter.shareCSV(path, "pr_progression.csv")
                                     },
                                     onFailure = { error ->
-                                        exportMessage = "Export failed: ${error.message}"
+                                        exportMessage = exportFailedFormat.format(error.message ?: "")
                                     }
                                 )
                                 showExportMenu = false
@@ -570,7 +574,7 @@ fun AnalyticsScreen(
                     shape = RoundedCornerShape(20.dp)
                 ) {
                     Text(
-                        "Cancel",
+                        stringResource(Res.string.action_cancel),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -600,11 +604,11 @@ fun AnalyticsScreen(
                     isExporting = false
                     result.fold(
                         onSuccess = { path ->
-                            exportMessage = "Exported to: $path"
+                            exportMessage = exportSuccessFormat.format(path)
                             csvExporter.shareCSV(path, "workout_history.csv")
                         },
                         onFailure = { error ->
-                            exportMessage = "Export failed: ${error.message}"
+                            exportMessage = exportFailedFormat.format(error.message ?: "")
                         }
                     )
                 }
@@ -668,8 +672,8 @@ fun AnalyticsScreen(
             onDismissRequest = { showImportResultDialog = false },
             title = {
                 Text(
-                    if (result != null && result.hasImports) "Import Complete"
-                    else "Import Result"
+                    if (result != null && result.hasImports) stringResource(Res.string.import_complete_title)
+                    else stringResource(Res.string.import_result_title)
                 )
             },
             text = {
@@ -680,7 +684,7 @@ fun AnalyticsScreen(
                         if (result.errors.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(Spacing.small))
                             Text(
-                                "Issues:",
+                                stringResource(Res.string.import_issues),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -693,7 +697,7 @@ fun AnalyticsScreen(
                             }
                             if (result.errors.size > 5) {
                                 Text(
-                                    "... and ${result.errors.size - 5} more",
+                                    stringResource(Res.string.import_and_more, result.errors.size - 5),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

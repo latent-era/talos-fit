@@ -25,6 +25,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.presentation.util.ResponsiveDimensions
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -46,7 +49,7 @@ fun RadarChart(
     // Data validation
     if (data.isEmpty() || maxValue <= 0f) {
         RadarEmptyChartState(
-            message = "No data available",
+            message = stringResource(Res.string.chart_no_data),
             modifier = modifier
         )
         return
@@ -218,7 +221,7 @@ private fun RadarEmptyChartState(
         ) {
             Icon(
                 imageVector = Icons.Default.Radar,
-                contentDescription = "No data available",
+                contentDescription = stringResource(Res.string.chart_no_data),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 modifier = Modifier.size(48.dp)
             )

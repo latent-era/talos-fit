@@ -36,7 +36,9 @@ data class UserPreferences(
     // Issue #237: Motion-triggered set start (opt-in alternative to 5-second countdown)
     val motionStartEnabled: Boolean = false,  // Start sets by holding cables instead of countdown
     // Issue #293: Per-session auto-backup to device filesystem
-    val autoBackupEnabled: Boolean = false  // Automatically save each workout to a local backup file
+    val autoBackupEnabled: Boolean = false,  // Automatically save each workout to a local backup file
+    // Issue #238: Language/locale preference for i18n
+    val language: String = "en"  // Language code: "en", "nl", "de", "es", "fr"
 ) {
     /**
      * Get the effective weight increment in the user's display unit.

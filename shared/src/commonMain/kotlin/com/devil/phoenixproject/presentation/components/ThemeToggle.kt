@@ -11,6 +11,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import com.devil.phoenixproject.ui.theme.ThemeMode
+import org.jetbrains.compose.resources.stringResource
+import vitruvianprojectphoenix.shared.generated.resources.Res
+import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
  * Compact icon-only theme toggle.
@@ -40,7 +43,7 @@ fun ThemeToggle(
                 ThemeMode.DARK -> Icons.Default.DarkMode
                 ThemeMode.SYSTEM -> Icons.Default.LightMode // Fallback
             },
-            contentDescription = "Toggle theme (current: ${mode.name.lowercase()})",
+            contentDescription = stringResource(Res.string.cd_toggle_theme, mode.name.lowercase()),
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.onSurface
         )

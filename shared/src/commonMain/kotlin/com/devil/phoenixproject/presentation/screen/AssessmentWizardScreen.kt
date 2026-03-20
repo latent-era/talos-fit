@@ -143,7 +143,7 @@ private fun ExerciseSelectionContent(
             value = step.searchQuery,
             onValueChange = onSearchQueryChange,
             placeholder = { Text(stringResource(Res.string.search_exercises)) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(Res.string.cd_search)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             shape = RoundedCornerShape(12.dp)
@@ -757,7 +757,7 @@ private fun CompleteContent(
             // Success icon
             Icon(
                 Icons.Default.Check,
-                contentDescription = "Success",
+                contentDescription = stringResource(Res.string.cd_success),
                 tint = AccessibilityTheme.colors.success,
                 modifier = Modifier.size(72.dp)
             )
