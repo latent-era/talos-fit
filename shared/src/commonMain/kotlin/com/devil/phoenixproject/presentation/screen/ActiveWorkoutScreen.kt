@@ -52,6 +52,9 @@ fun ActiveWorkoutScreen(
     val loadedRoutine by viewModel.loadedRoutine.collectAsState()
     val currentExerciseIndex by viewModel.currentExerciseIndex.collectAsState()
     val currentSetIndex by viewModel.currentSetIndex.collectAsState()
+    // Issue #152: Collect skipped/completed sets for ExerciseNavigator dot state
+    val skippedExercises by viewModel.skippedExercises.collectAsState()
+    val completedExercises by viewModel.completedExercises.collectAsState()
     val hapticEvents = viewModel.hapticEvents
     val connectionState by viewModel.connectionState.collectAsState()
     // Load baseline for base tension subtraction (~4kg per cable)
@@ -312,8 +315,11 @@ fun ActiveWorkoutScreen(
 
     // Use the new state holder pattern for cleaner API
     // Issue #53: Compute canGoBack/canSkipForward based on routine and exercise index
-    val canGoBack = loadedRoutine != null && currentExerciseIndex > 0
-    val canSkipForward = loadedRoutine != null && currentExerciseIndex < (loadedRoutine?.exercises?.size ?: 0) - 1
+    // Issue #152: Defensive gating — also disable during Active state (belt-and-suspenders
+    // with the navigator visibility check in WorkoutTab)
+    val isSetActive = workoutState is WorkoutState.Active
+    val canGoBack = !isSetActive && loadedRoutine != null && currentExerciseIndex > 0
+    val canSkipForward = !isSetActive && loadedRoutine != null && currentExerciseIndex < (loadedRoutine?.exercises?.size ?: 0) - 1
 
     // Issue #167: autoplayEnabled now derived from summaryCountdownSeconds
     // 0 (Unlimited) = autoplay OFF, != 0 (-1 or 5-30) = autoplay ON
@@ -334,8 +340,9 @@ fun ActiveWorkoutScreen(
     val workoutUiState = remember(
         connectionState, gatedWorkoutState, currentMetric, currentHeuristicKgMax, workoutParameters,
         repCount, repRanges, autoStopState, weightUnit, enableVideoPlayback,
-        loadedRoutine, currentExerciseIndex, currentSetIndex, autoplayEnabled,
-        userPreferences.summaryCountdownSeconds, loadBaselineA, loadBaselineB, canGoBack, canSkipForward,
+        loadedRoutine, currentExerciseIndex, currentSetIndex, skippedExercises, completedExercises,
+        autoplayEnabled, userPreferences.summaryCountdownSeconds, loadBaselineA, loadBaselineB,
+        canGoBack, canSkipForward,
         timedExerciseRemainingSeconds, isCurrentExerciseBodyweight, gatedRepQualityScore,
         gatedBiomechanicsResult, detectionState, hudPreset,
         isFormCheckEnabled, latestFormViolations, latestFormScore,
@@ -356,6 +363,8 @@ fun ActiveWorkoutScreen(
             loadedRoutine = loadedRoutine,
             currentExerciseIndex = currentExerciseIndex,
             currentSetIndex = currentSetIndex,
+            skippedExercises = skippedExercises,
+            completedExercises = completedExercises,
             autoplayEnabled = autoplayEnabled,
             summaryCountdownSeconds = userPreferences.summaryCountdownSeconds,
             isWorkoutSetupDialogVisible = false,
