@@ -25,7 +25,9 @@ data class DetectionState(
     /** Current extracted signature for potential storage */
     val signature: ExerciseSignature? = null,
     /** User dismissed without confirming (prevents re-trigger for this set) */
-    val isDismissed: Boolean = false
+    val isDismissed: Boolean = false,
+    /** High-confidence auto-accept: classification confirmed without showing sheet */
+    val isAutoAccepted: Boolean = false
 )
 
 /**
@@ -48,6 +50,9 @@ class ExerciseDetectionManager(
     companion object {
         /** Minimum working reps before triggering detection */
         const val MIN_REPS_FOR_DETECTION = 3
+
+        /** Confidence threshold at or above which detection auto-accepts without showing sheet */
+        const val AUTO_ACCEPT_THRESHOLD = 0.90f
     }
 
     private val _detectionState = MutableStateFlow(DetectionState())
@@ -111,13 +116,31 @@ class ExerciseDetectionManager(
                     "Exercise detected: ${classification.exerciseName} (${(classification.confidence * 100).toInt()}% confidence)"
                 }
 
-                // Update state to show the detection sheet
-                _detectionState.value = DetectionState(
-                    isActive = true,
-                    classification = classification,
-                    signature = signature,
-                    isDismissed = false
-                )
+                // High-confidence auto-accept: skip showing the sheet when we have
+                // a valid exerciseId and confidence >= threshold
+                val canAutoAccept = classification.confidence >= AUTO_ACCEPT_THRESHOLD &&
+                        !classification.exerciseId.isNullOrBlank()
+
+                if (canAutoAccept) {
+                    Logger.d("ExerciseDetectionManager") {
+                        "Auto-accepting: ${classification.exerciseName} (${(classification.confidence * 100).toInt()}% >= ${(AUTO_ACCEPT_THRESHOLD * 100).toInt()}%)"
+                    }
+                    _detectionState.value = DetectionState(
+                        isActive = false,
+                        classification = classification,
+                        signature = signature,
+                        isDismissed = false,
+                        isAutoAccepted = true
+                    )
+                } else {
+                    // Show the detection sheet for manual confirmation
+                    _detectionState.value = DetectionState(
+                        isActive = true,
+                        classification = classification,
+                        signature = signature,
+                        isDismissed = false
+                    )
+                }
             } catch (e: Exception) {
                 Logger.e("ExerciseDetectionManager", e) { "Detection failed" }
             }

@@ -179,8 +179,18 @@ class MainViewModel constructor(
     // ===== Exercise Detection Delegation =====
     val detectionState get() = workoutSessionManager.detectionManager.detectionState
 
-    suspend fun onDetectionConfirmed(exerciseId: String, exerciseName: String) =
+    suspend fun onDetectionConfirmed(exerciseId: String, exerciseName: String) {
         workoutSessionManager.detectionManager.onExerciseConfirmed(exerciseId, exerciseName)
+        // Populate exercise attribution on workout parameters so subsequent
+        // session saves (e.g. Just Lift) include the confirmed exercise
+        val coordinator = workoutSessionManager.coordinator
+        val params = coordinator.workoutParameters.value
+        if (params.isJustLift && params.selectedExerciseId == null) {
+            coordinator._workoutParameters.value = params.copy(
+                selectedExerciseId = exerciseId
+            )
+        }
+    }
 
     fun onDetectionDismissed() =
         workoutSessionManager.detectionManager.onDetectionDismissed()
