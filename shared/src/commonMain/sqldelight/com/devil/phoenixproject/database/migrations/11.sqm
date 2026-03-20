@@ -13,12 +13,12 @@ ALTER TABLE WorkoutSession ADD COLUMN serverId TEXT;
 ALTER TABLE WorkoutSession ADD COLUMN deletedAt INTEGER;
 
 -- ============================================================
--- STEP 2: Add subscription columns to UserProfile
+-- STEP 2: (REMOVED) UserProfile subscription columns
 -- ============================================================
-ALTER TABLE UserProfile ADD COLUMN supabase_user_id TEXT;
-ALTER TABLE UserProfile ADD COLUMN subscription_status TEXT DEFAULT 'free';
-ALTER TABLE UserProfile ADD COLUMN subscription_expires_at INTEGER;
-ALTER TABLE UserProfile ADD COLUMN last_auth_at INTEGER;
+-- These 4 columns (supabase_user_id, subscription_status, subscription_expires_at,
+-- last_auth_at) were already added in migration 5.sqm (Part A). Duplicating them
+-- here would crash users upgrading sequentially through both migrations.
+-- Removed as part of migration audit (MVP audit remediation, Batch B).
 
 -- ============================================================
 -- STEP 3: Add sync columns to PersonalRecord
