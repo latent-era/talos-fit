@@ -75,8 +75,10 @@ class SyncTriggerManager(
             return
         }
 
-        // Check premium status -- skip auto-sync for free users
-        if (syncManager.currentUser.value?.isPremium != true) {
+        // Check premium status -- skip auto-sync for users confirmed as free.
+        // Allow first sync attempt (lastSyncTime == 0) so premium status can be discovered.
+        val user = syncManager.currentUser.value
+        if (user?.isPremium == false && syncManager.lastSyncTime.value > 0) {
             Logger.d { "SyncTrigger: Skipping sync - not premium" }
             return
         }

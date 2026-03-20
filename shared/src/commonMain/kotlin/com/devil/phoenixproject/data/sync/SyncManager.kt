@@ -80,7 +80,7 @@ class SyncManager(
             val error = pushResult.exceptionOrNull()
             if (error is PortalApiException && error.statusCode == 401) {
                 _syncState.value = SyncState.NotAuthenticated
-            } else if (error is PortalApiException && error.statusCode == 402) {
+            } else if (error is PortalApiException && (error.statusCode == 402 || error.statusCode == 403)) {
                 tokenStorage.updatePremiumStatus(false)
                 _syncState.value = SyncState.NotPremium
             } else {
