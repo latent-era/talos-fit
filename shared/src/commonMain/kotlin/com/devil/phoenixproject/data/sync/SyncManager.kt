@@ -110,19 +110,33 @@ class SyncManager(
         // 1. Gather workout sessions as full domain objects
         val sessions = syncRepository.getWorkoutSessionsModifiedSince(lastSync)
 
-        // 2. Fetch PRs to determine which sessions are PRs
-        val recentPRs = syncRepository.getPRsModifiedSince(lastSync)
-        val prSessionKeys = recentPRs.map { pr -> "${pr.exerciseId}:${pr.achievedAt}" }.toSet()
+        // 2. Fetch full PRs with type/phase/volume metadata (GAP 2 fix)
+        val recentPRs = syncRepository.getFullPRsModifiedSince(lastSync)
+        val prBySessionKey = recentPRs.associateBy { pr -> "${pr.exerciseId}:${pr.timestamp}" }
 
-        // 3. Build SessionWithReps (fetch rep metrics per session, detect PRs)
+        // 3. Build SessionWithReps (fetch rep metrics per session, detect PRs, attach PR metadata)
+        val allTelemetry = mutableListOf<PortalRepTelemetryDto>()
+
         val sessionsWithReps = sessions.map { session ->
             val repMetrics = repMetricRepository.getRepMetrics(session.id)
             val sessionKey = "${session.exerciseId}:${session.timestamp}"
+            val prRecord = prBySessionKey[sessionKey]
+
+            // GAP 1: Collect telemetry from rep force curves
+            // Generate a deterministic setId for this session's single set
+            val setId = session.id // Will be replaced with actual setId during buildPortalExercise
+            for (rep in repMetrics) {
+                if (rep.concentricTimestamps.isNotEmpty() || rep.eccentricTimestamps.isNotEmpty()) {
+                    allTelemetry.addAll(PortalSyncAdapter.toRepTelemetry(rep, setId))
+                }
+            }
+
             PortalSyncAdapter.SessionWithReps(
                 session = session,
                 repMetrics = repMetrics,
                 muscleGroup = "General",
-                isPr = sessionKey in prSessionKeys
+                isPr = prRecord != null,
+                prRecord = prRecord
             )
         }
 
@@ -174,21 +188,41 @@ class SyncManager(
             )
         }
 
-        // 6. Build portal payload
+        // 6. Phase 3 extended metrics (GAPs 7-9)
+        val sessionIds = sessions.map { it.id }
+        val phaseStatsDtos = syncRepository.getPhaseStatisticsForSessions(sessionIds)
+            .map { PortalSyncAdapter.toPortalPhaseStatistics(it) }
+        val signatureDtos = syncRepository.getAllExerciseSignatures()
+            .map { PortalSyncAdapter.toPortalExerciseSignature(it) }
+        val assessmentDtos = syncRepository.getAllAssessments()
+            .map { PortalSyncAdapter.toPortalAssessmentResult(it) }
+
+        // 7. Build portal payload
         val payload = PortalSyncPayload(
             deviceId = deviceId,
             platform = platform,
             lastSync = lastSync,
             sessions = PortalSyncAdapter.toPortalWorkoutSessions(sessionsWithReps, userId),
+            telemetry = allTelemetry,
             routines = routines.map { PortalSyncAdapter.toPortalRoutine(it, userId) },
             cycles = cyclesWithContext.map { PortalSyncAdapter.toPortalTrainingCycle(it, userId) },
             rpgAttributes = rpgDto,
             badges = badgeDtos,
-            gamificationStats = gamStatsDto
+            gamificationStats = gamStatsDto,
+            phaseStatistics = phaseStatsDtos,
+            exerciseSignatures = signatureDtos,
+            assessments = assessmentDtos
         )
 
-        // 7. Send to Edge Function
-        Logger.d("SyncManager") { "Pushing portal payload: ${payload.sessions.size} sessions, ${payload.routines.size} routines, ${payload.cycles.size} cycles, ${payload.badges.size} badges" }
+        // 8. Send to Edge Function
+        Logger.d("SyncManager") {
+            "Pushing portal payload: ${payload.sessions.size} sessions, " +
+            "${payload.telemetry.size} telemetry points, " +
+            "${payload.routines.size} routines, ${payload.cycles.size} cycles, " +
+            "${payload.phaseStatistics.size} phase stats, " +
+            "${payload.exerciseSignatures.size} signatures, " +
+            "${payload.assessments.size} assessments"
+        }
         return apiClient.pushPortalPayload(payload)
         // No updateServerIds() -- portal uses client-provided UUIDs
     }

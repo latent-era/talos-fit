@@ -3,6 +3,7 @@ package com.devil.phoenixproject.data.sync
 import com.devil.phoenixproject.domain.model.CycleDay
 import com.devil.phoenixproject.domain.model.CycleProgress
 import com.devil.phoenixproject.domain.model.CycleProgression
+import com.devil.phoenixproject.domain.model.PersonalRecord
 import com.devil.phoenixproject.domain.model.ProgramMode
 import com.devil.phoenixproject.domain.model.RepMetricData
 import com.devil.phoenixproject.domain.model.Routine
@@ -40,7 +41,8 @@ object PortalSyncAdapter {
         val repMetrics: List<RepMetricData> = emptyList(),
         val repBiomechanics: List<RepBiomechanicsData> = emptyList(),
         val muscleGroup: String = "General",
-        val isPr: Boolean = false
+        val isPr: Boolean = false,
+        val prRecord: PersonalRecord? = null // Carries PR metadata (type, phase, volume)
     )
 
     /**
@@ -122,6 +124,47 @@ object PortalSyncAdapter {
             .maxByOrNull { it.value }
             ?.key
 
+        // Aggregate biomechanics from sessions that have values
+        val sessionsWithBio = sorted.filter { it.session.avgMcvMmS != null && it.session.avgMcvMmS!! > 0f }
+        val avgVelocity = sessionsWithBio.mapNotNull { it.session.avgMcvMmS }
+            .takeIf { it.isNotEmpty() }
+            ?.let { vals -> vals.sum() / vals.size }
+            ?.let { PortalMappings.velocityMmSToMps(it) }
+        val avgAsymmetry = sorted.mapNotNull { it.session.avgAsymmetryPercent }
+            .takeIf { it.isNotEmpty() }
+            ?.let { vals -> vals.sum() / vals.size }
+        val velLoss = sorted.mapNotNull { it.session.totalVelocityLossPercent }
+            .takeIf { it.isNotEmpty() }
+            ?.let { vals -> vals.sum() / vals.size }
+        // Use the first session's values for single-valued fields
+        val domSide = sorted.firstNotNullOfOrNull { it.session.dominantSide }
+        val strProfile = sorted.firstNotNullOfOrNull { it.session.strengthProfile }
+
+        // Safety & form aggregation
+        val formScoreAvg = sorted.mapNotNull { it.session.formScore }
+            .takeIf { it.isNotEmpty() }
+            ?.let { vals -> vals.sum() / vals.size }
+        val totalDeloads = sorted.sumOf { it.session.deloadWarningCount }
+        val totalRomViolations = sorted.sumOf { it.session.romViolationCount }
+        val totalSpotterActs = sorted.sumOf { it.session.spotterActivations }
+
+        // Force metrics (peak across all sessions)
+        val peakForce = sorted.mapNotNull { swr ->
+            val a = swr.session.peakForceConcentricA ?: 0f
+            val b = swr.session.peakForceConcentricB ?: 0f
+            if (a > 0f || b > 0f) PortalMappings.loadKgToNewtons(a + b) else null
+        }.maxOrNull()
+        val calories = sorted.mapNotNull { it.session.estimatedCalories }
+            .takeIf { it.isNotEmpty() }?.sum()
+        val heaviest = sorted.mapNotNull { it.session.heaviestLiftKg }
+            .maxOrNull()
+
+        // Config context (from first session — routine sessions share config)
+        val eccLoad = first.eccentricLoad.takeIf { it > 0 }
+        val echoLvl = first.echoLevel.takeIf { it > 0 }
+        val warmup = first.warmupReps.takeIf { it > 0 }
+        val working = first.workingReps.takeIf { it > 0 }
+
         return PortalWorkoutSessionDto(
             id = portalSessionId,
             userId = userId,
@@ -135,7 +178,24 @@ object PortalSyncAdapter {
             routineName = first.routineName,
             workoutMode = primaryMode?.let { PortalMappings.workoutModeToSync(it) },
             routineSessionId = routineSessionId,
-            exercises = exercises
+            exercises = exercises,
+            // Session enrichment
+            avgVelocityMps = avgVelocity,
+            avgAsymmetryPct = avgAsymmetry,
+            velocityLossPct = velLoss,
+            dominantSide = domSide,
+            strengthProfile = strProfile,
+            formScore = formScoreAvg,
+            deloadWarnings = totalDeloads.takeIf { it > 0 },
+            romViolations = totalRomViolations.takeIf { it > 0 },
+            spotterActivations = totalSpotterActs.takeIf { it > 0 },
+            peakForceN = peakForce,
+            estimatedCalories = calories,
+            heaviestLiftKg = heaviest,
+            eccentricLoad = eccLoad,
+            echoLevel = echoLvl,
+            warmupReps = warmup,
+            workingReps = working
         )
     }
 
@@ -152,6 +212,7 @@ object PortalSyncAdapter {
         val repSummaries = buildRepSummaries(swr, setId)
 
         // One mobile session = one "set" in portal (the entire exercise execution)
+        val pr = swr.prRecord
         val set = PortalSetDto(
             id = setId,
             exerciseId = exerciseId,
@@ -161,6 +222,9 @@ object PortalSyncAdapter {
             weightKg = session.weightPerCableKg,
             rpe = session.rpe,
             isPr = swr.isPr,
+            prType = pr?.prType?.name, // "MAX_WEIGHT" or "MAX_VOLUME"
+            prPhase = pr?.phase?.name, // "COMBINED", "CONCENTRIC", "ECCENTRIC"
+            prVolume = if (pr?.prType?.name == "MAX_VOLUME") pr.volume else null,
             workoutMode = PortalMappings.workoutModeToSync(session.mode),
             repSummaries = repSummaries
         )
@@ -465,6 +529,74 @@ object PortalSyncAdapter {
             progressionSettings = progressionJson,
             deloadSettings = null,
             days = days
+        )
+    }
+
+    // ─── Phase Statistics (GAP 7) ──────────────────────────────────
+
+    /**
+     * Convert SQLDelight PhaseStatistics to portal DTO.
+     * Velocities are converted from mm/s to m/s.
+     */
+    fun toPortalPhaseStatistics(
+        stats: com.devil.phoenixproject.database.PhaseStatistics
+    ): PortalPhaseStatisticsDto {
+        return PortalPhaseStatisticsDto(
+            id = generateUUID(),
+            sessionId = stats.sessionId,
+            concentricKgAvg = stats.concentricKgAvg.toFloat(),
+            concentricKgMax = stats.concentricKgMax.toFloat(),
+            concentricVelAvg = PortalMappings.velocityMmSToMps(stats.concentricVelAvg.toFloat()),
+            concentricVelMax = PortalMappings.velocityMmSToMps(stats.concentricVelMax.toFloat()),
+            concentricWattAvg = stats.concentricWattAvg.toFloat(),
+            concentricWattMax = stats.concentricWattMax.toFloat(),
+            eccentricKgAvg = stats.eccentricKgAvg.toFloat(),
+            eccentricKgMax = stats.eccentricKgMax.toFloat(),
+            eccentricVelAvg = PortalMappings.velocityMmSToMps(stats.eccentricVelAvg.toFloat()),
+            eccentricVelMax = PortalMappings.velocityMmSToMps(stats.eccentricVelMax.toFloat()),
+            eccentricWattAvg = stats.eccentricWattAvg.toFloat(),
+            eccentricWattMax = stats.eccentricWattMax.toFloat()
+        )
+    }
+
+    // ─── Exercise Signatures (GAP 8) ────────────────────────────────
+
+    /**
+     * Convert SQLDelight ExerciseSignature to portal DTO.
+     */
+    fun toPortalExerciseSignature(
+        sig: com.devil.phoenixproject.database.ExerciseSignature
+    ): PortalExerciseSignatureDto {
+        return PortalExerciseSignatureDto(
+            id = generateUUID(),
+            exerciseId = sig.exerciseId,
+            romMm = sig.romMm.toFloat(),
+            durationMs = sig.durationMs,
+            symmetryRatio = sig.symmetryRatio.toFloat(),
+            velocityProfile = sig.velocityProfile,
+            cableConfig = sig.cableConfig,
+            sampleCount = sig.sampleCount.toInt(),
+            confidence = sig.confidence.toFloat(),
+            updatedAt = epochToIso8601(sig.updatedAt)
+        )
+    }
+
+    // ─── VBT Assessments (GAP 9) ────────────────────────────────────
+
+    /**
+     * Convert SQLDelight AssessmentResult to portal DTO.
+     */
+    fun toPortalAssessmentResult(
+        result: com.devil.phoenixproject.database.AssessmentResult
+    ): PortalAssessmentResultDto {
+        return PortalAssessmentResultDto(
+            id = generateUUID(),
+            exerciseId = result.exerciseId,
+            estimatedOneRepMaxKg = result.estimatedOneRepMaxKg.toFloat(),
+            loadVelocityData = result.loadVelocityData,
+            assessmentSessionId = result.assessmentSessionId,
+            userOverrideKg = result.userOverrideKg?.toFloat(),
+            createdAt = epochToIso8601(result.createdAt)
         )
     }
 

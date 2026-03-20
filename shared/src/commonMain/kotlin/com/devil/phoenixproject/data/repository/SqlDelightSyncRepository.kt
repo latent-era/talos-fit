@@ -20,7 +20,9 @@ import com.devil.phoenixproject.domain.model.EccentricLoad
 import com.devil.phoenixproject.domain.model.EchoLevel
 import com.devil.phoenixproject.domain.model.Exercise
 import com.devil.phoenixproject.domain.model.PRType
+import com.devil.phoenixproject.domain.model.PersonalRecord
 import com.devil.phoenixproject.domain.model.ProgramMode
+import com.devil.phoenixproject.domain.model.WorkoutPhase
 import com.devil.phoenixproject.domain.model.RepCountTiming
 import com.devil.phoenixproject.domain.model.Routine
 import com.devil.phoenixproject.domain.model.RoutineExercise
@@ -849,6 +851,56 @@ class SqlDelightSyncRepository(
             modeStr == "EccentricOnly" -> ProgramMode.EccentricOnly
             modeStr == "OldSchool" -> ProgramMode.OldSchool
             else -> ProgramMode.OldSchool
+        }
+    }
+
+    // === Extended Sync Methods (GAPs 1-9) ===
+
+    override suspend fun getFullPRsModifiedSince(timestamp: Long): List<PersonalRecord> {
+        return withContext(Dispatchers.IO) {
+            queries.selectPRsModifiedSince(timestamp).executeAsList().map { row ->
+                PersonalRecord(
+                    id = row.id,
+                    exerciseId = row.exerciseId,
+                    exerciseName = row.exerciseName,
+                    weightPerCableKg = row.weight.toFloat(),
+                    reps = row.reps.toInt(),
+                    oneRepMax = row.oneRepMax.toFloat(),
+                    timestamp = row.achievedAt,
+                    workoutMode = row.workoutMode,
+                    prType = when (row.prType) {
+                        "MAX_VOLUME" -> PRType.MAX_VOLUME
+                        else -> PRType.MAX_WEIGHT
+                    },
+                    volume = row.volume.toFloat(),
+                    phase = when (row.phase) {
+                        "CONCENTRIC" -> WorkoutPhase.CONCENTRIC
+                        "ECCENTRIC" -> WorkoutPhase.ECCENTRIC
+                        else -> WorkoutPhase.COMBINED
+                    }
+                )
+            }
+        }
+    }
+
+    override suspend fun getPhaseStatisticsForSessions(
+        sessionIds: List<String>
+    ): List<com.devil.phoenixproject.database.PhaseStatistics> {
+        if (sessionIds.isEmpty()) return emptyList()
+        return withContext(Dispatchers.IO) {
+            queries.selectPhaseStatsBySessionIds(sessionIds).executeAsList()
+        }
+    }
+
+    override suspend fun getAllExerciseSignatures(): List<com.devil.phoenixproject.database.ExerciseSignature> {
+        return withContext(Dispatchers.IO) {
+            queries.selectAllSignatures().executeAsList()
+        }
+    }
+
+    override suspend fun getAllAssessments(): List<com.devil.phoenixproject.database.AssessmentResult> {
+        return withContext(Dispatchers.IO) {
+            queries.selectAllAssessments().executeAsList()
         }
     }
 }

@@ -10,6 +10,7 @@ import com.devil.phoenixproject.data.sync.PullRoutineDto
 import com.devil.phoenixproject.data.sync.PullTrainingCycleDto
 import com.devil.phoenixproject.data.sync.RoutineSyncDto
 import com.devil.phoenixproject.data.sync.WorkoutSessionSyncDto
+import com.devil.phoenixproject.domain.model.PersonalRecord
 import com.devil.phoenixproject.domain.model.Routine
 import com.devil.phoenixproject.domain.model.WorkoutSession
 
@@ -70,6 +71,30 @@ interface SyncRepository {
      * Returns all cycles (no delta — cycles lack updatedAt timestamps).
      */
     suspend fun getFullCyclesForSync(): List<CycleWithContext>
+
+    /**
+     * Get full PersonalRecord domain objects modified since timestamp.
+     * Returns rich objects with prType, phase, and volume for PortalSyncAdapter PR metadata.
+     */
+    suspend fun getFullPRsModifiedSince(timestamp: Long): List<PersonalRecord>
+
+    /**
+     * Get phase statistics for the given session IDs.
+     * Returns SQLDelight PhaseStatistics rows for conversion to portal DTOs.
+     */
+    suspend fun getPhaseStatisticsForSessions(
+        sessionIds: List<String>
+    ): List<com.devil.phoenixproject.database.PhaseStatistics>
+
+    /**
+     * Get all exercise signatures for sync push.
+     */
+    suspend fun getAllExerciseSignatures(): List<com.devil.phoenixproject.database.ExerciseSignature>
+
+    /**
+     * Get all VBT assessment results for sync push.
+     */
+    suspend fun getAllAssessments(): List<com.devil.phoenixproject.database.AssessmentResult>
 
     // === ID Mapping (after push) ===
 

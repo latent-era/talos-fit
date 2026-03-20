@@ -37,7 +37,28 @@ data class PortalWorkoutSessionDto(
     val routineName: String? = null,
     val workoutMode: String? = null, // SCREAMING_SNAKE
     val routineSessionId: String? = null,
-    val exercises: List<PortalExerciseDto> = emptyList()
+    val exercises: List<PortalExerciseDto> = emptyList(),
+    // --- Session enrichment (GAPs 3-6) ---
+    // Biomechanics summary
+    val avgVelocityMps: Float? = null,
+    val avgAsymmetryPct: Float? = null,
+    val velocityLossPct: Float? = null,
+    val dominantSide: String? = null,
+    val strengthProfile: String? = null,
+    // Safety & form
+    val formScore: Int? = null,
+    val deloadWarnings: Int? = null,
+    val romViolations: Int? = null,
+    val spotterActivations: Int? = null,
+    // Force metrics
+    val peakForceN: Float? = null,
+    val estimatedCalories: Float? = null,
+    val heaviestLiftKg: Float? = null,
+    // Configuration context
+    val eccentricLoad: Int? = null,
+    val echoLevel: Int? = null,
+    val warmupReps: Int? = null,
+    val workingReps: Int? = null
 )
 
 // ─── Level 2: Exercise (within a session) ───────────────────────────
@@ -73,6 +94,9 @@ data class PortalSetDto(
     val weightKg: Float = 0f, // per-cable
     val rpe: Int? = null,
     val isPr: Boolean = false,
+    val prType: String? = null, // "MAX_WEIGHT" or "MAX_VOLUME"
+    val prPhase: String? = null, // "COMBINED", "CONCENTRIC", or "ECCENTRIC"
+    val prVolume: Float? = null, // total volume (weight × reps) for volume PRs
     val notes: String? = null,
     val workoutMode: String? = null, // SCREAMING_SNAKE
     val repSummaries: List<PortalRepSummaryDto> = emptyList()
@@ -246,6 +270,67 @@ data class PortalGamificationStatsSyncDto(
     val totalTimeSeconds: Int = 0
 )
 
+// ─── Phase Statistics (GAP 7) ───────────────────────────────────────
+
+/**
+ * Maps to portal's `session_phase_statistics` table.
+ * Concentric vs eccentric phase comparison metrics per session.
+ */
+@Serializable
+data class PortalPhaseStatisticsDto(
+    val id: String,
+    val sessionId: String,
+    val concentricKgAvg: Float = 0f,
+    val concentricKgMax: Float = 0f,
+    val concentricVelAvg: Float = 0f, // m/s (converted from mm/s)
+    val concentricVelMax: Float = 0f,
+    val concentricWattAvg: Float = 0f,
+    val concentricWattMax: Float = 0f,
+    val eccentricKgAvg: Float = 0f,
+    val eccentricKgMax: Float = 0f,
+    val eccentricVelAvg: Float = 0f, // m/s
+    val eccentricVelMax: Float = 0f,
+    val eccentricWattAvg: Float = 0f,
+    val eccentricWattMax: Float = 0f
+)
+
+// ─── Exercise Signatures (GAP 8) ───────────────────────────────────
+
+/**
+ * Maps to portal's `exercise_signatures` table.
+ * Movement pattern signatures for exercise auto-detection and comparison.
+ */
+@Serializable
+data class PortalExerciseSignatureDto(
+    val id: String,
+    val exerciseId: String,
+    val romMm: Float = 0f,
+    val durationMs: Long = 0,
+    val symmetryRatio: Float = 0.5f,
+    val velocityProfile: String = "LINEAR", // EXPLOSIVE_START, LINEAR, DECELERATING
+    val cableConfig: String = "DUAL_SYMMETRIC",
+    val sampleCount: Int = 1,
+    val confidence: Float = 0f,
+    val updatedAt: String? = null // ISO 8601
+)
+
+// ─── VBT Assessment Results (GAP 9) ────────────────────────────────
+
+/**
+ * Maps to portal's `vbt_assessments` table.
+ * VBT-derived 1RM estimates (more accurate than Brzycki formula).
+ */
+@Serializable
+data class PortalAssessmentResultDto(
+    val id: String,
+    val exerciseId: String,
+    val estimatedOneRepMaxKg: Float,
+    val loadVelocityData: String, // JSON array of {loadKg, meanVelocityMs}
+    val assessmentSessionId: String? = null,
+    val userOverrideKg: Float? = null,
+    val createdAt: String // ISO 8601
+)
+
 // ─── Push Response ──────────────────────────────────────────────────
 
 /**
@@ -260,11 +345,15 @@ data class PortalSyncPushResponse(
     val exercisesInserted: Int = 0,
     val setsInserted: Int = 0,
     val repSummariesInserted: Int = 0,
+    val telemetryInserted: Int = 0,
     val routinesUpserted: Int = 0,
     val cyclesUpserted: Int = 0,
     val badgesUpserted: Int = 0,
     val exerciseProgressInserted: Int = 0,
-    val personalRecordsInserted: Int = 0
+    val personalRecordsInserted: Int = 0,
+    val phaseStatisticsInserted: Int = 0,
+    val exerciseSignaturesUpserted: Int = 0,
+    val assessmentsInserted: Int = 0
 )
 
 // ─── Composite Sync Payload ─────────────────────────────────────────
@@ -279,11 +368,16 @@ data class PortalSyncPayload(
     val platform: String = "android",
     val lastSync: Long,
     val sessions: List<PortalWorkoutSessionDto> = emptyList(),
+    val telemetry: List<PortalRepTelemetryDto> = emptyList(),
     val routines: List<PortalRoutineSyncDto> = emptyList(),
     val cycles: List<PortalTrainingCycleSyncDto> = emptyList(),
     val rpgAttributes: PortalRpgAttributesSyncDto? = null,
     val badges: List<PortalEarnedBadgeSyncDto> = emptyList(),
-    val gamificationStats: PortalGamificationStatsSyncDto? = null
+    val gamificationStats: PortalGamificationStatsSyncDto? = null,
+    // Phase 3: Extended metrics
+    val phaseStatistics: List<PortalPhaseStatisticsDto> = emptyList(),
+    val exerciseSignatures: List<PortalExerciseSignatureDto> = emptyList(),
+    val assessments: List<PortalAssessmentResultDto> = emptyList()
 )
 
 // ─── Pull Response DTOs (camelCase — NO @SerialName) ──────────────────
