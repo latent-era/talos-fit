@@ -83,6 +83,8 @@ fun ActiveWorkoutScreen(
     // Phase 35C: Variable warm-up set state
     val currentWarmupSetIndex by viewModel.currentWarmupSetIndex.collectAsState()
     val totalWarmupSets by viewModel.totalWarmupSets.collectAsState()
+    // Issue #113: Just Lift visual rest countdown
+    val justLiftRestCountdown by viewModel.justLiftRestCountdown.collectAsState()
     @Suppress("UNUSED_VARIABLE") // Reserved for future connecting overlay
     val isAutoConnecting by viewModel.isAutoConnecting.collectAsState()
     val connectionError by viewModel.connectionError.collectAsState()
@@ -356,8 +358,6 @@ fun ActiveWorkoutScreen(
         currentWorkoutState
     }
 
-    val hudPreset by viewModel.hudPreset.collectAsState()
-
     val workoutUiState = remember(
         connectionState, gatedWorkoutState, currentMetric, currentHeuristicKgMax, workoutParameters,
         repCount, repRanges, autoStopState, weightUnit, enableVideoPlayback,
@@ -365,11 +365,12 @@ fun ActiveWorkoutScreen(
         autoplayEnabled, userPreferences.summaryCountdownSeconds, loadBaselineA, loadBaselineB,
         canGoBack, canSkipForward,
         timedExerciseRemainingSeconds, isCurrentExerciseBodyweight, gatedRepQualityScore,
-        gatedBiomechanicsResult, detectionState, hudPreset,
+        gatedBiomechanicsResult, detectionState,
         isFormCheckEnabled, latestFormViolations, latestFormScore,
         gatedGhostSession, gatedGhostVerdict,
         motionStartHoldProgress, isRestPaused,
-        currentWarmupSetIndex, totalWarmupSets
+        currentWarmupSetIndex, totalWarmupSets,
+        justLiftRestCountdown
     ) {
         WorkoutUiState(
             connectionState = connectionState,
@@ -401,7 +402,6 @@ fun ActiveWorkoutScreen(
             latestRepQualityScore = gatedRepQualityScore,
             latestBiomechanicsResult = gatedBiomechanicsResult,
             detectionState = detectionState,
-            hudPreset = hudPreset,
             isFormCheckEnabled = isFormCheckEnabled,
             latestFormViolations = latestFormViolations,
             latestFormScore = latestFormScore,
@@ -410,7 +410,8 @@ fun ActiveWorkoutScreen(
             motionStartHoldProgress = motionStartHoldProgress,
             isRestPaused = isRestPaused,
             currentWarmupSetIndex = currentWarmupSetIndex,
-            totalWarmupSets = totalWarmupSets
+            totalWarmupSets = totalWarmupSets,
+            justLiftRestCountdown = justLiftRestCountdown
         )
     }
 

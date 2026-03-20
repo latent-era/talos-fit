@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
@@ -230,6 +231,12 @@ fun JustLiftScreen(
                         autoStartCountdown = autoStartCountdown,
                         autoStopState = autoStopState
                     )
+
+                    // Issue #113: Just Lift rest countdown pill
+                    val justLiftRestCountdown by viewModel.justLiftRestCountdown.collectAsState()
+                    if (justLiftRestCountdown != null && justLiftRestCountdown!! > 0) {
+                        JustLiftRestCountdownRow(secondsRemaining = justLiftRestCountdown!!)
+                    }
                 }
 
                 // Mode Selection Card - expands to fill space
@@ -1060,5 +1067,41 @@ fun AutoStartStopCard(
                     )
             )
         }
+    }
+}
+
+/**
+ * Compact rest countdown row for Just Lift mode (Issue #113).
+ * Displayed inline in the JustLiftScreen column between the auto-start card
+ * and the mode selection card. Purely informational — does not block auto-start.
+ */
+@Composable
+private fun JustLiftRestCountdownRow(secondsRemaining: Int) {
+    val minutes = secondsRemaining / 60
+    val seconds = secondsRemaining % 60
+    val timeText = if (minutes > 0) "%d:%02d".format(minutes, seconds) else "${seconds}s"
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f))
+            .padding(horizontal = Spacing.medium, vertical = Spacing.small),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Timer,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "Rest: $timeText",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     }
 }

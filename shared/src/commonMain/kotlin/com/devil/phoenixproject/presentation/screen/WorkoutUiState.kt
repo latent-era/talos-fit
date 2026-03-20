@@ -74,7 +74,6 @@ data class WorkoutUiState(
     val latestRepQualityScore: Int? = null,
     val latestBiomechanicsResult: BiomechanicsRepResult? = null,
     val detectionState: DetectionState = DetectionState(),
-    val hudPreset: String = "full",  // HUD page preset: "essential", "biomechanics", or "full"
     // Form Check state (Phase 19 CV-05/CV-06)
     val isFormCheckEnabled: Boolean = false,
     val latestFormViolations: List<FormViolation> = emptyList(),
@@ -90,7 +89,9 @@ data class WorkoutUiState(
     // -1 = not in warm-up phase, 0+ = current warm-up set index
     val currentWarmupSetIndex: Int = -1,
     // Total number of variable warm-up sets (0 if none)
-    val totalWarmupSets: Int = 0
+    val totalWarmupSets: Int = 0,
+    // Issue #113: Just Lift visual rest countdown (null = not resting, 0 = done)
+    val justLiftRestCountdown: Int? = null
 ) {
     /** True when currently executing a variable warm-up set (for HUD label) */
     val isInVariableWarmup: Boolean get() = currentWarmupSetIndex >= 0

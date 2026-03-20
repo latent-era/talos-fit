@@ -26,7 +26,6 @@ import com.devil.phoenixproject.domain.model.FormAssessment
 import com.devil.phoenixproject.domain.model.FormViolation
 import com.devil.phoenixproject.domain.model.GhostRepComparison
 import com.devil.phoenixproject.domain.model.GhostSession
-import com.devil.phoenixproject.domain.model.HudPreset
 import com.devil.phoenixproject.domain.usecase.RepRanges
 import com.devil.phoenixproject.presentation.components.AutoStartOverlay
 import com.devil.phoenixproject.presentation.components.AutoStopOverlay
@@ -124,7 +123,6 @@ fun WorkoutTab(
         detectionState = state.detectionState,
         onDetectionConfirmed = actions::onDetectionConfirmed,
         onDetectionDismissed = actions::onDetectionDismissed,
-        hudPreset = state.hudPreset,
         isFormCheckEnabled = state.isFormCheckEnabled,
         hasFormCheckAccess = hasFormCheckAccess,
         latestFormViolations = state.latestFormViolations,
@@ -133,7 +131,8 @@ fun WorkoutTab(
         ghostSession = state.ghostSession,
         latestGhostVerdict = state.latestGhostVerdict,
         motionStartHoldProgress = state.motionStartHoldProgress,
-        isRestPaused = state.isRestPaused
+        isRestPaused = state.isRestPaused,
+        justLiftRestCountdown = state.justLiftRestCountdown
     )
 }
 
@@ -200,7 +199,6 @@ fun WorkoutTab(
     detectionState: DetectionState = DetectionState(),  // Exercise auto-detection state
     onDetectionConfirmed: suspend (String, String) -> Unit = { _, _ -> },  // Detection confirm callback
     onDetectionDismissed: () -> Unit = {},  // Detection dismiss callback
-    hudPreset: String = HudPreset.FULL.key,  // HUD page preset for pager filtering
     // CV Form Check parameters (Phase 19)
     isFormCheckEnabled: Boolean = false,
     hasFormCheckAccess: Boolean = false,
@@ -213,7 +211,9 @@ fun WorkoutTab(
     // Issue #237: Motion-triggered set start
     motionStartHoldProgress: Float? = null,
     // Issue #297, #228: Rest timer pause state
-    isRestPaused: Boolean = false
+    isRestPaused: Boolean = false,
+    // Issue #113: Just Lift visual rest countdown (null = not resting)
+    justLiftRestCountdown: Int? = null
 ) {
     // Note: HapticFeedbackEffect is now global in EnhancedMainScreen
     // No need for local haptic effect here
@@ -250,7 +250,6 @@ fun WorkoutTab(
                 detectionState = detectionState,
                 onDetectionConfirmed = onDetectionConfirmed,
                 onDetectionDismissed = onDetectionDismissed,
-                hudPreset = hudPreset,
                 isFormCheckEnabled = isFormCheckEnabled,
                 hasFormCheckAccess = hasFormCheckAccess,
                 latestFormViolations = latestFormViolations,
@@ -590,6 +589,20 @@ fun WorkoutTab(
                 )
             }
         }
+
+        // Issue #113: Just Lift rest countdown overlay - informational egg timer between sets
+        // Shown in Idle state when the engine is counting down rest. Does not block auto-start;
+        // if the user grabs handles the timer is canceled by ActiveSessionEngine.
+        if (workoutState is WorkoutState.Idle && justLiftRestCountdown != null && justLiftRestCountdown > 0) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 16.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                JustLiftRestTimerBadge(secondsRemaining = justLiftRestCountdown)
+            }
+        }
     }
 
     // Show the workout setup dialog
@@ -607,6 +620,45 @@ fun WorkoutTab(
             },
             onDismiss = onHideWorkoutSetupDialog
         )
+    }
+}
+
+/**
+ * Compact rest timer badge for Just Lift mode (Issue #113).
+ *
+ * Displayed as a non-blocking pill at the top of the screen during Idle state.
+ * Purely informational — the workout stays in Idle and auto-start detection is active.
+ * The timer is canceled when the user grabs the handles.
+ */
+@Composable
+private fun JustLiftRestTimerBadge(secondsRemaining: Int) {
+    val minutes = secondsRemaining / 60
+    val seconds = secondsRemaining % 60
+    val timeText = if (minutes > 0) "%d:%02d".format(minutes, seconds) else "${seconds}s"
+
+    Surface(
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        tonalElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Timer,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = timeText,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
     }
 }
 
