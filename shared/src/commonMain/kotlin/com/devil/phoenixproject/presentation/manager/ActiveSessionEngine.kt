@@ -2633,8 +2633,14 @@ class ActiveSessionEngine(
             // At the end of a superset cycle (last exercise of the group), use the current exercise's
             // configured rest time so users can recover before starting the next round.
             val useSupersetQuickRest = isInSupersetTransition || (isStillInSupersetWorkout && !isAtEndOfSupersetCycle)
+            // Issue #259: When an exercise has perSetRestTime enabled, use its own rest
+            // times even within a superset transition, instead of the superset default.
             val restDuration = if (useSupersetQuickRest) {
-                (flowDelegate?.getSupersetRestSeconds() ?: 5).coerceAtLeast(5)
+                if (currentExercise?.perSetRestTime == true) {
+                    currentExercise.getRestForSet(completedSetIndex)
+                } else {
+                    (flowDelegate?.getSupersetRestSeconds() ?: 5).coerceAtLeast(5)
+                }
             } else {
                 currentExercise?.getRestForSet(completedSetIndex) ?: 90
             }
