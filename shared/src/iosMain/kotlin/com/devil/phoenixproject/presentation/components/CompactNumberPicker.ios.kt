@@ -376,13 +376,13 @@ actual fun CompactNumberPicker(
                         }
                     }
                 },
-                enabled = values.isNotEmpty() && safeCurrentIndex > 0,
+                enabled = values.isNotEmpty() && actionIndex > 0,
                 modifier = Modifier.size(pickerSizing.buttonSize)
             ) {
                 Icon(
                     imageVector = Icons.Default.Remove,
                     contentDescription = "Decrease $label",
-                    tint = if (values.isNotEmpty() && safeCurrentIndex > 0)
+                    tint = if (values.isNotEmpty() && actionIndex > 0)
                         MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
@@ -566,13 +566,13 @@ actual fun CompactNumberPicker(
                         }
                     }
                 },
-                enabled = values.isNotEmpty() && safeCurrentIndex < values.size - 1,
+                enabled = values.isNotEmpty() && actionIndex < values.lastIndex,
                 modifier = Modifier.size(pickerSizing.buttonSize)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Increase $label",
-                    tint = if (values.isNotEmpty() && safeCurrentIndex < values.size - 1)
+                    tint = if (values.isNotEmpty() && actionIndex < values.lastIndex)
                         MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
