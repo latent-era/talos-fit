@@ -32,7 +32,8 @@ data class TrainingCycle(
     val createdAt: Long,
     val isActive: Boolean,
     val progressionRule: ProgressionRule? = null,
-    val weekNumber: Int = 1
+    val weekNumber: Int = 1,
+    val profileId: String = "default"
 ) {
     companion object {
         fun create(
