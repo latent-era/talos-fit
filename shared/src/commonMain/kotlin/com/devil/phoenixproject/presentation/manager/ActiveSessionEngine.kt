@@ -1215,7 +1215,7 @@ class ActiveSessionEngine(
     }
 
     suspend fun getLastWeightForExercise(exerciseId: String): Float? {
-        return workoutRepository.getAllSessions()
+        return workoutRepository.getAllSessions(profileId = "default")
             .first()
             .filter { it.exerciseId == exerciseId }
             .sortedByDescending { it.timestamp }
@@ -1571,7 +1571,8 @@ class ActiveSessionEngine(
                             exerciseId = exerciseId,
                             mode = params.programMode.displayName,
                             weightPerCableKg = params.weightPerCableKg,
-                            weightToleranceKg = 5f
+                            weightToleranceKg = 5f,
+                            profileId = "default"
                         )
                         if (candidate != null) {
                             val repBio = biomechanicsRepository.getRepBiomechanics(candidate.id)

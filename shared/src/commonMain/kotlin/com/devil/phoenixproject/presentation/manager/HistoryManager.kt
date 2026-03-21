@@ -51,7 +51,7 @@ class HistoryManager(
     val workoutHistory: StateFlow<List<WorkoutSession>> = _workoutHistory.asStateFlow()
 
     val allWorkoutSessions: StateFlow<List<WorkoutSession>> =
-        workoutRepository.getAllSessions()
+        workoutRepository.getAllSessions(profileId = "default")
             .stateIn(
                 scope = scope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -83,7 +83,7 @@ class HistoryManager(
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val allPersonalRecords: StateFlow<List<PersonalRecord>> =
-        personalRecordRepository.getAllPRsGrouped()
+        personalRecordRepository.getAllPRsGrouped(profileId = "default")
             .stateIn(
                 scope = scope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -152,7 +152,7 @@ class HistoryManager(
     init {
         // Load recent history (moved from MainViewModel init L483-487)
         scope.launch {
-            workoutRepository.getAllSessions().collect { sessions ->
+            workoutRepository.getAllSessions(profileId = "default").collect { sessions ->
                 _workoutHistory.value = sessions.take(20)
             }
         }

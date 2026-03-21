@@ -186,7 +186,7 @@ abstract class BaseDataBackupManager(
         val routineNameResolutionContext = buildRoutineNameResolutionContext(routines, routineExercises)
         // Supersets table might not exist on older databases
         val supersets = runCatching { queries.selectAllSupersetsSync().executeAsList() }.getOrElse { emptyList() }
-        val personalRecords = queries.selectAllRecords { id, exerciseId, exerciseName, weight, reps, oneRepMax, achievedAt, workoutMode, prType, volume, phase, _, _, _ ->
+        val personalRecords = queries.selectAllRecords(profileId = "default") { id, exerciseId, exerciseName, weight, reps, oneRepMax, achievedAt, workoutMode, prType, volume, phase, _, _, _, _ ->
             PersonalRecordBackup(
                 id = id,
                 exerciseId = exerciseId,
@@ -202,7 +202,7 @@ abstract class BaseDataBackupManager(
             )
         }.executeAsList()
         // Training cycles tables might not exist on older databases
-        val trainingCycles = runCatching { queries.selectAllTrainingCycles().executeAsList() }.getOrElse { emptyList() }
+        val trainingCycles = runCatching { queries.selectAllTrainingCycles(profileId = "default").executeAsList() }.getOrElse { emptyList() }
         val cycleDays = trainingCycles.flatMap { cycle ->
             runCatching { queries.selectCycleDaysByCycle(cycle.id).executeAsList() }.getOrElse { emptyList() }
         }
@@ -423,7 +423,7 @@ abstract class BaseDataBackupManager(
             val existingRoutineIds = queries.selectAllRoutineIds().executeAsList().toSet()
             val existingSupersetIds = queries.selectAllSupersetIds().executeAsList().toSet()
             val existingPRIds = queries.selectAllPRIds().executeAsList().toSet()
-            val existingCycleIds = queries.selectAllTrainingCycles().executeAsList().map { it.id }.toSet()
+            val existingCycleIds = queries.selectAllTrainingCycles(profileId = "default").executeAsList().map { it.id }.toSet()
             val existingUserProfileIds = queries.selectAllUserProfileIds().executeAsList().toSet()
             val importRoutineNameResolutionContext = buildRoutineNameResolutionContextFromBackup(
                 backup.data.routines,
@@ -520,7 +520,8 @@ abstract class BaseDataBackupManager(
                             totalVelocityLossPercent = session.totalVelocityLossPercent?.toDouble(),
                             dominantSide = session.dominantSide,
                             strengthProfile = session.strengthProfile,
-                            formScore = session.formScore
+                            formScore = session.formScore,
+                            profile_id = "default"
                         )
                         sessionsImported++
                     } else {
@@ -561,7 +562,8 @@ abstract class BaseDataBackupManager(
                             description = routine.description,
                             createdAt = routine.createdAt,
                             lastUsed = routine.lastUsed,
-                            useCount = routine.useCount.toLong()
+                            useCount = routine.useCount.toLong(),
+                            profile_id = "default"
                         )
                         routinesImported++
                     } else {
@@ -654,7 +656,8 @@ abstract class BaseDataBackupManager(
                             workoutMode = pr.workoutMode,
                             prType = pr.prType,
                             volume = pr.volume.toDouble(),
-                            phase = pr.phase ?: "COMBINED"
+                            phase = pr.phase ?: "COMBINED",
+                            profile_id = "default"
                         )
                         personalRecordsImported++
                     } else {
@@ -670,7 +673,8 @@ abstract class BaseDataBackupManager(
                             name = cycle.name,
                             description = cycle.description,
                             created_at = cycle.createdAt,
-                            is_active = if (cycle.isActive) 1L else 0L
+                            is_active = if (cycle.isActive) 1L else 0L,
+                            profile_id = "default"
                         )
                         trainingCyclesImported++
                     } else {
@@ -802,7 +806,8 @@ abstract class BaseDataBackupManager(
                         reason = event.reason,
                         user_response = event.userResponse,
                         actual_weight_kg = event.actualWeightKg?.toDouble(),
-                        timestamp = event.timestamp
+                        timestamp = event.timestamp,
+                        profile_id = "default"
                     )
                     progressionEventsImported++
                 }
@@ -950,11 +955,11 @@ abstract class BaseDataBackupManager(
         writeJsonArray(writer, "supersets", supersets.map { json.encodeToString(SupersetBackup.serializer(), mapSupersetToBackup(it)) })
         writer.write(",")
 
-        val personalRecords = queries.selectAllRecords().executeAsList()
+        val personalRecords = queries.selectAllRecords(profileId = "default").executeAsList()
         writeJsonArray(writer, "personalRecords", personalRecords.map { json.encodeToString(PersonalRecordBackup.serializer(), mapPersonalRecordToBackup(it)) })
         writer.write(",")
 
-        val trainingCycles = runCatching { queries.selectAllTrainingCycles().executeAsList() }.getOrElse { emptyList() }
+        val trainingCycles = runCatching { queries.selectAllTrainingCycles(profileId = "default").executeAsList() }.getOrElse { emptyList() }
         writeJsonArray(writer, "trainingCycles", trainingCycles.map { json.encodeToString(TrainingCycleBackup.serializer(), mapTrainingCycleToBackup(it)) })
         writer.write(",")
 

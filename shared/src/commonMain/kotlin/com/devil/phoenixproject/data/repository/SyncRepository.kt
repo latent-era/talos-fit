@@ -94,7 +94,7 @@ interface SyncRepository {
     /**
      * Get all VBT assessment results for sync push.
      */
-    suspend fun getAllAssessments(): List<com.devil.phoenixproject.database.AssessmentResult>
+    suspend fun getAllAssessments(profileId: String = "default"): List<com.devil.phoenixproject.database.AssessmentResult>
 
     // === ID Mapping (after push) ===
 
