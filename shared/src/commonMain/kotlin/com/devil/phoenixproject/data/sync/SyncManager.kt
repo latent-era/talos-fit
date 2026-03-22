@@ -250,7 +250,6 @@ class SyncManager(
 
     /**
      * Pull portal data and merge into local database.
-     * Sessions are skipped (immutable/push-only per PULL-03).
      * Returns the pull response syncTime on success, or null on failure.
      */
     private suspend fun pullRemoteChanges(lastSync: Long): Long? {
@@ -272,13 +271,21 @@ class SyncManager(
             "Pull response: ${pullResponse.routines.size} routines, " +
             "${pullResponse.cycles.size} cycles, " +
             "${pullResponse.badges.size} badges, " +
-            "sessions=${pullResponse.sessions.size} (skipped)"
+            "sessions=${pullResponse.sessions.size}"
         }
 
-        // 2. Sessions — SKIPPED (immutable/push-only per PULL-03)
-        // pullResponse.sessions is deserialized but not merged.
-
         val mergeProfileId = activeProfileId ?: "default"
+
+        // 2. Sessions — merge from portal (INSERT OR IGNORE, local data wins)
+        if (pullResponse.sessions.isNotEmpty()) {
+            val mobileSessions = pullResponse.sessions.flatMap { portalSession ->
+                PortalPullAdapter.toWorkoutSessions(portalSession, mergeProfileId)
+            }
+            if (mobileSessions.isNotEmpty()) {
+                syncRepository.mergePortalSessions(mobileSessions)
+                Logger.d("SyncManager") { "Merged ${mobileSessions.size} portal sessions from ${pullResponse.sessions.size} workouts" }
+            }
+        }
 
         // 3. Routines — merge with local preference (PULL-03)
         if (pullResponse.routines.isNotEmpty()) {
