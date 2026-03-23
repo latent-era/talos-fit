@@ -20,21 +20,23 @@ import vitruvianprojectphoenix.shared.generated.resources.Res
 import vitruvianprojectphoenix.shared.generated.resources.*
 
 /**
- * Dialog for selecting superset rest time from fixed options.
- * Options: 0, 5, 10, 15, 20, 25, 30 seconds
+ * Dialog for selecting rest time from chip options.
+ * Default options (superset): 0, 5, 10, 15, 20, 25, 30 seconds.
+ * Override [options], [title], and [formatLabel] for different contexts (e.g. Just Lift).
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RestTimePickerDialog(
     currentRestSeconds: Int,
     onSelect: (Int) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    options: List<Int> = listOf(0, 5, 10, 15, 20, 25, 30),
+    title: String = stringResource(Res.string.rest_between_exercises),
+    formatLabel: (Int) -> String = { "${it}s" }
 ) {
-    val options = listOf(0, 5, 10, 15, 20, 25, 30)
-
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(Res.string.rest_between_exercises)) },
+        title = { Text(title) },
         text = {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -51,7 +53,7 @@ fun RestTimePickerDialog(
                             MaterialTheme.colorScheme.surfaceVariant
                     ) {
                         Text(
-                            text = "${seconds}s",
+                            text = formatLabel(seconds),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             color = if (isSelected)
