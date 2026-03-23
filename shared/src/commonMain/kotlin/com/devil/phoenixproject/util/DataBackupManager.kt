@@ -411,7 +411,7 @@ abstract class BaseDataBackupManager(
             val existingSessionIds = queries.selectAllSessionIds().executeAsList().toSet()
             val existingRoutineIds = queries.selectAllRoutineIds().executeAsList().toSet()
             val existingSupersetIds = queries.selectAllSupersetIds().executeAsList().toSet()
-            val existingPRIds = queries.selectAllPRIds().executeAsList().toSet()
+            // existingPRIds removed — upsertPR handles duplicates via business-key INSERT OR REPLACE
             val existingCycleIds = queries.selectAllTrainingCyclesSync().executeAsList().map { it.id }.toSet()
             val existingUserProfileIds = queries.selectAllUserProfileIds().executeAsList().toSet()
             val importRoutineNameResolutionContext = buildRoutineNameResolutionContextFromBackup(

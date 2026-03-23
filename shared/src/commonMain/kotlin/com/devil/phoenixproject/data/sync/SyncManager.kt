@@ -81,8 +81,7 @@ class SyncManager(
         _syncState.value = SyncState.Syncing
 
         // Push local changes (no status check -- Railway backend abandoned)
-        val rawToken = tokenStorage.getToken()
-        Logger.i("SyncManager") { "Token expired: ${tokenStorage.isTokenExpired()}, expiresAt: ${tokenStorage.getExpiresAt()}, tokenLen: ${rawToken?.length}, tokenStart: ${rawToken?.take(20)}" }
+        Logger.i("SyncManager") { "Token expired: ${tokenStorage.isTokenExpired()}, expiresAt: ${tokenStorage.getExpiresAt()}" }
         val pushResult = pushLocalChanges()
         if (pushResult.isFailure) {
             val error = pushResult.exceptionOrNull()
@@ -256,9 +255,9 @@ class SyncManager(
         val deviceId = tokenStorage.getDeviceId()
         val activeProfileId = userProfileRepository.activeProfile.value?.id
 
-        // Pull remote changes. profileId filters server-side by local_profile_id column.
-        // Pass null to pull all data (no profile filtering) — local merge assigns profiles.
-        val pullResult = apiClient.pullPortalPayload(lastSync, deviceId, profileId = null)
+        // Pull remote changes filtered by active profile to prevent cross-profile contamination.
+        // The server filters by local_profile_id column; merge assigns the same profileId locally.
+        val pullResult = apiClient.pullPortalPayload(lastSync, deviceId, profileId = activeProfileId)
         if (pullResult.isFailure) {
             Logger.w("SyncManager") {
                 "Pull failed (non-fatal): ${pullResult.exceptionOrNull()?.message}"
