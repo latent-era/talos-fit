@@ -15,6 +15,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,9 +51,9 @@ import com.devil.phoenixproject.data.repository.UserProfileRepository
 import com.devil.phoenixproject.domain.model.*
 import com.devil.phoenixproject.presentation.components.AddProfileDialog
 import com.devil.phoenixproject.presentation.components.CompactNumberPicker
-import com.devil.phoenixproject.presentation.components.ExpressiveSlider
 import com.devil.phoenixproject.presentation.components.ProfileSidePanel
 import com.devil.phoenixproject.presentation.components.ProgressionSlider
+import com.devil.phoenixproject.presentation.components.RestTimePickerDialog
 import com.devil.phoenixproject.presentation.navigation.NavigationRoutes
 import com.devil.phoenixproject.presentation.viewmodel.MainViewModel
 import com.devil.phoenixproject.ui.theme.AccessibilityTheme
@@ -577,40 +578,61 @@ fun JustLiftScreen(
                     }
                 }
 
-                // Rest Timer picker
-                Card(
+                // Rest Timer - compact chip + dialog (matches toggle row style)
+                var showRestTimerDialog by remember { mutableStateOf(false) }
+
+                Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    shadowElevation = 2.dp
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(Spacing.medium),
-                        verticalArrangement = Arrangement.spacedBy(Spacing.small)
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CompactNumberPicker(
-                            value = restSeconds.toFloat(),
-                            onValueChange = { newValue ->
-                                restSeconds = newValue.toInt()
-                            },
-                            range = 0f..300f,
-                            step = 5f,
-                            label = "Rest Timer",
-                            suffix = if (restSeconds == 0) "Off" else "sec",
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Text(
-                            text = if (restSeconds == 0) "No rest between sets"
-                                   else "Rest $restSeconds seconds between sets",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Rest Timer",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = if (restSeconds == 0) "No rest between sets"
+                                       else "Rest $restSeconds seconds between sets",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Surface(
+                            modifier = Modifier.clickable { showRestTimerDialog = true },
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                        ) {
+                            Text(
+                                text = if (restSeconds == 0) "Off" else "${restSeconds}s",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            )
+                        }
                     }
+                }
+
+                if (showRestTimerDialog) {
+                    RestTimePickerDialog(
+                        currentRestSeconds = restSeconds,
+                        onSelect = { restSeconds = it; showRestTimerDialog = false },
+                        onDismiss = { showRestTimerDialog = false },
+                        options = listOf(0, 30, 60, 90, 120),
+                        title = "Rest Between Sets",
+                        formatLabel = { if (it == 0) "Off" else "${it}s" }
+                    )
                 }
 
                 // Active workout status (replaces mode cards when active)
@@ -1079,7 +1101,7 @@ fun AutoStartStopCard(
 private fun JustLiftRestCountdownRow(secondsRemaining: Int) {
     val minutes = secondsRemaining / 60
     val seconds = secondsRemaining % 60
-    val timeText = if (minutes > 0) "%d:%02d".format(minutes, seconds) else "${seconds}s"
+    val timeText = if (minutes > 0) "$minutes:${seconds.toString().padStart(2, '0')}" else "${seconds}s"
 
     Row(
         modifier = Modifier
