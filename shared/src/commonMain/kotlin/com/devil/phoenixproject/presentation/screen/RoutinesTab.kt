@@ -416,22 +416,20 @@ fun RoutineCard(
                     else onSelectionToggle()
                 }
             ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected)
                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
             else
                 MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (expanded) 8.dp else 2.dp
-        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         border = BorderStroke(
-            2.dp,
+            1.dp,
             if (isSelected)
                 MaterialTheme.colorScheme.primary
             else
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                MaterialTheme.colorScheme.outlineVariant
         )
     ) {
         Column(
