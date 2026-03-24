@@ -15,10 +15,10 @@ progress:
 
 ## Current Position
 
-Phase: 33 of 36 (complete)
+Phase: 34 of 36 (planned)
 Plan: —
-Status: Phase 33 complete — review passed (2 cycles)
-Last activity: 2026-03-23 — Phase 33 Sync & Data Integrity review passed
+Status: Phase 34 planned — 3 plans across 2 waves
+Last activity: 2026-03-23 — Phase 34 Lifecycle & Security planned
 
 ## Progress
 ```
@@ -55,11 +55,12 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 | Phase | Issue | Milestone |
 |-------|-------|-----------|
 | Phase 32: BLE Reliability | [#308](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/308) (closed) | v0.8.0 Beta Readiness (#2) |
-| Phase 33: Sync & Data Integrity | [#309](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/309) | v0.8.0 Beta Readiness (#2) |
+| Phase 33: Sync & Data Integrity | [#309](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/309) (closed) | v0.8.0 Beta Readiness (#2) |
+| Phase 34: Lifecycle & Security | [#310](https://github.com/9thLevelSoftware/Project-Phoenix-MP/issues/310) | v0.8.0 Beta Readiness (#2) |
 
 ## Next Action
 
-Run `/legion:plan 34` to plan Phase 34: Lifecycle & Security
+Run `/legion:build` to execute Phase 34: Lifecycle & Security
 
 ---
 *Last updated: 2026-03-23 — v0.8.0 Beta Readiness initialized*
