@@ -33,6 +33,8 @@ sealed class NavigationRoutes(val route: String) {
         fun createRoute(cycleId: String) = "cycleReview/$cycleId"
     }
 
+    object ExerciseSelector : NavigationRoutes("exercise_selector")
+
     // Premium/Account routes
     object Auth : NavigationRoutes("auth")
     object Paywall : NavigationRoutes("paywall")

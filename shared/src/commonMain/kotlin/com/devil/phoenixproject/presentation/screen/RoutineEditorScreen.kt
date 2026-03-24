@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.devil.phoenixproject.data.repository.ExerciseRepository
 import com.devil.phoenixproject.data.repository.PersonalRecordRepository
 import com.devil.phoenixproject.domain.model.*
-import com.devil.phoenixproject.presentation.components.ExercisePickerDialog
 import com.devil.phoenixproject.presentation.components.ExerciseRowInSuperset
 import com.devil.phoenixproject.presentation.components.ExerciseRowWithConnector
 import com.devil.phoenixproject.presentation.components.RestTimePickerDialog
@@ -33,6 +32,7 @@ import com.devil.phoenixproject.presentation.components.SelectionActionBar
 import com.devil.phoenixproject.presentation.components.SupersetContainer
 import com.devil.phoenixproject.presentation.components.SupersetHeader
 import com.devil.phoenixproject.presentation.components.SupersetPickerDialog
+import com.devil.phoenixproject.presentation.navigation.NavigationRoutes
 import com.devil.phoenixproject.ui.theme.SupersetTheme
 import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableItem
@@ -61,11 +61,12 @@ fun RoutineEditorScreen(
     weightUnit: WeightUnit,
     kgToDisplay: (Float, WeightUnit) -> Float,
     displayToKg: (Float, WeightUnit) -> Float,
-    enableVideoPlayback: Boolean
+    enableVideoPlayback: Boolean,
+    exerciseSelectorResult: Exercise? = null,
+    onExerciseSelectorResultConsumed: () -> Unit = {},
 ) {
     // 1. Initialize State
     var state by remember { mutableStateOf(RoutineEditorState()) }
-    var showExercisePicker by remember { mutableStateOf(false) }
     var hasInitialized by remember { mutableStateOf(false) }
 
     // Exercise configuration state - holds exercise being configured (new or edit)
@@ -139,6 +140,26 @@ fun RoutineEditorScreen(
             )
             hasInitialized = true
         }
+    }
+
+    // Handle exercise selection result from ExerciseSelectorScreen
+    LaunchedEffect(exerciseSelectorResult) {
+        val selectedExercise = exerciseSelectorResult ?: return@LaunchedEffect
+        val newEx = RoutineExercise(
+            id = generateUUID(),
+            exercise = selectedExercise,
+            orderIndex = state.exercises.size,
+            weightPerCableKg = 5f,
+            supersetId = supersetForAddExercise?.id,
+            orderInSuperset = supersetForAddExercise?.let { ss ->
+                state.exercises.filter { it.supersetId == ss.id }.size
+            } ?: 0
+        )
+        exerciseToConfig = newEx
+        isNewExercise = true
+        editingIndex = null
+        supersetForAddExercise = null
+        onExerciseSelectorResultConsumed()
     }
 
     // Drag and Drop State
@@ -354,7 +375,7 @@ fun RoutineEditorScreen(
                 exit = fadeOut() + scaleOut()
             ) {
                 ExtendedFloatingActionButton(
-                    onClick = { showExercisePicker = true },
+                    onClick = { navController.navigate(NavigationRoutes.ExerciseSelector.route) },
                     icon = { Icon(Icons.Default.Add, null) },
                     text = { Text("Add Exercise") },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -463,7 +484,7 @@ fun RoutineEditorScreen(
                                             onChangeColor = { supersetToChangeColor = superset },
                                             onAddExercise = {
                                                 supersetForAddExercise = superset
-                                                showExercisePicker = true
+                                                navController.navigate(NavigationRoutes.ExerciseSelector.route)
                                             },
                                             onCopy = {
                                                 // Copy superset with all exercises
@@ -647,37 +668,6 @@ fun RoutineEditorScreen(
             )
         }
         }
-    }
-
-    // Exercise Picker Dialog
-    if (showExercisePicker) {
-        ExercisePickerDialog(
-            showDialog = true,
-            onDismiss = {
-                showExercisePicker = false
-                supersetForAddExercise = null  // Clear superset target on dismiss
-            },
-            onExerciseSelected = { selectedExercise ->
-                val newEx = RoutineExercise(
-                    id = generateUUID(),
-                    exercise = selectedExercise,
-                    orderIndex = state.exercises.size,
-                    weightPerCableKg = 5f,
-                    // If adding to a superset, set the superset reference
-                    supersetId = supersetForAddExercise?.id,
-                    orderInSuperset = supersetForAddExercise?.let { ss ->
-                        state.exercises.filter { it.supersetId == ss.id }.size
-                    } ?: 0
-                )
-                exerciseToConfig = newEx
-                isNewExercise = true
-                editingIndex = null
-                showExercisePicker = false
-                supersetForAddExercise = null  // Clear after use
-            },
-            exerciseRepository = exerciseRepository,
-            enableVideoPlayback = false
-        )
     }
 
     // Exercise Configuration Bottom Sheet

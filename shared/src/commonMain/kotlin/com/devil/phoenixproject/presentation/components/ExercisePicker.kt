@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 /**
  * Map display equipment names back to database values for filtering
  */
-private fun getEquipmentDatabaseValues(displayName: String): List<String> {
+internal fun getEquipmentDatabaseValues(displayName: String): List<String> {
     return when (displayName) {
         "Long Bar" -> listOf("BAR", "LONG_BAR", "BARBELL")
         "Short Bar" -> listOf("SHORT_BAR")

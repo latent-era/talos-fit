@@ -27,6 +27,7 @@ import androidx.savedstate.read
 import com.devil.phoenixproject.data.repository.AuthRepository
 import com.devil.phoenixproject.data.repository.ExerciseRepository
 import com.devil.phoenixproject.data.repository.TrainingCycleRepository
+import com.devil.phoenixproject.domain.model.Exercise
 import com.devil.phoenixproject.domain.model.TrainingCycle
 import com.devil.phoenixproject.domain.subscription.SubscriptionManager
 import com.devil.phoenixproject.presentation.screen.*
@@ -48,6 +49,9 @@ fun NavGraph(
     onThemeModeChange: (ThemeMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Shared state for passing exercise selection results back from ExerciseSelector
+    var exerciseSelectorResult by remember { mutableStateOf<Exercise?>(null) }
+
     SharedTransitionLayout {
         NavHost(
             navController = navController,
@@ -362,6 +366,21 @@ fun NavGraph(
             )
         }
 
+        // Exercise Selector - full screen exercise picker
+        composable(route = NavigationRoutes.ExerciseSelector.route) {
+            val enableVideo by viewModel.enableVideoPlayback.collectAsState()
+
+            ExerciseSelectorScreen(
+                navController = navController,
+                exerciseRepository = exerciseRepository,
+                onExerciseSelected = { exercise ->
+                    exerciseSelectorResult = exercise
+                },
+                enableVideoPlayback = enableVideo,
+                themeMode = themeMode,
+            )
+        }
+
         // Routine Editor - create/edit daily routine
         composable(
             route = NavigationRoutes.RoutineEditor.route,
@@ -381,7 +400,9 @@ fun NavGraph(
                 weightUnit = weightUnit,
                 kgToDisplay = viewModel::kgToDisplay,
                 displayToKg = viewModel::displayToKg,
-                enableVideoPlayback = enableVideo
+                enableVideoPlayback = enableVideo,
+                exerciseSelectorResult = exerciseSelectorResult,
+                onExerciseSelectorResultConsumed = { exerciseSelectorResult = null },
             )
         }
 
