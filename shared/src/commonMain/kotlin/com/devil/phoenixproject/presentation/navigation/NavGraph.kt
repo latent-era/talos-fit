@@ -435,24 +435,29 @@ fun NavGraph(
                         if (unit == WeightUnit.LB) "${displayWeight.toInt()} lbs" else "${displayWeight.toInt()} kg"
                     },
                     onSave = { configuredExercise ->
-                        exerciseToConfigState = null
-                        // Pop back to the exact RoutineEditor route using stored routineId
+                        // Pop back to RoutineEditor using the route pattern (not filled-in route)
+                        // Nav Compose v2.9.x doesn't reliably match concrete routes against parametrized patterns
                         navController.popBackStack(
-                            route = "routine_editor/$currentRoutineId",
+                            route = NavigationRoutes.RoutineEditor.route,
                             inclusive = false
                         )
                         configuredExerciseResult = configuredExercise
                     },
                     onCancel = {
-                        exerciseToConfigState = null
                         navController.popBackStack() // Back to ExerciseSelector
                     },
                     buttonText = if (isNewExerciseState) "Add to Routine" else "Save",
                 )
             } ?: run {
                 // No exercise to configure - pop back
-                LaunchedEffect(Unit) {
-                    navController.popBackStack()
+                // Guard: only pop if ExerciseConfig is the current destination
+                // (prevents firing during exit animations after a successful save/cancel)
+                val isCurrentDestination = navController.currentBackStackEntry
+                    ?.destination?.route == NavigationRoutes.ExerciseConfig.route
+                if (isCurrentDestination) {
+                    LaunchedEffect(Unit) {
+                        navController.popBackStack()
+                    }
                 }
             }
         }
