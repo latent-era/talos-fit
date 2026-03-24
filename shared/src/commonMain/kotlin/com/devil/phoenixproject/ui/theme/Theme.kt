@@ -10,41 +10,41 @@ import androidx.compose.ui.graphics.Color
 enum class ThemeMode { SYSTEM, LIGHT, DARK }
 
 private val DarkColorScheme = darkColorScheme(
-    // Primary (Orange)
+    // Primary (Rose)
     primary = Primary80,
     onPrimary = Primary20,
     primaryContainer = PrimaryContainerDark,
     onPrimaryContainer = OnPrimaryContainerDark,
 
-    // Secondary (Gold)
+    // Secondary (Rose Light)
     secondary = Secondary80,
     onSecondary = Secondary20,
     secondaryContainer = SecondaryContainerDark,
     onSecondaryContainer = OnSecondaryContainerDark,
 
-    // Tertiary (Teal - cool accent)
+    // Tertiary (Neutral Grey)
     tertiary = Tertiary80,
     onTertiary = Tertiary20,
-    tertiaryContainer = AshBlueLight,
-    onTertiaryContainer = Color.White,
+    tertiaryContainer = Slate700,
+    onTertiaryContainer = Slate200,
 
-    // Backgrounds & Surfaces (Slate scale)
-    background = SurfaceContainerDark,
+    // Backgrounds & Surfaces (AMOLED black)
+    background = Slate950,
     onBackground = OnSurfaceDark,
 
-    surface = SurfaceContainerDark,
+    surface = Slate900,
     onSurface = OnSurfaceDark,
-    surfaceVariant = SurfaceContainerHighDark,
+    surfaceVariant = Slate800,
     onSurfaceVariant = OnSurfaceVariantDark,
 
-    // Surface container roles
-    surfaceDim = SurfaceDimDark,
-    surfaceBright = SurfaceContainerHighestDark,
+    // Surface container roles (AMOLED scale)
+    surfaceDim = Slate950,
+    surfaceBright = Slate700,
     surfaceContainerLowest = Slate950,
     surfaceContainerLow = Slate900,
-    surfaceContainer = SurfaceContainerDark,
-    surfaceContainerHigh = SurfaceContainerHighDark,
-    surfaceContainerHighest = SurfaceContainerHighestDark,
+    surfaceContainer = Slate900,
+    surfaceContainerHigh = Slate800,
+    surfaceContainerHighest = Slate700,
 
     // Status
     error = SignalError,
@@ -55,19 +55,19 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    // Primary (Orange)
+    // Primary (Rose)
     primary = PhoenixOrangeLight,
     onPrimary = Color.White,
     primaryContainer = PrimaryContainerLight,
     onPrimaryContainer = OnPrimaryContainerLight,
 
-    // Secondary (Gold)
+    // Secondary (Rose Darker)
     secondary = EmberYellowLight,
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFFE06F).copy(alpha = 0.3f),
+    secondaryContainer = Color(0xFFFDA4AF).copy(alpha = 0.3f),
     onSecondaryContainer = Secondary20,
 
-    // Tertiary (Teal)
+    // Tertiary (Neutral Grey)
     tertiary = AshBlueLight,
     onTertiary = Color.White,
     tertiaryContainer = AshBlueDark.copy(alpha = 0.2f),

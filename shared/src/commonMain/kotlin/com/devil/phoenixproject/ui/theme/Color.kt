@@ -3,34 +3,34 @@ package com.devil.phoenixproject.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // ==============================================================================
-// THEME: PHOENIX RISING
-// Concept: High energy activity (Fire) grounded by solid structure (Ash/Slate)
+// THEME: TALOS HEALTH
+// Concept: AMOLED black + Rose accent for clean, modern health tracking
 // ==============================================================================
 
 // --- CORE BRAND COLORS ---
-// Primary: "Phoenix Flame" - Used for FABs, Main Actions, Active States
-val PhoenixOrangeLight = Color(0xFFE65100)  // Deep energetic orange (light mode)
-val PhoenixOrangeDark = Color(0xFFFF9149)   // Vibrant orange (dark mode) - was too pink/salmon
+// Primary: "Talos Rose" - Used for FABs, Main Actions, Active States
+val PhoenixOrangeLight = Color(0xFFE11D48)  // Rose dark (light mode)
+val PhoenixOrangeDark = Color(0xFFF43F5E)   // Talos rose (dark mode)
 
-// Fire gradient colors for Just Lift button
-val FlameOrange = Color(0xFFFF6B00)   // Core flame orange
-val FlameYellow = Color(0xFFFFAB00)   // Inner flame yellow
-val FlameRed = Color(0xFFE64A19)      // Outer flame red-orange
+// Accent rose (unified — no gradient)
+val FlameOrange = Color(0xFFF43F5E)   // Rose accent
+val FlameYellow = Color(0xFFF43F5E)   // Rose accent
+val FlameRed = Color(0xFFF43F5E)      // Rose accent
 
-// Secondary: "Ember Gold" - Used for Secondary Actions, Toggles
-val EmberYellowLight = Color(0xFF6A5F00)    // Olive gold (light mode)
-val EmberYellowDark = Color(0xFFE2C446)     // Bright gold (dark mode)
+// Secondary: "Rose Light" - Used for Secondary Actions, Toggles
+val EmberYellowLight = Color(0xFFBE123C)    // Rose darker (light mode)
+val EmberYellowDark = Color(0xFFFB7185)     // Rose light (dark mode)
 
-// Tertiary: "Cooling Ash" - Used for accents to balance the heat
-val AshBlueLight = Color(0xFF006684)        // Deep teal (light mode)
-val AshBlueDark = Color(0xFF6ED2FF)         // Electric cyan (dark mode)
+// Tertiary: "Neutral Grey" - Used for accents to balance the rose
+val AshBlueLight = Color(0xFF6B7280)        // Neutral grey (light mode)
+val AshBlueDark = Color(0xFF9BA1A6)         // Neutral grey (dark mode)
 
-// --- SLATE NEUTRALS (Tinted Blue-Grey) ---
-// 2025 Trend: Tinted neutrals instead of pure grey
-val Slate950 = Color(0xFF020617)  // Almost black, blue-tinted (OLED friendly)
-val Slate900 = Color(0xFF0F172A)  // Deep background
-val Slate800 = Color(0xFF1E293B)  // Card background
-val Slate700 = Color(0xFF334155)  // Border/Divider
+// --- AMOLED NEUTRALS ---
+// Pure black scale for true AMOLED blacks
+val Slate950 = Color(0xFF000000)  // Pure black (AMOLED)
+val Slate900 = Color(0xFF0A0A0A)  // Near black surface
+val Slate800 = Color(0xFF141414)  // Card surface
+val Slate700 = Color(0xFF1E1E1E)  // Border/Divider
 val Slate400 = Color(0xFF94A3B8)  // Subtext
 val Slate200 = Color(0xFFE2E8F0)  // Light mode surfaces
 val Slate50 = Color(0xFFF8FAFC)   // Light mode background
@@ -43,21 +43,21 @@ val SignalWarning = Color(0xFFF59E0B)  // Amber
 
 // --- MATERIAL 3 DARK MODE TOKENS ---
 val Primary80 = PhoenixOrangeDark
-val Primary20 = Color(0xFF4C1400)
-val PrimaryContainerDark = Color(0xFF702300)
-val OnPrimaryContainerDark = Color(0xFFFFDBCF)
+val Primary20 = Color(0xFF4C0519)
+val PrimaryContainerDark = Color(0xFF9F1239)
+val OnPrimaryContainerDark = Color(0xFFFFE4E6)
 
 val Secondary80 = EmberYellowDark
-val Secondary20 = Color(0xFF373100)
-val SecondaryContainerDark = Color(0xFF4F4700)
-val OnSecondaryContainerDark = Color(0xFFFFE06F)
+val Secondary20 = Color(0xFF4C0519)
+val SecondaryContainerDark = Color(0xFF9F1239)
+val OnSecondaryContainerDark = Color(0xFFFDA4AF)
 
 val Tertiary80 = AshBlueDark
-val Tertiary20 = Color(0xFF003546)
+val Tertiary20 = Color(0xFF374151)
 
 // --- MATERIAL 3 LIGHT MODE TOKENS ---
-val PrimaryContainerLight = Color(0xFFFFDBCF)
-val OnPrimaryContainerLight = Color(0xFF380D00)
+val PrimaryContainerLight = Color(0xFFFFE4E6)
+val OnPrimaryContainerLight = Color(0xFF4C0519)
 
 // --- SURFACE CONTAINERS (Dark Mode) ---
 // Using Slate scale for depth without opacity hacks

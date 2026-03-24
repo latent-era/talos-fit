@@ -118,7 +118,8 @@ fun ExerciseEditBottomSheet(
         },
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        dragHandle = null
     ) {
         Column(
             modifier = Modifier

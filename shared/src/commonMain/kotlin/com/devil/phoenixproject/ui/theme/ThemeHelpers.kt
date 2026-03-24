@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.luminance
 
 /**
  * Returns a vertical gradient brush for screen backgrounds.
- * Dark mode: Slate with subtle plum accent in center
- * Light mode: Light with subtle mint wash
+ * Dark mode: Solid AMOLED black
+ * Light mode: Subtle warm wash
  *
  * Uses MaterialTheme.colorScheme to detect dark/light mode,
  * respecting the app's theme preference (not just system theme).
@@ -26,13 +26,11 @@ fun screenBackgroundBrush(): Brush {
     return if (isDark) {
         Brush.verticalGradient(
             0.0f to Slate950,
-            0.5f to HomeButtonColors.AccentPlum.copy(alpha = 0.15f),
             1.0f to Slate950
         )
     } else {
         Brush.verticalGradient(
             0.0f to Slate50,
-            0.5f to HomeButtonColors.SecondaryMint.copy(alpha = 0.1f),
             1.0f to Color.White
         )
     }
