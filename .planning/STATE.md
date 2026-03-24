@@ -15,14 +15,14 @@ progress:
 
 ## Current Position
 
-Phase: 36 of 36 (planned)
+Phase: 36 of 36 (complete)
 Plan: —
-Status: Phase 36 planned — 3 plans, 1 wave (all parallel)
-Last activity: 2026-03-24 — Phase 36 Integration Validation planned
+Status: v0.8.0 Beta Readiness — ALL PHASES COMPLETE
+Last activity: 2026-03-24 — Phase 36 Integration Validation complete
 
 ## Progress
 ```
-[################....] 80% — 12/15 plans complete
+[####################] 100% — 15/15 plans complete
 ```
 
 ## Project Reference
@@ -61,7 +61,8 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 
 ## Next Action
 
-Run `/legion:build` to execute Phase 36: Integration Validation (FINAL PHASE)
+v0.8.0 Beta Readiness milestone complete. All 29 audit findings addressed across 5 phases.
+One known issue: SqlDelightTrainingCycleRepositoryTest.checkAndAutoAdvance flaky (time-dependent, pre-existing).
 
 ---
 *Last updated: 2026-03-23 — v0.8.0 Beta Readiness initialized*
