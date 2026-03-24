@@ -15,10 +15,10 @@ progress:
 
 ## Current Position
 
-Phase: 32 of 36 (executed, pending review)
+Phase: 32 of 36 (complete)
 Plan: —
-Status: Phase 32 complete — all 3 plans executed successfully
-Last activity: 2026-03-23 — Phase 32 BLE Reliability executed
+Status: Phase 32 complete — review passed (1 cycle)
+Last activity: 2026-03-23 — Phase 32 BLE Reliability review passed
 
 ## Progress
 ```
@@ -58,7 +58,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 
 ## Next Action
 
-Run `/legion:review` to verify Phase 32, or `/legion:plan 33` to plan Phase 33: Sync & Data Integrity
+Run `/legion:plan 33` to plan Phase 33: Sync & Data Integrity
 
 ---
 *Last updated: 2026-03-23 — v0.8.0 Beta Readiness initialized*
