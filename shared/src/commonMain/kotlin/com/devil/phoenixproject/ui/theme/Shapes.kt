@@ -6,14 +6,14 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Shape System
- * Clean, standard Material 3 corner radii
+ * Talos Design Language corner radii
  */
 object ExpressiveShapeValues {
     val ExtraSmall = RoundedCornerShape(4.dp)
-    val Small = RoundedCornerShape(8.dp)
-    val Medium = RoundedCornerShape(12.dp)
-    val Large = RoundedCornerShape(16.dp)
-    val ExtraLarge = RoundedCornerShape(20.dp)
+    val Small = RoundedCornerShape(6.dp)
+    val Medium = RoundedCornerShape(8.dp)
+    val Large = RoundedCornerShape(12.dp)
+    val ExtraLarge = RoundedCornerShape(16.dp)
 }
 
 /**

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 /**
  * A Material 3 Expressive Card wrapper.
  * Features:
- * - 20dp rounded corners
+ * - 12dp rounded corners, flat Talos style
  * - Spring animation on press
  * - Consistent elevation and border
  */
@@ -31,10 +31,10 @@ fun ExpressiveCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = RoundedCornerShape(20.dp),
+    shape: Shape = RoundedCornerShape(12.dp),
     colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-    elevation: CardElevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-    border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+    elevation: CardElevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable ColumnScope.() -> Unit
 ) {

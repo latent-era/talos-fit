@@ -6,53 +6,53 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Typography using system font - Material 3 Expressive (Larger, Bolder)
+// Typography using system font - Talos Design Language
 val Typography = Typography(
     // Display styles (large headers) - Expressive: Larger and bolder
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 64.sp,  // Expressive: Increased from 57sp
-        lineHeight = 72.sp, // Expressive: Increased from 64sp
+        fontSize = 48.sp,
+        lineHeight = 56.sp,
         letterSpacing = (-0.25).sp
     ),
     displayMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 50.sp,  // Expressive: Increased from 45sp
-        lineHeight = 58.sp, // Expressive: Increased from 52sp
+        fontSize = 36.sp,
+        lineHeight = 44.sp,
         letterSpacing = 0.sp
     ),
 
     // Headline styles (screen titles) - Expressive: Larger and bolder
     headlineLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,  // Expressive: Changed from SemiBold to Bold
-        fontSize = 36.sp,  // Expressive: Increased from 32sp
-        lineHeight = 44.sp, // Expressive: Increased from 40sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+        lineHeight = 38.sp,
         letterSpacing = 0.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,  // Expressive: Changed from SemiBold to Bold
-        fontSize = 32.sp,  // Expressive: Increased from 28sp
-        lineHeight = 40.sp, // Expressive: Increased from 36sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,  // Expressive: Changed from SemiBold to Bold
-        fontSize = 28.sp,  // Expressive: Increased from 24sp
-        lineHeight = 36.sp, // Expressive: Increased from 32sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
 
     // Title styles (card headers, section titles) - Expressive: Larger
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,  // Expressive: Changed from SemiBold to Bold
-        fontSize = 24.sp,  // Expressive: Increased from 22sp
-        lineHeight = 32.sp, // Expressive: Increased from 28sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     titleMedium = TextStyle(
@@ -74,8 +74,8 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,  // Expressive: Increased from 16sp
-        lineHeight = 26.sp, // Expressive: Increased from 24sp
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
@@ -110,9 +110,9 @@ val Typography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 11.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 1.5.sp
     )
 )

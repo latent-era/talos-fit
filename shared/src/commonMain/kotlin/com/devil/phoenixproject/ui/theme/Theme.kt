@@ -39,7 +39,7 @@ private val DarkColorScheme = darkColorScheme(
 
     // Surface container roles (AMOLED scale)
     surfaceDim = Slate950,
-    surfaceBright = Slate700,
+    surfaceBright = Slate800,
     surfaceContainerLowest = Slate950,
     surfaceContainerLow = Slate900,
     surfaceContainer = Slate900,
@@ -50,7 +50,7 @@ private val DarkColorScheme = darkColorScheme(
     error = SignalError,
     onError = Color.White,
 
-    outline = Slate400,
+    outline = Slate700,
     outlineVariant = Slate700
 )
 

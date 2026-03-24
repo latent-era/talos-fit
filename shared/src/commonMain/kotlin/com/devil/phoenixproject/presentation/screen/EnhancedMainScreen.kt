@@ -9,7 +9,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -97,13 +96,6 @@ fun EnhancedMainScreen(
     }
 
 
-    // Determine if we're in dark mode for TopAppBar color
-    val isDarkMode = when (themeMode) {
-        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-        ThemeMode.LIGHT -> false
-        ThemeMode.DARK -> true
-    }
-
     var currentRoute by remember { mutableStateOf(NavigationRoutes.Home.route) }
 
     // Track navigation changes
@@ -155,110 +147,120 @@ fun EnhancedMainScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             if (shouldShowTopBar) {
-                TopAppBar(
-                    modifier = Modifier.statusBarsPadding(),
-                    title = {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(0.dp)
-                        ) {
-                            // Main title - either dynamic or default based on route
-                            Text(
-                                text = if (topBarTitle.isNotEmpty()) topBarTitle
-                                       else getScreenTitle(
-                                           route = currentRoute,
-                                           routineName = currentRoutineName,
-                                           exerciseName = selectedExerciseName,
-                                           cycleName = editingCycleName
-                                       ),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            // Subtitle - always show "Talos Fit"
-                            Text(
-                                text = "Talos Fit",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Medium
+                Column {
+                    TopAppBar(
+                        modifier = Modifier.statusBarsPadding(),
+                        title = {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(0.dp)
+                            ) {
+                                // Main title - either dynamic or default based on route
+                                Text(
+                                    text = if (topBarTitle.isNotEmpty()) topBarTitle
+                                           else getScreenTitle(
+                                               route = currentRoute,
+                                               routineName = currentRoutineName,
+                                               exerciseName = selectedExerciseName,
+                                               cycleName = editingCycleName
+                                           ),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
-                            )
-                        }
-                    },
-                    navigationIcon = {
-                        if (showBackButton) {
-                            IconButton(onClick = {
-                                when (currentRoute) {
-                                    // Routine flow - needs confirmation
-                                    NavigationRoutes.RoutineOverview.route -> {
-                                        showExitRoutineConfirmation = true
-                                    }
-                                    // Set ready - go back to overview
-                                    NavigationRoutes.SetReady.route -> {
-                                        viewModel.returnToOverview()
-                                        navController.navigateUp()
-                                    }
-                                    // All other screens - standard back or custom action
-                                    else -> {
-                                        if (topBarBackAction != null) {
-                                            topBarBackAction?.invoke()
-                                        } else {
+                                // Subtitle - always show "Talos Fit"
+                                Text(
+                                    text = "Talos Fit",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                )
+                            }
+                        },
+                        navigationIcon = {
+                            if (showBackButton) {
+                                IconButton(onClick = {
+                                    when (currentRoute) {
+                                        // Routine flow - needs confirmation
+                                        NavigationRoutes.RoutineOverview.route -> {
+                                            showExitRoutineConfirmation = true
+                                        }
+                                        // Set ready - go back to overview
+                                        NavigationRoutes.SetReady.route -> {
+                                            viewModel.returnToOverview()
                                             navController.navigateUp()
                                         }
+                                        // All other screens - standard back or custom action
+                                        else -> {
+                                            if (topBarBackAction != null) {
+                                                topBarBackAction?.invoke()
+                                            } else {
+                                                navController.navigateUp()
+                                            }
+                                        }
                                     }
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back",
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    actions = {
-                        // Dynamic Actions from Screens
-                        topBarActions.forEach { action ->
-                            IconButton(onClick = action.onClick) {
-                                Icon(
-                                    imageVector = action.icon,
-                                    contentDescription = action.description,
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-
-                        // Connection status icon with text label
-                        ConnectionStatusIndicator(
-                            connectionState = connectionState,
-                            onToggleConnection = {
-                                if (connectionState is ConnectionState.Connected) {
-                                    viewModel.disconnect()
-                                } else {
-                                    viewModel.ensureConnection(
-                                        onConnected = {},
-                                        onFailed = {}
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Back",
+                                        tint = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
-                        )
-                    }
-                )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        actions = {
+                            // Dynamic Actions from Screens
+                            topBarActions.forEach { action ->
+                                IconButton(onClick = action.onClick) {
+                                    Icon(
+                                        imageVector = action.icon,
+                                        contentDescription = action.description,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+
+                            // Connection status icon with text label
+                            ConnectionStatusIndicator(
+                                connectionState = connectionState,
+                                onToggleConnection = {
+                                    if (connectionState is ConnectionState.Connected) {
+                                        viewModel.disconnect()
+                                    } else {
+                                        viewModel.ensureConnection(
+                                            onConnected = {},
+                                            onFailed = {}
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    )
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                }
             }
         },
         bottomBar = {
             if (shouldShowBottomBar) {
-                NavigationBar(
-                    containerColor = if (isDarkMode) Color(0xFF1C1B1F) else Color(0xFFF3F3F3),
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.navigationBarsPadding()
-                ) {
+                Column {
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.navigationBarsPadding()
+                    ) {
                     // Analytics tab
                     NavigationBarItem(
                         icon = {
@@ -281,7 +283,7 @@ fun EnhancedMainScreen(
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            indicatorColor = Color.Transparent,
                             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -308,7 +310,7 @@ fun EnhancedMainScreen(
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            indicatorColor = Color.Transparent,
                             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -336,11 +338,12 @@ fun EnhancedMainScreen(
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            indicatorColor = Color.Transparent,
                             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
+                }
                 }
             }
         }
