@@ -147,7 +147,6 @@ fun EnhancedMainScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             if (shouldShowTopBar) {
-                Column {
                     TopAppBar(
                         modifier = Modifier.statusBarsPadding(),
                         title = {
@@ -211,7 +210,7 @@ fun EnhancedMainScreen(
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
+                            containerColor = MaterialTheme.colorScheme.background,
                             titleContentColor = MaterialTheme.colorScheme.onSurface,
                             actionIconContentColor = MaterialTheme.colorScheme.onSurface
                         ),
@@ -243,22 +242,12 @@ fun EnhancedMainScreen(
                             )
                         }
                     )
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
-                }
             }
         },
         bottomBar = {
             if (shouldShowBottomBar) {
-                Column {
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
                     NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.surface,
+                        containerColor = MaterialTheme.colorScheme.background,
                         modifier = Modifier.navigationBarsPadding()
                     ) {
                     // Analytics tab
@@ -343,7 +332,6 @@ fun EnhancedMainScreen(
                             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
-                }
                 }
             }
         }

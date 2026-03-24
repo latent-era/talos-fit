@@ -289,7 +289,7 @@ fun AnalyticsScreen(
             // Tab Row - Redesigned: Dashboard, Progress, History
             PrimaryTabRow(
                 selectedTabIndex = pagerState.currentPage,
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 indicator = {
                     TabRowDefaults.PrimaryIndicator(

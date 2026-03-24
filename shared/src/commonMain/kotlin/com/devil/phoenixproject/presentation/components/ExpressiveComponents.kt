@@ -86,7 +86,7 @@ fun ExpressiveSlider(
         colors = SliderDefaults.colors(
             thumbColor = thumbColor,
             activeTrackColor = trackColor,
-            inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            inactiveTrackColor = MaterialTheme.colorScheme.outlineVariant,
             activeTickColor = MaterialTheme.colorScheme.surface,
             inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )

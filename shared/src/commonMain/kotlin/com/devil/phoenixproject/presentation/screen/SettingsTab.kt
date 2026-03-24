@@ -228,7 +228,8 @@ fun SettingsTab(
                             onCheckedChange = onDarkModeChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -350,7 +351,8 @@ fun SettingsTab(
                             onCheckedChange = onEnableVideoPlaybackChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -381,7 +383,8 @@ fun SettingsTab(
                             onCheckedChange = onAudioRepCountChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -412,7 +415,8 @@ fun SettingsTab(
                             onCheckedChange = onGamificationEnabledChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -566,7 +570,8 @@ fun SettingsTab(
                                 enabled = isConnected,
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                    checkedThumbColor = Color.White
+                                    checkedThumbColor = Color.White,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                                 )
                             )
                         }
@@ -954,7 +959,8 @@ fun SettingsTab(
                                 onCheckedChange = { onSimulatorModeToggle(it) },
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                    checkedThumbColor = Color.White
+                                    checkedThumbColor = Color.White,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                                 )
                             )
                         }

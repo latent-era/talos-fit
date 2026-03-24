@@ -427,7 +427,7 @@ fun ExercisePickerContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = 8.dp),
+                    .padding(top = 8.dp, bottom = 8.dp),
                 placeholder = { Text("Search exercises...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                 trailingIcon = if (searchQuery.isNotEmpty()) {

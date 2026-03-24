@@ -241,7 +241,7 @@ fun ExerciseConfigScreen(
                             onCheckedChange = { isBeast ->
                                 configViewModel.onSelectedModeChange(if (isBeast) WorkoutMode.TUTBeast else WorkoutMode.TUT)
                             },
-                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
+                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White, uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant)
                         )
                     }
                 }
@@ -328,7 +328,7 @@ fun ExerciseConfigScreen(
                     Switch(
                         checked = perSetRestTime,
                         onCheckedChange = configViewModel::onPerSetRestTimeChange,
-                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White, uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant)
                     )
                 }
             }
@@ -364,7 +364,7 @@ fun ExerciseConfigScreen(
                     Switch(
                         checked = stallDetectionEnabled,
                         onCheckedChange = configViewModel::onStallDetectionEnabledChange,
-                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White, uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant)
                     )
                 }
             }
@@ -407,7 +407,7 @@ fun ExerciseConfigScreen(
                                 if (isTop) RepCountTiming.TOP else RepCountTiming.BOTTOM
                             )
                         },
-                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White, uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant)
                     )
                 }
             }
@@ -447,7 +447,7 @@ fun ExerciseConfigScreen(
                         Switch(
                             checked = stopAtTop,
                             onCheckedChange = configViewModel::onStopAtTopChange,
-                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
+                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White, uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant)
                         )
                     }
                 }

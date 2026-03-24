@@ -195,7 +195,7 @@ fun ExerciseEditBottomSheet(
                             containerColor = MaterialTheme.colorScheme.primaryContainer
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
                     ) {
                         Row(
                             modifier = Modifier
@@ -284,7 +284,8 @@ fun ExerciseEditBottomSheet(
                                 },
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                    checkedThumbColor = Color.White
+                                    checkedThumbColor = Color.White,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                                 )
                             )
                         }
@@ -309,7 +310,7 @@ fun ExerciseEditBottomSheet(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
                     ) {
                         Column(
                             modifier = Modifier
@@ -372,7 +373,8 @@ fun ExerciseEditBottomSheet(
                             onCheckedChange = viewModel::onPerSetRestTimeChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -411,7 +413,8 @@ fun ExerciseEditBottomSheet(
                             onCheckedChange = viewModel::onStallDetectionEnabledChange,
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -457,7 +460,8 @@ fun ExerciseEditBottomSheet(
                             },
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
+                                checkedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                             )
                         )
                     }
@@ -500,7 +504,8 @@ fun ExerciseEditBottomSheet(
                                 onCheckedChange = viewModel::onStopAtTopChange,
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                    checkedThumbColor = Color.White
+                                    checkedThumbColor = Color.White,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                                 )
                             )
                         }
@@ -744,7 +749,7 @@ fun SetRow(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier
@@ -790,7 +795,8 @@ fun SetRow(
                         },
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = MaterialTheme.colorScheme.primary,
-                            checkedThumbColor = Color.White
+                            checkedThumbColor = Color.White,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                         )
                     )
                     Text(
@@ -964,7 +970,7 @@ fun ModeSelector(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant),
         shadowElevation = 8.dp
     ) {
         Column(modifier = Modifier.padding(Spacing.medium)) {
@@ -1033,7 +1039,7 @@ fun EccentricLoadSelector(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier
@@ -1099,7 +1105,7 @@ fun EchoLevelSelector(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier
@@ -1155,7 +1161,7 @@ fun WeightConfigurationCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier
@@ -1200,7 +1206,8 @@ fun WeightConfigurationCard(
                     enabled = currentExercisePR != null,
                     colors = SwitchDefaults.colors(
                         checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        checkedThumbColor = Color.White
+                        checkedThumbColor = Color.White,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
                     )
                 )
             }
