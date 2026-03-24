@@ -54,7 +54,7 @@ actual class DriverFactory {
 
     companion object {
         /** Current schema version - must match SQLDelight (1 + number of .sqm files) */
-        private const val CURRENT_SCHEMA_VERSION = 21L
+        private const val CURRENT_SCHEMA_VERSION = 22L
     }
 
     /**
@@ -499,6 +499,7 @@ actual class DriverFactory {
                 burnoutAvgWeightKg REAL,
                 peakWeightKg REAL,
                 rpe INTEGER,
+                formScore INTEGER,
                 updatedAt INTEGER,
                 serverId TEXT,
                 deletedAt INTEGER,
@@ -535,6 +536,7 @@ actual class DriverFactory {
                 workoutMode TEXT NOT NULL,
                 prType TEXT NOT NULL DEFAULT 'MAX_WEIGHT',
                 volume REAL NOT NULL DEFAULT 0.0,
+                phase TEXT NOT NULL DEFAULT 'COMBINED',
                 updatedAt INTEGER,
                 serverId TEXT,
                 deletedAt INTEGER,
@@ -791,6 +793,19 @@ actual class DriverFactory {
                 serverId TEXT
             )
             """,
+            // ==================== RPG Attributes (migration 17) ====================
+            """
+            CREATE TABLE IF NOT EXISTS RpgAttributes (
+                id INTEGER PRIMARY KEY DEFAULT 1,
+                strength INTEGER NOT NULL DEFAULT 0,
+                power INTEGER NOT NULL DEFAULT 0,
+                stamina INTEGER NOT NULL DEFAULT 0,
+                consistency INTEGER NOT NULL DEFAULT 0,
+                mastery INTEGER NOT NULL DEFAULT 0,
+                characterClass TEXT NOT NULL DEFAULT 'Phoenix',
+                lastComputed INTEGER NOT NULL DEFAULT 0
+            )
+            """,
             // ==================== Training Cycles ====================
             """
             CREATE TABLE IF NOT EXISTS TrainingCycle (
@@ -966,6 +981,8 @@ actual class DriverFactory {
         safeAddColumn(driver, "WorkoutSession", "totalVelocityLossPercent", "REAL")
         safeAddColumn(driver, "WorkoutSession", "dominantSide", "TEXT")
         safeAddColumn(driver, "WorkoutSession", "strengthProfile", "TEXT")
+        // Form Check score (migration 16 - Phase 19 CV-06)
+        safeAddColumn(driver, "WorkoutSession", "formScore", "INTEGER")
         safeAddColumn(driver, "WorkoutSession", "updatedAt", "INTEGER")
         safeAddColumn(driver, "WorkoutSession", "serverId", "TEXT")
         safeAddColumn(driver, "WorkoutSession", "deletedAt", "INTEGER")
@@ -1027,7 +1044,7 @@ actual class DriverFactory {
             "CREATE INDEX IF NOT EXISTS idx_routine_exercise_superset ON RoutineExercise(supersetId)",
             // WorkoutSession indexes
             "CREATE INDEX IF NOT EXISTS idx_workout_session_exercise ON WorkoutSession(exerciseId)",
-            "CREATE INDEX IF NOT EXISTS idx_workout_session_started ON WorkoutSession(timestamp)",
+            "CREATE INDEX IF NOT EXISTS idx_workout_session_timestamp ON WorkoutSession(timestamp)",
             // MetricSample indexes
             "CREATE INDEX IF NOT EXISTS idx_metric_sample_session ON MetricSample(sessionId)",
             // PersonalRecord indexes
