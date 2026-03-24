@@ -71,7 +71,7 @@ data class TalosSyncCounts(
 
 @Serializable
 data class PairingResponse(
-    @SerialName("device_token") val deviceToken: String,
-    @SerialName("vps_url") val vpsUrl: String? = null,
-    @SerialName("user_id") val userId: String? = null,
+    val deviceToken: String,
+    val vpsUrl: String? = null,
+    val userId: String? = null,
 )
