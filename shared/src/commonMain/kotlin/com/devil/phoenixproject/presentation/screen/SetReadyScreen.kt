@@ -132,7 +132,7 @@ fun SetReadyScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.surfaceContainer,
-                tonalElevation = 3.dp
+                tonalElevation = 0.dp
             ) {
                 Row(
                     modifier = Modifier
@@ -166,7 +166,7 @@ fun SetReadyScreen(
                             .weight(1f)
                             .height(48.dp),
                         enabled = connectionState is ConnectionState.Connected,
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(8.dp)
                     ) {
                         Icon(
                             Icons.Default.PlayArrow,
@@ -230,10 +230,12 @@ fun SetReadyScreen(
             // Header - Set X of Y
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Column(
                     modifier = Modifier
@@ -292,10 +294,10 @@ fun SetReadyScreen(
             // Issue #222: Hide for bodyweight exercises (no cable settings to configure)
             if (!isBodyweight) Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(
                     modifier = Modifier

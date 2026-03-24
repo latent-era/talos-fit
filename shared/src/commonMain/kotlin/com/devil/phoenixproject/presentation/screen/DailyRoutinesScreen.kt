@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devil.phoenixproject.data.repository.ExerciseRepository
 import com.devil.phoenixproject.domain.model.Routine
@@ -147,7 +148,9 @@ fun DailyRoutinesScreen(
                     TextButton(onClick = { showWorkoutActiveDialog = false }) {
                         Text("OK")
                     }
-                }
+                },
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
             )
         }
     }

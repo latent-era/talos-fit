@@ -54,7 +54,8 @@ fun ExerciseRowContent(
                 onClick = onClick,
                 onLongClick = onLongPress
             ),
-        color = MaterialTheme.colorScheme.surface
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),

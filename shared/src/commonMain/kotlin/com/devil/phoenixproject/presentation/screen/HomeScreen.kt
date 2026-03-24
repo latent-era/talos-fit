@@ -33,6 +33,8 @@ import com.devil.phoenixproject.presentation.components.AnimatedActionButton
 import com.devil.phoenixproject.presentation.components.IconAnimation
 import com.devil.phoenixproject.presentation.util.LocalWindowSizeClass
 import com.devil.phoenixproject.presentation.util.WindowWidthSizeClass
+import com.devil.phoenixproject.ui.theme.TalosFitDesign
+import com.devil.phoenixproject.ui.theme.TalosSectionHeader
 import com.devil.phoenixproject.ui.theme.ThemeMode
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
@@ -107,8 +109,8 @@ fun HomeScreen(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 4.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 // 1. Weekly Compliance Strip (Top of screen)
                 item(key = "weekly-compliance") {
@@ -133,12 +135,9 @@ fun HomeScreen(
 
                 // 4. Recent Activity Summary
                 item(key = "recent-activity") {
-                    Text(
-                        "Recent Activity",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    TalosSectionHeader(
+                        title = "RECENT ACTIVITY",
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
                     RecentActivitySummary(recentSessions, weightUnit)
                 }
@@ -154,7 +153,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Left column: Cycles & Routines
@@ -342,15 +341,17 @@ private fun ActiveCycleHero(
     Card(
         onClick = onViewSchedule,
         modifier = Modifier.fillMaxWidth().height(heroCardHeight),
-        shape = RoundedCornerShape(28.dp), // Expressive shape
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = TalosFitDesign.cardBorder
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Background Image/Icon Placeholder (Right aligned, subtle)
             Icon(
                 imageVector = if (isRest) Icons.Default.SelfImprovement else Icons.Default.FitnessCenter,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.05f),
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f),
                 modifier = Modifier
                     .size(heroImageSize)
                     .align(Alignment.BottomEnd)
@@ -359,11 +360,11 @@ private fun ActiveCycleHero(
 
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(20.dp)
                     .align(Alignment.TopStart)
             ) {
                 Surface(
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
@@ -371,7 +372,7 @@ private fun ActiveCycleHero(
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -381,25 +382,25 @@ private fun ActiveCycleHero(
                     text = cycleDay?.name ?: "Day $currentDayNum",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 if (routine != null) {
                     Text(
                         text = routine.name,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else if (isRest) {
                     Text(
                         text = "Take it easy today.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            // Progress Bar at bottom (replaces dot indicators)
+            // Progress Bar at bottom
             if (cycle.days.isNotEmpty()) {
                 val progressValue = currentDayNum.toFloat() / cycle.days.size.toFloat()
                 LinearProgressIndicator(
@@ -408,8 +409,8 @@ private fun ActiveCycleHero(
                         .fillMaxWidth()
                         .height(4.dp)
                         .align(Alignment.BottomCenter),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    trackColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f),
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.outlineVariant,
                     drawStopIndicator = {}
                 )
             }
@@ -434,8 +435,9 @@ private fun RecentActivitySummary(history: List<WorkoutSession>, weightUnit: Wei
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             history.take(3).forEach { session ->
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(12.dp),
+                    border = TalosFitDesign.cardBorder,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -456,7 +458,8 @@ private fun RecentActivitySummary(history: List<WorkoutSession>, weightUnit: Wei
                             Text(
                                 session.exerciseName ?: "Workout Session",
                                 style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 "${session.workingReps} reps • $displayWeight $unitLabel/cable",

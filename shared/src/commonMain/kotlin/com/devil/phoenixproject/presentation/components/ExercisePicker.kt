@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
@@ -284,8 +285,8 @@ fun ExercisePickerDialog(
             sheetState = sheetState,
             modifier = modifier,
             dragHandle = null,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
         ) {
             ExercisePickerContent(
                 exercises = exercises,
@@ -437,7 +438,13 @@ fun ExercisePickerContent(
                     }
                 } else null,
                 singleLine = true,
-                shape = RoundedCornerShape(28.dp)
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary
+                )
             )
 
             // Unified filter shelf
@@ -475,7 +482,7 @@ fun ExercisePickerContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                         .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -546,8 +553,8 @@ fun ExerciseVideoDialog(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
     ) {
         Column(
             modifier = Modifier
@@ -580,10 +587,26 @@ fun ExerciseVideoDialog(
                     modifier = Modifier.padding(bottom = 16.dp)
                 ) {
                     items(videos) { video ->
+                        val isSelected = selectedAngle == video.angle
                         FilterChip(
-                            selected = selectedAngle == video.angle,
+                            selected = isSelected,
                             onClick = { selectedAngle = video.angle },
-                            label = { Text(video.angle.lowercase().replaceFirstChar { it.uppercase() }) }
+                            label = { Text(video.angle.lowercase().replaceFirstChar { it.uppercase() }) },
+                            shape = RoundedCornerShape(8.dp),
+                            border = if (!isSelected) {
+                                FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = false,
+                                    borderColor = MaterialTheme.colorScheme.outlineVariant,
+                                    borderWidth = 1.dp
+                                )
+                            } else null,
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = Color.Transparent,
+                                labelColor = MaterialTheme.colorScheme.onSurface,
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = Color.White
+                            )
                         )
                     }
                 }
@@ -594,7 +617,8 @@ fun ExerciseVideoDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 if (enableVideoPlayback) {
                     VideoPlayer(

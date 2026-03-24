@@ -1,5 +1,6 @@
 package com.devil.phoenixproject.presentation.components.exercisepicker
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
@@ -23,6 +25,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -68,9 +71,11 @@ fun ExerciseFilterShelf(
                             modifier = Modifier.size(18.dp)
                         )
                     },
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                     colors = InputChipDefaults.inputChipColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        labelColor = MaterialTheme.colorScheme.onErrorContainer
+                        containerColor = Color.Transparent,
+                        labelColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
             }
@@ -86,12 +91,24 @@ fun ExerciseFilterShelf(
                     Icon(
                         Icons.Default.Star,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = if (showFavoritesOnly) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
+                shape = RoundedCornerShape(8.dp),
+                border = if (!showFavoritesOnly) {
+                    FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = false,
+                        borderColor = MaterialTheme.colorScheme.outlineVariant,
+                        borderWidth = 1.dp
+                    )
+                } else null,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = Color.Transparent,
+                    labelColor = MaterialTheme.colorScheme.onSurface,
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
                 )
             )
         }
@@ -106,12 +123,24 @@ fun ExerciseFilterShelf(
                     Icon(
                         Icons.Default.Person,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = if (showCustomOnly) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
+                shape = RoundedCornerShape(8.dp),
+                border = if (!showCustomOnly) {
+                    FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = false,
+                        borderColor = MaterialTheme.colorScheme.outlineVariant,
+                        borderWidth = 1.dp
+                    )
+                } else null,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = Color.Transparent,
+                    labelColor = MaterialTheme.colorScheme.onSurface,
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
                 )
             )
         }
@@ -126,13 +155,25 @@ fun ExerciseFilterShelf(
 
         // Muscle group chips
         items(muscleGroups) { muscle ->
+            val isSelected = muscle in selectedMuscles
             FilterChip(
-                selected = muscle in selectedMuscles,
+                selected = isSelected,
                 onClick = { onToggleMuscle(muscle) },
                 label = { Text(muscle) },
+                shape = RoundedCornerShape(8.dp),
+                border = if (!isSelected) {
+                    FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = false,
+                        borderColor = MaterialTheme.colorScheme.outlineVariant,
+                        borderWidth = 1.dp
+                    )
+                } else null,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    containerColor = Color.Transparent,
+                    labelColor = MaterialTheme.colorScheme.onSurface,
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
                 )
             )
         }
@@ -147,13 +188,25 @@ fun ExerciseFilterShelf(
 
         // Equipment chips
         items(equipmentTypes) { equipment ->
+            val isSelected = equipment in selectedEquipment
             FilterChip(
-                selected = equipment in selectedEquipment,
+                selected = isSelected,
                 onClick = { onToggleEquipment(equipment) },
                 label = { Text(equipment) },
+                shape = RoundedCornerShape(8.dp),
+                border = if (!isSelected) {
+                    FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = false,
+                        borderColor = MaterialTheme.colorScheme.outlineVariant,
+                        borderWidth = 1.dp
+                    )
+                } else null,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    containerColor = Color.Transparent,
+                    labelColor = MaterialTheme.colorScheme.onSurface,
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
                 )
             )
         }

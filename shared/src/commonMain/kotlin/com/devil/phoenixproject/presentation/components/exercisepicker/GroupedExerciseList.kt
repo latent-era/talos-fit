@@ -104,7 +104,7 @@ fun GroupedExerciseList(
                         }
                     )
                     HorizontalDivider(
-                        thickness = 0.5.dp,
+                        thickness = 1.dp,
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                 }

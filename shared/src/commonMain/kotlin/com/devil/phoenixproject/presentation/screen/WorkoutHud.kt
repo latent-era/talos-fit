@@ -1,5 +1,6 @@
 package com.devil.phoenixproject.presentation.screen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -300,7 +301,7 @@ private fun HudTopBar(
         Button(
             onClick = onStopWorkout,
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 0.dp)
         ) {
             Icon(Icons.Default.Stop, contentDescription = null)
@@ -322,8 +323,8 @@ private fun HudBottomBar(
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        shadowElevation = 8.dp
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        shadowElevation = 0.dp
     ) {
         Row(
             modifier = Modifier
@@ -777,9 +778,11 @@ private fun StatsPage(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            shape = RoundedCornerShape(16.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            shape = RoundedCornerShape(12.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -818,9 +821,11 @@ private fun StatsPage(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            shape = RoundedCornerShape(16.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            shape = RoundedCornerShape(12.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -854,9 +859,11 @@ private fun StatsPage(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            shape = RoundedCornerShape(16.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            shape = RoundedCornerShape(12.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),

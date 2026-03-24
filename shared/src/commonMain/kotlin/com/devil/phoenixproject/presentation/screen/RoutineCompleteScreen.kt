@@ -1,6 +1,7 @@
 package com.devil.phoenixproject.presentation.screen
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -121,10 +122,12 @@ fun RoutineCompleteScreen(
             // Stats card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
-                )
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Row(
                     modifier = Modifier
@@ -159,7 +162,7 @@ fun RoutineCompleteScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text("DONE", fontWeight = FontWeight.Bold)
             }

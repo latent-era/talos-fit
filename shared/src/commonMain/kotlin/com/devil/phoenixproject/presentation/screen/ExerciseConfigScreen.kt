@@ -131,11 +131,12 @@ fun ExerciseConfigScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                            containerColor = MaterialTheme.colorScheme.surface
                         ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                     ) {
                         VideoPlayer(
                             videoUrl = video.videoUrl,
@@ -149,12 +150,12 @@ fun ExerciseConfigScreen(
             currentExercisePR?.let { pr ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
                     Row(
                         modifier = Modifier
@@ -220,8 +221,8 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                    shadowElevation = 2.dp
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    shadowElevation = 0.dp
                 ) {
                     Row(
                         modifier = Modifier
@@ -263,8 +264,10 @@ fun ExerciseConfigScreen(
             if (exerciseType == ExerciseType.STANDARD && !isEchoMode) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
                     Column(
                         modifier = Modifier
@@ -306,8 +309,8 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                shadowElevation = 2.dp
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                shadowElevation = 0.dp
             ) {
                 Row(
                     modifier = Modifier
@@ -335,8 +338,8 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                shadowElevation = 2.dp
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                shadowElevation = 0.dp
             ) {
                 Row(
                     modifier = Modifier
@@ -371,8 +374,8 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                shadowElevation = 2.dp
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                shadowElevation = 0.dp
             ) {
                 Row(
                     modifier = Modifier
@@ -415,8 +418,8 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                    shadowElevation = 2.dp
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    shadowElevation = 0.dp
                 ) {
                     Row(
                         modifier = Modifier
@@ -474,8 +477,8 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-                    shadowElevation = 2.dp
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    shadowElevation = 0.dp
                 ) {
                     Column(modifier = Modifier.padding(Spacing.small)) {
                         Text(
@@ -512,8 +515,8 @@ fun ExerciseConfigScreen(
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
-                border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(20.dp)
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
                     "Cancel",
@@ -532,10 +535,10 @@ fun ExerciseConfigScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 ),
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(8.dp),
                 elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 4.dp,
-                    pressedElevation = 2.dp
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp
                 )
             ) {
                 Text(

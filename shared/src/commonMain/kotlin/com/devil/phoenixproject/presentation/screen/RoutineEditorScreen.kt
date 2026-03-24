@@ -18,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -370,6 +369,7 @@ fun RoutineEditorScreen(
                     onClick = { navController.navigate(NavigationRoutes.ExerciseSelector.route) },
                     icon = { Icon(Icons.Default.Add, null) },
                     text = { Text("Add Exercise") },
+                    shape = RoundedCornerShape(12.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 )
@@ -405,7 +405,8 @@ fun RoutineEditorScreen(
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("Routine Name") },
                     textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    singleLine = true
+                    singleLine = true,
+                    shape = RoundedCornerShape(8.dp)
                 )
                 Button(
                     onClick = {
@@ -418,7 +419,8 @@ fun RoutineEditorScreen(
                         )
                         viewModel.saveRoutine(routineToSave)
                         navController.popBackStack()
-                    }
+                    },
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Save")
                 }
@@ -463,10 +465,10 @@ fun RoutineEditorScreen(
                                     state = reorderState,
                                     key = "superset_${superset.id}"
                                 ) { isDragging ->
-                                    val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
+                                    val borderWidth by animateDpAsState(if (isDragging) 2.dp else 0.dp)
                                     SupersetContainer(
                                         colorIndex = superset.colorIndex,
-                                        modifier = Modifier.shadow(elevation, RoundedCornerShape(12.dp))
+                                        modifier = if (isDragging) Modifier.border(borderWidth, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp)) else Modifier
                                     ) {
                                         // Header
                                         SupersetHeader(
@@ -553,11 +555,13 @@ fun RoutineEditorScreen(
                                     state = reorderState,
                                     key = exercise.id
                                 ) { isDragging ->
-                                    val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
-                                    Box {
+                                    val borderWidth by animateDpAsState(if (isDragging) 2.dp else 0.dp)
+                                    Box(
+                                        modifier = if (isDragging) Modifier.border(borderWidth, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp)) else Modifier
+                                    ) {
                                         ExerciseRowWithConnector(
                                             exercise = exercise,
-                                            elevation = elevation,
+                                            elevation = 0.dp,
                                             weightUnit = weightUnit,
                                             kgToDisplay = kgToDisplay,
                                             onClick = {
@@ -596,7 +600,8 @@ fun RoutineEditorScreen(
                                         // Keep the dropdown menu for standalone exercises
                                         DropdownMenu(
                                             expanded = exerciseMenuFor == exercise.id,
-                                            onDismissRequest = { exerciseMenuFor = null }
+                                            onDismissRequest = { exerciseMenuFor = null },
+                                            containerColor = MaterialTheme.colorScheme.surface
                                         ) {
                                             DropdownMenuItem(
                                                 text = { Text("Edit") },
@@ -680,7 +685,8 @@ fun RoutineEditorScreen(
                     onValueChange = { newName = it },
                     label = { Text("Name") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
                 )
             },
             confirmButton = {
@@ -697,7 +703,9 @@ fun RoutineEditorScreen(
                 TextButton(onClick = { supersetToRename = null }) {
                     Text("Cancel")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(12.dp)
         )
     }
 
@@ -746,7 +754,9 @@ fun RoutineEditorScreen(
                 TextButton(onClick = { supersetToChangeColor = null }) {
                     Text("Cancel")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(12.dp)
         )
     }
 
@@ -777,7 +787,9 @@ fun RoutineEditorScreen(
                 TextButton(onClick = { supersetToDelete = null }) {
                     Text("Cancel")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(12.dp)
         )
     }
 
@@ -827,7 +839,9 @@ fun RoutineEditorScreen(
                 TextButton(onClick = { showBatchDeleteDialog = false }) {
                     Text("Cancel")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(12.dp)
         )
     }
 }
