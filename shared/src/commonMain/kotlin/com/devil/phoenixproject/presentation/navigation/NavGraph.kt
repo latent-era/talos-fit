@@ -433,10 +433,12 @@ fun NavGraph(
                     },
                     onSave = { configuredExercise ->
                         exerciseToConfigState = null
-                        // Pop ExerciseConfig + ExerciseSelector to land on RoutineEditor
-                        navController.popBackStack() // pop ExerciseConfig
-                        navController.popBackStack() // pop ExerciseSelector → RoutineEditor
-                        // Set result AFTER pops so RoutineEditor recomposes with it
+                        // Pop everything up to and including ExerciseSelector,
+                        // landing on RoutineEditor (single call, no race)
+                        navController.popBackStack(
+                            route = NavigationRoutes.ExerciseSelector.route,
+                            inclusive = true
+                        )
                         configuredExerciseResult = configuredExercise
                     },
                     onCancel = {
