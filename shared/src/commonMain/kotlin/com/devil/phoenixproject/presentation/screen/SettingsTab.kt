@@ -229,7 +229,7 @@ fun SettingsTab(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -352,7 +352,7 @@ fun SettingsTab(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -384,7 +384,7 @@ fun SettingsTab(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -416,7 +416,7 @@ fun SettingsTab(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -571,7 +571,7 @@ fun SettingsTab(
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
                                     checkedThumbColor = Color.White,
-                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -960,7 +960,7 @@ fun SettingsTab(
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
                                     checkedThumbColor = Color.White,
-                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }

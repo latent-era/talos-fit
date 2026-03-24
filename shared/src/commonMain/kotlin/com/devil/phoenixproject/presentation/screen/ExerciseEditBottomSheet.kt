@@ -285,7 +285,7 @@ fun ExerciseEditBottomSheet(
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
                                     checkedThumbColor = Color.White,
-                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -374,7 +374,7 @@ fun ExerciseEditBottomSheet(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -414,7 +414,7 @@ fun ExerciseEditBottomSheet(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -461,7 +461,7 @@ fun ExerciseEditBottomSheet(
                             colors = SwitchDefaults.colors(
                                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 checkedThumbColor = Color.White,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
@@ -505,7 +505,7 @@ fun ExerciseEditBottomSheet(
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = MaterialTheme.colorScheme.primary,
                                     checkedThumbColor = Color.White,
-                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
@@ -796,7 +796,7 @@ fun SetRow(
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = MaterialTheme.colorScheme.primary,
                             checkedThumbColor = Color.White,
-                            uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                            uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                     Text(
@@ -1207,7 +1207,7 @@ fun WeightConfigurationCard(
                     colors = SwitchDefaults.colors(
                         checkedTrackColor = MaterialTheme.colorScheme.primary,
                         checkedThumbColor = Color.White,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant
+                        uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant, uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
