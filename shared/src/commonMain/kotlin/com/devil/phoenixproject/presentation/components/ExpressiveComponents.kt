@@ -34,7 +34,7 @@ fun ExpressiveCard(
     shape: Shape = RoundedCornerShape(20.dp),
     colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
     elevation: CardElevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-    border: BorderStroke? = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant),
+    border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -73,8 +73,8 @@ fun ExpressiveSlider(
     modifier: Modifier = Modifier,
     steps: Int = 0,
     onValueChangeFinished: (() -> Unit)? = null,
-    trackColor: Color = MaterialTheme.colorScheme.onSurface,
-    thumbColor: Color = MaterialTheme.colorScheme.onSurface
+    trackColor: Color = MaterialTheme.colorScheme.primary,
+    thumbColor: Color = MaterialTheme.colorScheme.primary
 ) {
     Slider(
         value = value,
@@ -109,7 +109,7 @@ fun ProgressionSlider(
 
     val activeColor = when {
         isNegative -> MaterialTheme.colorScheme.error
-        isPositive -> MaterialTheme.colorScheme.onSurface
+        isPositive -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 

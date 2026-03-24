@@ -281,7 +281,11 @@ fun ExerciseEditBottomSheet(
                                 checked = selectedMode is WorkoutMode.TUTBeast,
                                 onCheckedChange = { isBeast ->
                                     viewModel.onSelectedModeChange(if (isBeast) WorkoutMode.TUTBeast else WorkoutMode.TUT)
-                                }
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    checkedThumbColor = Color.White
+                                )
                             )
                         }
                     }
@@ -305,7 +309,7 @@ fun ExerciseEditBottomSheet(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
                     ) {
                         Column(
                             modifier = Modifier
@@ -365,7 +369,11 @@ fun ExerciseEditBottomSheet(
                         )
                         Switch(
                             checked = perSetRestTime,
-                            onCheckedChange = viewModel::onPerSetRestTimeChange
+                            onCheckedChange = viewModel::onPerSetRestTimeChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
                         )
                     }
                 }
@@ -400,7 +408,11 @@ fun ExerciseEditBottomSheet(
                         }
                         Switch(
                             checked = stallDetectionEnabled,
-                            onCheckedChange = viewModel::onStallDetectionEnabledChange
+                            onCheckedChange = viewModel::onStallDetectionEnabledChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
                         )
                     }
                 }
@@ -442,7 +454,11 @@ fun ExerciseEditBottomSheet(
                                 viewModel.onRepCountTimingChange(
                                     if (isTop) RepCountTiming.TOP else RepCountTiming.BOTTOM
                                 )
-                            }
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
                         )
                     }
                 }
@@ -481,7 +497,11 @@ fun ExerciseEditBottomSheet(
                             }
                             Switch(
                                 checked = stopAtTop,
-                                onCheckedChange = viewModel::onStopAtTopChange
+                                onCheckedChange = viewModel::onStopAtTopChange,
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    checkedThumbColor = Color.White
+                                )
                             )
                         }
                     }
@@ -526,7 +546,11 @@ fun ExerciseEditBottomSheet(
                                 onValueChange = { viewModel.onRestChange(it.toInt()) },
                                 valueRange = 0f..300f,
                                 steps = 59,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor = MaterialTheme.colorScheme.primary
+                                )
                             )
                         }
                     }
@@ -606,13 +630,21 @@ fun SetModeToggle(
                 selected = setMode == SetMode.REPS,
                 onClick = { onModeChange(SetMode.REPS) },
                 label = { Text("Reps") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
+                )
             )
             FilterChip(
                 selected = setMode == SetMode.DURATION,
                 onClick = { onModeChange(SetMode.DURATION) },
                 label = { Text("Duration") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
+                )
             )
         }
     }
@@ -712,7 +744,7 @@ fun SetRow(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
         Column(
             modifier = Modifier
@@ -755,7 +787,11 @@ fun SetRow(
                         checked = setConfig.reps == null,
                         onCheckedChange = { isAMRAP ->
                             onRepsChange(if (isAMRAP) null else 10)
-                        }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            checkedThumbColor = Color.White
+                        )
                     )
                     Text(
                         text = "AMRAP (As Many Reps As Possible)",
@@ -898,7 +934,11 @@ fun SetRow(
                     onValueChange = { onRestChange(it.toInt()) },
                     valueRange = 0f..300f,
                     steps = 59,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary
+                    )
                 )
             }
         }
@@ -924,7 +964,7 @@ fun ModeSelector(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
         shadowElevation = 8.dp
     ) {
         Column(modifier = Modifier.padding(Spacing.medium)) {
@@ -993,7 +1033,7 @@ fun EccentricLoadSelector(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
         Column(
             modifier = Modifier
@@ -1059,7 +1099,7 @@ fun EchoLevelSelector(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
         Column(
             modifier = Modifier
@@ -1082,7 +1122,11 @@ fun EchoLevelSelector(
                     SegmentedButton(
                         shape = SegmentedButtonDefaults.itemShape(index = index, count = levels.size),
                         onClick = { onLevelChange(echoLevel) },
-                        selected = level == echoLevel
+                        selected = level == echoLevel,
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = MaterialTheme.colorScheme.primary,
+                            activeContentColor = Color.White
+                        )
                     ) {
                         Text(echoLevel.displayName, maxLines = 1)
                     }
@@ -1111,7 +1155,7 @@ fun WeightConfigurationCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
         Column(
             modifier = Modifier
@@ -1153,7 +1197,11 @@ fun WeightConfigurationCard(
                 Switch(
                     checked = usePercentOfPR,
                     onCheckedChange = onUsePercentOfPRChange,
-                    enabled = currentExercisePR != null
+                    enabled = currentExercisePR != null,
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedThumbColor = Color.White
+                    )
                 )
             }
 
@@ -1193,7 +1241,11 @@ fun WeightConfigurationCard(
                     onValueChange = { onWeightPercentOfPRChange(it.toInt()) },
                     valueRange = 50f..120f,
                     steps = 13, // (120-50)/5 - 1 = 13 steps for 5% increments
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(Spacing.small))
@@ -1208,7 +1260,11 @@ fun WeightConfigurationCard(
                             selected = weightPercentOfPR == percent,
                             onClick = { onWeightPercentOfPRChange(percent) },
                             label = { Text("$percent%") },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = Color.White
+                            )
                         )
                     }
                 }

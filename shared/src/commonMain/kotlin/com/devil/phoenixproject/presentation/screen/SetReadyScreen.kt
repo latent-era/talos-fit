@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.foundation.BorderStroke
 import com.devil.phoenixproject.data.repository.ExerciseRepository
 import com.devil.phoenixproject.data.repository.ExerciseVideoEntity
 import com.devil.phoenixproject.domain.model.*
@@ -218,7 +219,7 @@ fun SetReadyScreen(
                     Brush.verticalGradient(
                         colors = listOf(
                             MaterialTheme.colorScheme.background,
-                            MaterialTheme.colorScheme.surfaceVariant
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                         )
                     )
                 )
@@ -293,6 +294,7 @@ fun SetReadyScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(

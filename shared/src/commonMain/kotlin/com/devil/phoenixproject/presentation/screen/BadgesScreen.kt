@@ -143,11 +143,13 @@ fun StreakWidget(
     totalBadges: Int,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
     val fireColor = when {
-        streakInfo.currentStreak >= 30 -> Color(0xFFFF4500) // Orange-red for long streaks
-        streakInfo.currentStreak >= 7 -> Color(0xFFFF8C00) // Dark orange
-        streakInfo.currentStreak >= 3 -> Color(0xFFFFA500) // Orange
-        else -> Color(0xFFFFD700) // Gold
+        streakInfo.currentStreak >= 30 -> primaryColor // Brightest for highest streaks
+        streakInfo.currentStreak >= 7 -> primaryColor.copy(alpha = 0.85f)
+        streakInfo.currentStreak >= 3 -> primaryColor.copy(alpha = 0.7f)
+        else -> secondaryColor // Lighter rose
     }
 
     val scale by animateFloatAsState(
@@ -212,7 +214,7 @@ fun StreakWidget(
                     Text(
                         text = "At Risk!",
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFFFF4500),
+                        color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -265,7 +267,7 @@ fun StreakWidget(
                 Icon(
                     imageVector = Icons.Default.MilitaryTech,
                     contentDescription = null,
-                    tint = Color(0xFFFFD700),
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(28.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -574,14 +576,14 @@ private fun BadgeDetailDialog(
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = Color(0xFF4CAF50),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Earned!",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF4CAF50),
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     }

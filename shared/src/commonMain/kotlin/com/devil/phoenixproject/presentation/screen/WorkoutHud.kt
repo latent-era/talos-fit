@@ -285,7 +285,7 @@ private fun HudTopBar(
                     .size(12.dp)
                     .clip(CircleShape)
                     .background(
-                        if (connectionState is ConnectionState.Connected) Color.Green else Color.Red
+                        if (connectionState is ConnectionState.Connected) Color(0xFF22C55E) else MaterialTheme.colorScheme.error
                     )
             )
             Spacer(modifier = Modifier.width(8.dp))

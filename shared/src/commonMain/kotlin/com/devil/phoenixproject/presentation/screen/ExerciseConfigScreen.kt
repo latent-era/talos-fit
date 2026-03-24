@@ -220,7 +220,7 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                     shadowElevation = 2.dp
                 ) {
                     Row(
@@ -239,7 +239,8 @@ fun ExerciseConfigScreen(
                             checked = selectedMode is WorkoutMode.TUTBeast,
                             onCheckedChange = { isBeast ->
                                 configViewModel.onSelectedModeChange(if (isBeast) WorkoutMode.TUTBeast else WorkoutMode.TUT)
-                            }
+                            },
+                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
                         )
                     }
                 }
@@ -263,7 +264,7 @@ fun ExerciseConfigScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
                 ) {
                     Column(
                         modifier = Modifier
@@ -305,7 +306,7 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                 shadowElevation = 2.dp
             ) {
                 Row(
@@ -323,7 +324,8 @@ fun ExerciseConfigScreen(
                     )
                     Switch(
                         checked = perSetRestTime,
-                        onCheckedChange = configViewModel::onPerSetRestTimeChange
+                        onCheckedChange = configViewModel::onPerSetRestTimeChange,
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
                     )
                 }
             }
@@ -333,7 +335,7 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                 shadowElevation = 2.dp
             ) {
                 Row(
@@ -358,7 +360,8 @@ fun ExerciseConfigScreen(
                     }
                     Switch(
                         checked = stallDetectionEnabled,
-                        onCheckedChange = configViewModel::onStallDetectionEnabledChange
+                        onCheckedChange = configViewModel::onStallDetectionEnabledChange,
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
                     )
                 }
             }
@@ -368,7 +371,7 @@ fun ExerciseConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                 shadowElevation = 2.dp
             ) {
                 Row(
@@ -400,7 +403,8 @@ fun ExerciseConfigScreen(
                             configViewModel.onRepCountTimingChange(
                                 if (isTop) RepCountTiming.TOP else RepCountTiming.BOTTOM
                             )
-                        }
+                        },
+                        colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
                     )
                 }
             }
@@ -411,7 +415,7 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                     shadowElevation = 2.dp
                 ) {
                     Row(
@@ -439,7 +443,8 @@ fun ExerciseConfigScreen(
                         }
                         Switch(
                             checked = stopAtTop,
-                            onCheckedChange = configViewModel::onStopAtTopChange
+                            onCheckedChange = configViewModel::onStopAtTopChange,
+                            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary, checkedThumbColor = Color.White)
                         )
                     }
                 }
@@ -469,7 +474,7 @@ fun ExerciseConfigScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                     shadowElevation = 2.dp
                 ) {
                     Column(modifier = Modifier.padding(Spacing.small)) {
@@ -484,7 +489,8 @@ fun ExerciseConfigScreen(
                             onValueChange = { configViewModel.onRestChange(it.toInt()) },
                             valueRange = 0f..300f,
                             steps = 59,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = SliderDefaults.colors(thumbColor = MaterialTheme.colorScheme.primary, activeTrackColor = MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
