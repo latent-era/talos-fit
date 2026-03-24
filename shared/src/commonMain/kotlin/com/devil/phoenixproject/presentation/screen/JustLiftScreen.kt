@@ -211,19 +211,18 @@ fun JustLiftScreen(
         viewModel.updateTopBarTitle("Just Lift")
     }
 
-    Scaffold { padding ->
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
+                .navigationBarsPadding()
+                .padding(horizontal = Spacing.medium, vertical = Spacing.small),
+            verticalArrangement = Arrangement.spacedBy(Spacing.small)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = Spacing.medium, vertical = Spacing.small),
-                verticalArrangement = Arrangement.spacedBy(Spacing.small)
-            ) {
                 // Auto-Start/Stop Banner (compact, always visible when idle)
                 if (workoutState is WorkoutState.Idle) {
                     val autoStartCountdown by viewModel.autoStartCountdown.collectAsState()
@@ -672,7 +671,6 @@ fun JustLiftScreen(
                 scope = scope,
                 onDismiss = { showAddProfileDialog = false }
             )
-        }
         }
     }
 }
