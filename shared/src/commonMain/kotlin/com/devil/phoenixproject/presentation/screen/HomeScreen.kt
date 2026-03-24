@@ -234,7 +234,18 @@ fun HomeScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    RecentWorkoutsList(recentSessions.take(3), weightUnit)
+                    // Group sessions by date, show last 3 workout days
+                    val workoutDays = remember(recentSessions) {
+                        recentSessions
+                            .groupBy { session ->
+                                Instant.fromEpochMilliseconds(session.timestamp)
+                                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                            }
+                            .entries
+                            .sortedByDescending { it.key }
+                            .take(3)
+                    }
+                    RecentWorkoutDaysList(workoutDays, weightUnit)
                 }
 
                 // 5. Active Cycle (conditional)
@@ -449,12 +460,15 @@ private fun WorkoutModeCard(
 }
 
 // ============================================================================
-// RECENT WORKOUTS LIST
+// RECENT WORKOUTS LIST (grouped by day)
 // ============================================================================
 
 @Composable
-private fun RecentWorkoutsList(sessions: List<WorkoutSession>, weightUnit: WeightUnit) {
-    if (sessions.isEmpty()) {
+private fun RecentWorkoutDaysList(
+    workoutDays: List<Map.Entry<LocalDate, List<WorkoutSession>>>,
+    weightUnit: WeightUnit
+) {
+    if (workoutDays.isEmpty()) {
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(12.dp),
@@ -469,72 +483,121 @@ private fun RecentWorkoutsList(sessions: List<WorkoutSession>, weightUnit: Weigh
             )
         }
     } else {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-        ) {
-            Column {
-                sessions.forEachIndexed { index, session ->
-                    WorkoutListItem(session, weightUnit)
-                    if (index < sessions.lastIndex) {
-                        HorizontalDivider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            modifier = Modifier.padding(horizontal = 14.dp)
-                        )
-                    }
-                }
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            workoutDays.forEach { (date, sessions) ->
+                WorkoutDayCard(date, sessions, weightUnit)
             }
         }
     }
 }
 
 @Composable
-private fun WorkoutListItem(session: WorkoutSession, weightUnit: WeightUnit) {
-    val displayWeight = if (weightUnit == WeightUnit.LB)
-        (session.weightPerCableKg * 2.20462f).toInt() else session.weightPerCableKg.toInt()
-    val unitLabel = if (weightUnit == WeightUnit.LB) "lbs" else "kg"
+private fun WorkoutDayCard(
+    date: LocalDate,
+    sessions: List<WorkoutSession>,
+    weightUnit: WeightUnit
+) {
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val yesterday = LocalDate.fromEpochDays(today.toEpochDays() - 1)
 
-    Column(modifier = Modifier.padding(14.dp)) {
-        // Top row: icon + name + duration badge
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TalosIconBadge(
-                icon = Icons.Outlined.FitnessCenter,
-                color = MetricForce,
-                size = 36.dp,
-                iconSize = 18.dp
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = session.exerciseName ?: "Workout",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${session.workingReps} reps • $displayWeight $unitLabel/cable",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            // Duration badge
-            Surface(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(6.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+    val dateLabel = when (date) {
+        today -> "Today"
+        yesterday -> "Yesterday"
+        else -> "${date.dayOfMonth} ${date.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }}"
+    }
+
+    val totalVolume = sessions.sumOf { (it.totalVolumeKg ?: 0f).toDouble() }.toInt()
+    val displayVolume = if (weightUnit == WeightUnit.LB) (totalVolume * 2.20462).toInt() else totalVolume
+    val volumeUnit = if (weightUnit == WeightUnit.LB) "lbs" else "kg"
+    val totalDurationMin = sessions.sumOf { it.duration } / 60000
+    val exerciseCount = sessions.map { it.exerciseName ?: "Unknown" }.distinct().size
+    val uniqueExercises = sessions.map { it.exerciseName ?: "Unknown" }.distinct()
+
+    Surface(
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            // Top row: icon + date + duration badge
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "${(session.duration / 60000).coerceAtLeast(1)} min",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                TalosIconBadge(
+                    icon = Icons.Outlined.FitnessCenter,
+                    color = MetricForce,
+                    size = 36.dp,
+                    iconSize = 18.dp
                 )
+                Spacer(Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = dateLabel,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "$exerciseCount exercises • ${sessions.size} sets",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                // Duration badge
+                Surface(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(6.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                ) {
+                    Text(
+                        text = "${totalDurationMin.coerceAtLeast(1)} min",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
+
+            // Divider
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
+
+            // Bottom row: volume + exercises done
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Total Volume",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "$displayVolume $volumeUnit",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "Exercises",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = uniqueExercises.take(2).joinToString(", ") { it.take(10) },
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
     }
