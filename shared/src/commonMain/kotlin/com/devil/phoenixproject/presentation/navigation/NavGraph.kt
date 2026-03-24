@@ -82,25 +82,25 @@ fun NavGraph(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             }
         ) {
@@ -137,26 +137,26 @@ fun NavGraph(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
-                ) + fadeIn(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeIn(animationSpec = tween(500))
             },
             exitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
-                ) + fadeOut(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeOut(animationSpec = tween(500))
             },
             popEnterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
-                ) + fadeIn(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeIn(animationSpec = tween(500))
             },
             popExitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
-                ) + fadeOut(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeOut(animationSpec = tween(500))
             }
         ) {
             ActiveWorkoutScreen(
@@ -198,25 +198,25 @@ fun NavGraph(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             }
         ) {
@@ -246,25 +246,25 @@ fun NavGraph(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(500)
                 )
             }
         ) { backStackEntry ->
@@ -357,16 +357,16 @@ fun NavGraph(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
-                ) + fadeIn(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeIn(animationSpec = tween(500))
             },
             exitTransition = { fadeOut(animationSpec = tween(200)) },
             popEnterTransition = { fadeIn(animationSpec = tween(200)) },
             popExitTransition = {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
-                ) + fadeOut(animationSpec = tween(300))
+                    animationSpec = tween(500)
+                ) + fadeOut(animationSpec = tween(500))
             }
         ) {
             BadgesScreen(
@@ -378,10 +378,10 @@ fun NavGraph(
         // Exercise Selector - full screen exercise picker
         composable(
             route = NavigationRoutes.ExerciseSelector.route,
-            enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300)) },
-            exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300)) },
-            popEnterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(300)) },
-            popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(300)) },
+            enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            popEnterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
+            popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
         ) {
             val enableVideo by viewModel.enableVideoPlayback.collectAsState()
 
@@ -409,10 +409,10 @@ fun NavGraph(
         // Exercise Config - full screen exercise configuration
         composable(
             route = NavigationRoutes.ExerciseConfig.route,
-            enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300)) },
-            exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(300)) },
-            popEnterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(300)) },
-            popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(300)) },
+            enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            popEnterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
+            popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
         ) {
             val weightUnit by viewModel.weightUnit.collectAsState()
             val enableVideo by viewModel.enableVideoPlayback.collectAsState()
@@ -432,12 +432,12 @@ fun NavGraph(
                         if (unit == WeightUnit.LB) "${displayWeight.toInt()} lbs" else "${displayWeight.toInt()} kg"
                     },
                     onSave = { configuredExercise ->
-                        // Store configured result for RoutineEditor to consume
-                        configuredExerciseResult = configuredExercise
                         exerciseToConfigState = null
                         // Pop ExerciseConfig + ExerciseSelector to land on RoutineEditor
                         navController.popBackStack() // pop ExerciseConfig
                         navController.popBackStack() // pop ExerciseSelector → RoutineEditor
+                        // Set result AFTER pops so RoutineEditor recomposes with it
+                        configuredExerciseResult = configuredExercise
                     },
                     onCancel = {
                         exerciseToConfigState = null
@@ -456,7 +456,11 @@ fun NavGraph(
         // Routine Editor - create/edit daily routine
         composable(
             route = NavigationRoutes.RoutineEditor.route,
-            arguments = listOf(navArgument("routineId") { type = NavType.StringType })
+            arguments = listOf(navArgument("routineId") { type = NavType.StringType }),
+            enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(500)) },
+            popEnterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
+            popExitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(500)) },
         ) { backStackEntry ->
             val routineId = backStackEntry.arguments?.read { getStringOrNull("routineId") } ?: "new"
 
@@ -572,14 +576,14 @@ fun NavGraph(
         //     enterTransition = {
         //         slideIntoContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Up,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     },
         //     exitTransition = { fadeOut(animationSpec = tween(200)) },
         //     popExitTransition = {
         //         slideOutOfContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Down,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     }
         // ) {
@@ -598,14 +602,14 @@ fun NavGraph(
         //     enterTransition = {
         //         slideIntoContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Up,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     },
         //     exitTransition = { fadeOut(animationSpec = tween(200)) },
         //     popExitTransition = {
         //         slideOutOfContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Down,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     }
         // ) {
@@ -624,7 +628,7 @@ fun NavGraph(
         //     enterTransition = {
         //         slideIntoContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Left,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     },
         //     exitTransition = { fadeOut(animationSpec = tween(200)) },
@@ -632,7 +636,7 @@ fun NavGraph(
         //     popExitTransition = {
         //         slideOutOfContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Right,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     }
         // ) {
@@ -654,7 +658,7 @@ fun NavGraph(
         //     enterTransition = {
         //         slideIntoContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Left,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     },
         //     exitTransition = { fadeOut(animationSpec = tween(200)) },
@@ -662,7 +666,7 @@ fun NavGraph(
         //     popExitTransition = {
         //         slideOutOfContainer(
         //             towards = AnimatedContentTransitionScope.SlideDirection.Right,
-        //             animationSpec = tween(300)
+        //             animationSpec = tween(500)
         //         )
         //     }
         // ) {
