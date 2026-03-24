@@ -1,6 +1,7 @@
 package com.devil.phoenixproject.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -21,6 +22,8 @@ fun ConnectionErrorDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
         icon = { Icon(Icons.Default.Warning, contentDescription = "Connection error") },
         title = { Text("Connection Failed") },
         text = {

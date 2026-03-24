@@ -63,8 +63,8 @@ fun CreateExerciseDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-            shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surfaceContainerHighest
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surface
         ) {
             Box(modifier = Modifier.fillMaxWidth().background(backgroundGradient)) {
                 Column(
@@ -257,7 +257,7 @@ fun CreateExerciseDialog(
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
                             ),
-                            shape = RoundedCornerShape(20.dp)
+                            shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
                                 if (isEditMode) "Save" else "Create",
@@ -275,6 +275,8 @@ fun CreateExerciseDialog(
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(12.dp),
             title = { Text("Delete Exercise?") },
             text = {
                 Text("Are you sure you want to delete \"$name\"? This action cannot be undone.")

@@ -3,6 +3,7 @@ package com.devil.phoenixproject.presentation.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BluetoothDisabled
 import androidx.compose.material3.AlertDialog
@@ -26,6 +27,8 @@ fun ConnectionLostDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
         icon = {
             Icon(
                 Icons.Default.BluetoothDisabled,

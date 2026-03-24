@@ -59,11 +59,10 @@ fun ProgressTab(
     ) {
         item {
             Text(
-                "PROGRESS",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.5.sp
+                "Progress",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -91,11 +90,10 @@ fun ProgressTab(
 
         item {
             Text(
-                "PERSONAL RECORDS",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.5.sp
+                "Personal Records",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -117,37 +115,19 @@ fun ProgressTab(
                 .toMap()
 
             prsByMode.forEach { (mode, modePRs) ->
-                // Mode header
+                // Mode section header outside the card
                 item(key = "mode_header_$mode") {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                        shadowElevation = 0.dp,
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-                    ) {
-                        Text(
-                            text = mode.uppercase(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 1.5.sp,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-                    }
+                    Text(
+                        text = mode.replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                    )
                 }
 
-                // PRs for this mode
-                items(modePRs, key = { it.id }) { pr ->
-                    var exerciseName by remember(pr.exerciseId) { mutableStateOf("Loading...") }
-
-                    LaunchedEffect(pr.exerciseId) {
-                        val exercise = exerciseRepository.getExerciseById(pr.exerciseId)
-                        exerciseName = exercise?.name ?: "Unknown Exercise"
-                    }
-
+                // Single card containing all PRs for this mode
+                item(key = "mode_card_$mode") {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
@@ -155,41 +135,59 @@ fun ProgressTab(
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                        shape = RoundedCornerShape(0.dp) // Flat edges for grouped look
+                        shape = RoundedCornerShape(12.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = exerciseName,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = formatTimestamp(pr.timestamp),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                        Column {
+                            modePRs.forEachIndexed { index, pr ->
+                                var exerciseName by remember(pr.exerciseId) { mutableStateOf("Loading...") }
 
-                            Column(horizontalAlignment = Alignment.End) {
-                                Text(
-                                    text = formatWeight(pr.weightPerCableKg, weightUnit),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = "${pr.reps} Reps",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                LaunchedEffect(pr.exerciseId) {
+                                    val exercise = exerciseRepository.getExerciseById(pr.exerciseId)
+                                    exerciseName = exercise?.name ?: "Unknown Exercise"
+                                }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = exerciseName,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                                            text = formatTimestamp(pr.timestamp),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text(
+                                            text = formatWeight(pr.weightPerCableKg, weightUnit),
+                                            style = MaterialTheme.typography.headlineSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = "${pr.reps} Reps",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+
+                                // Divider between items (not after the last one)
+                                if (index < modePRs.lastIndex) {
+                                    HorizontalDivider(
+                                        color = MaterialTheme.colorScheme.outlineVariant
+                                    )
+                                }
                             }
                         }
                     }
@@ -309,6 +307,7 @@ fun AnalyticsScreen(
                         Text(
                             "Dashboard",
                             style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (pagerState.currentPage == 0) FontWeight.Bold else FontWeight.Normal,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 0)
                                 MaterialTheme.colorScheme.primary
@@ -334,6 +333,7 @@ fun AnalyticsScreen(
                         Text(
                             "Progress",
                             style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (pagerState.currentPage == 1) FontWeight.Bold else FontWeight.Normal,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 1)
                                 MaterialTheme.colorScheme.primary
@@ -359,6 +359,7 @@ fun AnalyticsScreen(
                         Text(
                             "History",
                             style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (pagerState.currentPage == 2) FontWeight.Bold else FontWeight.Normal,
                             maxLines = 1,
                             color = if (pagerState.currentPage == 2)
                                 MaterialTheme.colorScheme.primary

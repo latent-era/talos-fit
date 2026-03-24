@@ -65,7 +65,7 @@ fun SupersetHeader(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         color = SupersetTheme.backgroundTint(superset.colorIndex, false),
-        tonalElevation = 1.dp
+        tonalElevation = 0.dp
     ) {
         Row(
             modifier = Modifier
@@ -96,7 +96,7 @@ fun SupersetHeader(
             // Rest time chip (tappable)
             Surface(
                 modifier = Modifier.clickable { onChangeRestTime() },
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 color = color.copy(alpha = 0.15f)
             ) {
                 Text(

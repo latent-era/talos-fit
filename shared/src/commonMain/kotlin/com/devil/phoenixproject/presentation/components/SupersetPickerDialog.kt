@@ -43,6 +43,8 @@ fun SupersetPickerDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
         title = { Text("Add to Superset") },
         text = {
             Column {

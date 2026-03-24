@@ -31,6 +31,8 @@ fun RestTimePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
         title = { Text("Rest Between Exercises") },
         text = {
             FlowRow(
@@ -41,7 +43,7 @@ fun RestTimePickerDialog(
                     val isSelected = seconds == currentRestSeconds
                     Surface(
                         modifier = Modifier.clickable { onSelect(seconds) },
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(12.dp),
                         color = if (isSelected)
                             MaterialTheme.colorScheme.primaryContainer
                         else
