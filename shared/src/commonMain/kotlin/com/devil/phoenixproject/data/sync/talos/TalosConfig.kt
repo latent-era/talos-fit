@@ -1,11 +1,35 @@
 package com.devil.phoenixproject.data.sync.talos
 
+import com.russhwolf.settings.Settings
+
 /**
- * Static Talos VPS configuration.
- * Single-user fork — hardcoded for simplicity.
- * Replace VPS_URL and API_TOKEN with your actual values.
+ * Talos VPS configuration.
+ * Reads device token from persistent settings (set during pairing).
  */
-object TalosConfig {
-    const val VPS_URL = "https://vps.latentera.com"
-    const val API_TOKEN = "REPLACE_WITH_DEVICE_TOKEN"
+class TalosConfig(private val settings: Settings) {
+    val vpsUrl: String = "https://vps.latentera.com"
+
+    private companion object {
+        const val KEY_DEVICE_TOKEN = "talos_vps_device_token"
+        const val KEY_VPS_PAIRED = "talos_vps_paired"
+    }
+
+    var deviceToken: String?
+        get() = settings.getStringOrNull(KEY_DEVICE_TOKEN)
+        set(value) {
+            if (value != null) {
+                settings.putString(KEY_DEVICE_TOKEN, value)
+                settings.putBoolean(KEY_VPS_PAIRED, true)
+            } else {
+                settings.remove(KEY_DEVICE_TOKEN)
+                settings.putBoolean(KEY_VPS_PAIRED, false)
+            }
+        }
+
+    val isPaired: Boolean
+        get() = settings.getBoolean(KEY_VPS_PAIRED, false) && !deviceToken.isNullOrBlank()
+
+    fun disconnect() {
+        deviceToken = null
+    }
 }

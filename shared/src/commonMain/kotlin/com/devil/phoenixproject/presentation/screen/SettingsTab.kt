@@ -34,6 +34,8 @@ import com.devil.phoenixproject.util.rememberFilePicker
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import com.devil.phoenixproject.presentation.components.CountdownDropdown
+import com.devil.phoenixproject.data.sync.talos.TalosApiClient
+import com.devil.phoenixproject.data.sync.talos.TalosConfig
 import com.devil.phoenixproject.ui.theme.*
 import com.devil.phoenixproject.util.KmpUtils
 
@@ -107,6 +109,15 @@ fun SettingsTab(
     // Optimistic UI state for immediate visual feedback
     var localWeightUnit by remember(weightUnit) { mutableStateOf(weightUnit) }
 
+    // VPS pairing
+    val talosConfig: TalosConfig = koinInject()
+    val talosApiClient: TalosApiClient = koinInject()
+    var vpsPaired by remember { mutableStateOf(talosConfig.isPaired) }
+    var pairingCode by remember { mutableStateOf("") }
+    var isPairing by remember { mutableStateOf(false) }
+    var pairingError by remember { mutableStateOf<String?>(null) }
+    val pairingScope = rememberCoroutineScope()
+
     // Inject DataBackupManager
     val backupManager: DataBackupManager = koinInject()
 
@@ -122,6 +133,119 @@ fun SettingsTab(
             .padding(Spacing.medium),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+
+        // ── VPS Connection ─────────────────────────────────────────────────
+        Column {
+            Text(
+                text = "VPS Connection",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    if (vpsPaired) {
+                        // Connected state
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    "Connected",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    talosConfig.vpsUrl,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    talosConfig.disconnect()
+                                    vpsPaired = false
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                            ) {
+                                Text("Disconnect")
+                            }
+                        }
+                    } else {
+                        // Not paired state
+                        Text(
+                            "Not connected to Talos VPS",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = pairingCode,
+                                onValueChange = { pairingCode = it.uppercase().take(6) },
+                                modifier = Modifier.weight(1f),
+                                placeholder = { Text("Pairing code") },
+                                singleLine = true,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            Button(
+                                onClick = {
+                                    pairingScope.launch {
+                                        isPairing = true
+                                        pairingError = null
+                                        val client = talosApiClient
+                                        val result = client.validatePairingCode(pairingCode)
+                                        if (result.isSuccess) {
+                                            talosConfig.deviceToken = result.getOrNull()
+                                            vpsPaired = true
+                                            pairingCode = ""
+                                        } else {
+                                            pairingError = result.exceptionOrNull()?.message ?: "Pairing failed"
+                                        }
+                                        isPairing = false
+                                    }
+                                },
+                                enabled = pairingCode.length == 6 && !isPairing,
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text(if (isPairing) "..." else "Pair")
+                            }
+                        }
+                        if (pairingError != null) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                pairingError!!,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                }
+            }
+        }
 
         // ── Group 1: Units & Display ──────────────────────────────────────
         Column {

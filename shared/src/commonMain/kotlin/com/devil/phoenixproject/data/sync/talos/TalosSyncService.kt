@@ -15,6 +15,7 @@ import kotlinx.datetime.toLocalDateTime
  * block the user — Talos sync is best-effort.
  */
 class TalosSyncService(
+    private val config: TalosConfig,
     private val apiClient: TalosApiClient,
     private val workoutRepository: WorkoutRepository,
 ) {
@@ -23,6 +24,11 @@ class TalosSyncService(
      * Called from [SyncTriggerManager.onWorkoutCompleted].
      */
     suspend fun syncLatestWorkout() {
+        if (!config.isPaired) {
+            Logger.d { "TalosSync: Not paired with VPS, skipping sync" }
+            return
+        }
+
         try {
             val sessions = workoutRepository.getRecentSessionsSync(limit = 1)
             val session = sessions.firstOrNull()
