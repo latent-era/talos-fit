@@ -120,11 +120,894 @@ fun SettingsTab(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(Spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // Header removed for global scaffold integration
 
-        // Donation Card
+        // ── Group 1: Units & Display ──────────────────────────────────────
+        Column {
+            Text(
+                text = "Units & Display",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    // Weight unit row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Weight Unit",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.small)) {
+                            FilterChip(
+                                selected = localWeightUnit == WeightUnit.KG,
+                                onClick = {
+                                    localWeightUnit = WeightUnit.KG
+                                    onWeightUnitChange(WeightUnit.KG)
+                                },
+                                label = { Text("kg") },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = localWeightUnit == WeightUnit.KG,
+                                    borderColor = MaterialTheme.colorScheme.outline,
+                                    selectedBorderColor = MaterialTheme.colorScheme.primary
+                                )
+                            )
+                            FilterChip(
+                                selected = localWeightUnit == WeightUnit.LB,
+                                onClick = {
+                                    localWeightUnit = WeightUnit.LB
+                                    onWeightUnitChange(WeightUnit.LB)
+                                },
+                                label = { Text("lbs") },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = localWeightUnit == WeightUnit.LB,
+                                    borderColor = MaterialTheme.colorScheme.outline,
+                                    selectedBorderColor = MaterialTheme.colorScheme.primary
+                                )
+                            )
+                        }
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Dark Mode row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Dark Mode",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Use dark theme for the app interface",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = darkModeEnabled,
+                            onCheckedChange = onDarkModeChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── Group 2: Workout ──────────────────────────────────────────────
+        Column {
+            Text(
+                text = "Workout Preferences",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    // Set Summary row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Set Summary",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Off = skip summary, Unlimited = manual, 5-30s = auto-advance",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        CountdownDropdown(
+                            label = "",
+                            selectedValue = summaryCountdownSeconds,
+                            options = listOf(-1, 0, 5, 10, 15, 20, 25, 30),
+                            onValueSelected = { onSummaryCountdownChange(it) },
+                            modifier = Modifier.width(120.dp),
+                            formatLabel = {
+                                when (it) {
+                                    -1 -> "Off"
+                                    0 -> "Unlimited"
+                                    else -> "${it}s"
+                                }
+                            }
+                        )
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Autostart Countdown row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Autostart Countdown",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Just Lift countdown when handles are grabbed",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        CountdownDropdown(
+                            label = "",
+                            selectedValue = autoStartCountdownSeconds,
+                            options = (2..10).toList(),
+                            onValueSelected = { onAutoStartCountdownChange(it) },
+                            modifier = Modifier.width(100.dp)
+                        )
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Show Exercise Videos row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Show Exercise Videos",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Display exercise demonstration videos (disable to avoid slow loading)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = enableVideoPlayback,
+                            onCheckedChange = onEnableVideoPlaybackChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
+                        )
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Audio Rep Counter row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Audio Rep Counter",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Play spoken rep numbers during working sets",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = audioRepCountEnabled,
+                            onCheckedChange = onAudioRepCountChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
+                        )
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Gamification row
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Gamification",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Show PR celebrations and award badges after workouts",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = gamificationEnabled,
+                            onCheckedChange = onGamificationEnabledChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                checkedThumbColor = Color.White
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── Group 3: LED Colors ───────────────────────────────────────────
+        Column {
+            // Easter egg: tap the header 7 times rapidly to unlock disco mode
+            Text(
+                text = "LED Colors",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable {
+                        val currentTime = KmpUtils.currentTimeMillis()
+                        // Reset if more than 2 seconds since last tap
+                        if (currentTime - lastTapTime > 2000L) {
+                            easterEggTapCount = 1
+                        } else {
+                            easterEggTapCount++
+                        }
+                        lastTapTime = currentTime
+
+                        // Unlock disco mode after 7 rapid taps
+                        if (easterEggTapCount >= 7 && !discoModeUnlocked) {
+                            showDiscoUnlockDialog = true
+                            onPlayDiscoSound()
+                            onDiscoModeUnlocked()
+                            easterEggTapCount = 0
+                        }
+                    }
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    // Color scheme slider with preview
+                    val colorSchemes = ColorSchemes.ALL
+                    val currentScheme = colorSchemes.getOrElse(selectedColorSchemeIndex) { colorSchemes.first() }
+                    val isNoneScheme = currentScheme.name == "None"
+
+                    // Convert RGB colors to Compose Color for preview
+                    val previewColors = if (isNoneScheme) {
+                        listOf(Color.DarkGray, Color.Gray, Color.DarkGray)
+                    } else {
+                        currentScheme.colors.map { Color(it.r, it.g, it.b) }
+                    }
+
+                    // Color preview box with current scheme name
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .background(
+                                Brush.horizontalGradient(previewColors),
+                                RoundedCornerShape(12.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (isNoneScheme) {
+                                    Icon(
+                                        imageVector = Icons.Default.PowerSettingsNew,
+                                        contentDescription = "LEDs Off",
+                                        tint = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                                Text(
+                                    text = currentScheme.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(Spacing.medium))
+
+                    // Slider for color selection
+                    Slider(
+                        value = selectedColorSchemeIndex.toFloat(),
+                        onValueChange = { onColorSchemeChange(it.toInt()) },
+                        valueRange = 0f..(colorSchemes.size - 1).toFloat(),
+                        steps = colorSchemes.size - 2,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = SliderDefaults.colors(
+                            thumbColor = MaterialTheme.colorScheme.primary,
+                            activeTrackColor = MaterialTheme.colorScheme.primary,
+                            inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    )
+
+                    // Disco mode toggle (only visible when unlocked)
+                    if (discoModeUnlocked) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = Spacing.small),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "🕺",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(modifier = Modifier.width(Spacing.small))
+                                Column {
+                                    Text(
+                                        text = "Disco Mode",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        if (!isConnected) "Connect to enable"
+                                        else if (discoModeActive) "Party time!"
+                                        else "Cycle through colors",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                            Switch(
+                                checked = discoModeActive,
+                                onCheckedChange = { onDiscoModeToggle(it) },
+                                enabled = isConnected,
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    checkedThumbColor = Color.White
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // ── Group 4: Data ─────────────────────────────────────────────────
+        Column {
+            Text(
+                text = "Data",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    // Backup Button
+                    OutlinedButton(
+                        onClick = { showBackupDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Icon(
+                            Icons.Default.CloudUpload,
+                            contentDescription = "Backup data",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(Spacing.small))
+                        Text(
+                            "Backup All Data",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(Spacing.small))
+
+                    // Restore Button
+                    OutlinedButton(
+                        onClick = { showRestoreDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.secondary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Icon(
+                            Icons.Default.CloudDownload,
+                            contentDescription = "Restore data",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(Spacing.small))
+                        Text(
+                            "Restore from Backup",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(Spacing.small))
+
+                    Button(
+                        onClick = { showDeleteAllDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 0.dp,
+                            pressedElevation = 0.dp
+                        )
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Delete all workouts",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(Spacing.small))
+                        Text(
+                            "Delete All Workouts",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── Group 5: Achievements (hidden when gamification is disabled) ──
+        if (gamificationEnabled) {
+            Column {
+                Text(
+                    text = "Achievements",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Spacing.medium)
+                    ) {
+                        OutlinedButton(
+                            onClick = onNavigateToBadges,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                        ) {
+                            Icon(
+                                Icons.Default.EmojiEvents,
+                                contentDescription = "View badges",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(Spacing.small))
+                            Text(
+                                "View Badges & Streaks",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            "Track your progress, earn badges, and maintain your workout streak",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        // TODO: Uncomment when Cloud Sync / Portal features are ready for public release
+        // Cloud Sync Section - Material 3 Expressive
+        // Card(
+        //     modifier = Modifier
+        //         .fillMaxWidth()
+        //         .shadow(8.dp, RoundedCornerShape(20.dp)),
+        //     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
+        //     shape = RoundedCornerShape(20.dp),
+        //     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        //     border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        // ) {
+        //     Column(
+        //         modifier = Modifier
+        //             .fillMaxWidth()
+        //             .padding(Spacing.medium)
+        //     ) {
+        //         Row(verticalAlignment = Alignment.CenterVertically) {
+        //             Box(
+        //                 modifier = Modifier
+        //                     .size(48.dp)
+        //                     .shadow(8.dp, RoundedCornerShape(20.dp))
+        //                     .background(
+        //                         Brush.linearGradient(
+        //                             colors = listOf(Color(0xFF06B6D4), Color(0xFF3B82F6))
+        //                         ),
+        //                         RoundedCornerShape(20.dp)
+        //                     ),
+        //                 contentAlignment = Alignment.Center
+        //             ) {
+        //                 Icon(
+        //                     Icons.Default.Cloud,
+        //                     contentDescription = "Cloud Sync",
+        //                     tint = MaterialTheme.colorScheme.onPrimary,
+        //                     modifier = Modifier.size(24.dp)
+        //                 )
+        //             }
+        //             Spacer(modifier = Modifier.width(Spacing.medium))
+        //             Text(
+        //                 "Cloud Sync",
+        //                 style = MaterialTheme.typography.titleLarge,
+        //                 fontWeight = FontWeight.Bold,
+        //                 color = MaterialTheme.colorScheme.onSurface
+        //             )
+        //         }
+        //         Spacer(modifier = Modifier.height(Spacing.small))
+        //
+        //         OutlinedButton(
+        //             onClick = onNavigateToLinkAccount,
+        //             modifier = Modifier
+        //                 .fillMaxWidth()
+        //                 .height(56.dp),
+        //             shape = RoundedCornerShape(20.dp),
+        //             colors = ButtonDefaults.outlinedButtonColors(
+        //                 contentColor = MaterialTheme.colorScheme.primary
+        //             ),
+        //             border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        //         ) {
+        //             Icon(
+        //                 Icons.Default.Sync,
+        //                 contentDescription = "Link Portal Account",
+        //                 modifier = Modifier.size(24.dp)
+        //             )
+        //             Spacer(modifier = Modifier.width(Spacing.small))
+        //             Text(
+        //                 "Link Portal Account",
+        //                 style = MaterialTheme.typography.titleLarge,
+        //                 fontWeight = FontWeight.Bold
+        //             )
+        //         }
+        //
+        //         Spacer(modifier = Modifier.height(4.dp))
+        //         Text(
+        //             "Sync your workouts to the Phoenix Portal for cross-device access",
+        //             style = MaterialTheme.typography.bodySmall,
+        //             color = MaterialTheme.colorScheme.onSurfaceVariant
+        //         )
+        //     }
+        // }
+
+        // ── Group 6: Developer ────────────────────────────────────────────
+        Column {
+            // Easter egg: tap the header 7 times rapidly to unlock simulator mode
+            Text(
+                text = "Developer",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable {
+                        val currentTime = KmpUtils.currentTimeMillis()
+                        // Reset if more than 2 seconds since last tap
+                        if (currentTime - simulatorLastTapTime > 2000L) {
+                            simulatorEasterEggTapCount = 1
+                        } else {
+                            simulatorEasterEggTapCount++
+                        }
+                        simulatorLastTapTime = currentTime
+
+                        // Unlock simulator mode after 7 rapid taps
+                        if (simulatorEasterEggTapCount >= 7 && !simulatorModeUnlocked) {
+                            showSimulatorUnlockDialog = true
+                            onSimulatorModeUnlocked()
+                            simulatorEasterEggTapCount = 0
+                        }
+                    }
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    OutlinedButton(
+                        onClick = onNavigateToConnectionLogs,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Icon(
+                            Icons.Default.Timeline,
+                            contentDescription = "Connection logs",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(Spacing.small))
+                        Text(
+                            "Connection Logs",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "View Bluetooth connection debug logs to diagnose connectivity issues",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(Spacing.medium))
+
+                    OutlinedButton(
+                        onClick = onTestSounds,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Icon(
+                            Icons.Default.MusicNote,
+                            contentDescription = "Test sounds",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(Spacing.small))
+                        Text(
+                            "Test Sounds",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Play workout sounds to test audio configuration and volume",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    // Simulator mode toggle (only visible when unlocked)
+                    if (simulatorModeUnlocked) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = Spacing.small),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "🔧",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(modifier = Modifier.width(Spacing.small))
+                                Column {
+                                    Text(
+                                        text = "BLE Simulator",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        "Use virtual machine for testing",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                            Switch(
+                                checked = simulatorModeEnabled,
+                                onCheckedChange = { onSimulatorModeToggle(it) },
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    checkedThumbColor = Color.White
+                                )
+                            )
+                        }
+
+                        // Info text about restart
+                        Text(
+                            if (simulatorModeEnabled) "Restart the app to connect to the virtual machine"
+                            else "Enable to use simulated BLE device instead of real hardware",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (simulatorModeEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── Group 7: About ────────────────────────────────────────────────
+        Column {
+            Text(
+                text = "About",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing.medium)
+                ) {
+                    Text(
+                        "Version: 0.5.0",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.small))
+                    Text(
+                        "Open source community project to control Vitruvian Trainer machines locally.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        // ── Donation (subtle, at the bottom) ──────────────────────────────
         val uriHandler = LocalUriHandler.current
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -138,1134 +1021,20 @@ fun SettingsTab(
                     .fillMaxWidth()
                     .padding(Spacing.medium)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .border(
-                                width = 1.5.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            Icons.Default.Favorite,
-                            contentDescription = "Support the developer",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(Spacing.medium))
-                    Text(
-                        "LIKE MY WORK?",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 1.5.sp
-                        ),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Spacer(modifier = Modifier.height(Spacing.small))
                 Text(
                     "This app is 100% free with no ads, but I graciously accept donations if you are so inclined!",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(Spacing.small))
                 Text(
                     "ko-fi.com/vitruvianredux",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
                         uriHandler.openUri("https://ko-fi.com/vitruvianredux")
                     }
-                )
-            }
-        }
-
-    // Weight Unit Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.medium)
-            ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Scale,
-                        contentDescription = "Weight unit settings",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "WEIGHT UNIT",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-                Spacer(modifier = Modifier.height(Spacing.small))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(Spacing.small)
-                ) {
-                    FilterChip(
-                        selected = localWeightUnit == WeightUnit.KG,
-                        onClick = {
-                            localWeightUnit = WeightUnit.KG
-                            onWeightUnitChange(WeightUnit.KG)
-                        },
-                        label = { Text("kg") },
-                        modifier = Modifier.weight(1f),
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.primary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                            labelColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            enabled = true,
-                            selected = localWeightUnit == WeightUnit.KG,
-                            borderColor = MaterialTheme.colorScheme.outline,
-                            selectedBorderColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-                    FilterChip(
-                        selected = localWeightUnit == WeightUnit.LB,
-                        onClick = {
-                            localWeightUnit = WeightUnit.LB
-                            onWeightUnitChange(WeightUnit.LB)
-                        },
-                        label = { Text("lbs") },
-                        modifier = Modifier.weight(1f),
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.primary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                            labelColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            enabled = true,
-                            selected = localWeightUnit == WeightUnit.LB,
-                            borderColor = MaterialTheme.colorScheme.outline,
-                            selectedBorderColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-                }
-            }
-        }
-
-    // Appearance Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.medium)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Palette,
-                        contentDescription = "Appearance settings",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "APPEARANCE",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Spacer(modifier = Modifier.height(Spacing.small))
-
-            // Dark Mode toggle
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        "Dark Mode",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "Use dark theme for the app interface",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Switch(
-                    checked = darkModeEnabled,
-                    onCheckedChange = onDarkModeChange,
-                    colors = SwitchDefaults.colors(
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        checkedThumbColor = Color.White
-                    )
-                )
-            }
-        }
-    }
-
-    // Workout Preferences Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.medium)
-            ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Tune,
-                        contentDescription = "Advanced settings",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "WORKOUT PREFERENCES",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-                Spacer(modifier = Modifier.height(Spacing.small))
-
-                // Issue #167: Summary Countdown now controls autoplay behavior
-                // - Off (-1): Skip summary, auto-advance immediately
-                // - Unlimited (0): Show summary, wait for manual tap (like old autoplay OFF)
-                // - 5-30s: Show summary, auto-advance after countdown (like old autoplay ON)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Set Summary",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Off = skip summary, Unlimited = manual, 5-30s = auto-advance",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    CountdownDropdown(
-                        label = "",
-                        selectedValue = summaryCountdownSeconds,
-                        options = listOf(-1, 0, 5, 10, 15, 20, 25, 30),
-                        onValueSelected = { onSummaryCountdownChange(it) },
-                        modifier = Modifier.width(120.dp),
-                        formatLabel = {
-                            when (it) {
-                                -1 -> "Off"        // Skip summary entirely
-                                0 -> "Unlimited"   // Show summary, no auto-advance
-                                else -> "${it}s"
-                            }
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Autostart Countdown - always visible
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Autostart Countdown",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Just Lift countdown when handles are grabbed",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    CountdownDropdown(
-                        label = "",
-                        selectedValue = autoStartCountdownSeconds,
-                        options = (2..10).toList(),
-                        onValueSelected = { onAutoStartCountdownChange(it) },
-                        modifier = Modifier.width(100.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
-                // Enable Video Playback toggle
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            "Show Exercise Videos",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            "Display exercise demonstration videos (disable to avoid slow loading)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = enableVideoPlayback,
-                        onCheckedChange = onEnableVideoPlaybackChange,
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
-                            checkedThumbColor = Color.White
-                        )
-                    )
-                }
-
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
-                // Audio Rep Counter toggle
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            "Audio Rep Counter",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            "Play spoken rep numbers during working sets",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = audioRepCountEnabled,
-                        onCheckedChange = onAudioRepCountChange,
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
-                            checkedThumbColor = Color.White
-                        )
-                    )
-                }
-
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
-                // Gamification toggle
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            "Gamification",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            "Show PR celebrations and award badges after workouts",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = gamificationEnabled,
-                        onCheckedChange = onGamificationEnabledChange,
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
-                            checkedThumbColor = Color.White
-                        )
-                    )
-                }
-            }
-        }
-
-    // Color Scheme Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.medium)
-        ) {
-            // Easter egg: tap the header 7 times rapidly to unlock disco mode
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    val currentTime = KmpUtils.currentTimeMillis()
-                    // Reset if more than 2 seconds since last tap
-                    if (currentTime - lastTapTime > 2000L) {
-                        easterEggTapCount = 1
-                    } else {
-                        easterEggTapCount++
-                    }
-                    lastTapTime = currentTime
-
-                    // Unlock disco mode after 7 rapid taps
-                    if (easterEggTapCount >= 7 && !discoModeUnlocked) {
-                        showDiscoUnlockDialog = true
-                        onPlayDiscoSound()
-                        onDiscoModeUnlocked()
-                        easterEggTapCount = 0
-                    }
-                }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.ColorLens,
-                        contentDescription = "LED color scheme",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "LED COLOR SCHEME",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.medium))
-
-            // Color scheme slider with preview
-            val colorSchemes = ColorSchemes.ALL
-            val currentScheme = colorSchemes.getOrElse(selectedColorSchemeIndex) { colorSchemes.first() }
-            val isNoneScheme = currentScheme.name == "None"
-
-            // Convert RGB colors to Compose Color for preview
-            val previewColors = if (isNoneScheme) {
-                listOf(Color.DarkGray, Color.Gray, Color.DarkGray)
-            } else {
-                currentScheme.colors.map { Color(it.r, it.g, it.b) }
-            }
-
-            // Color preview box with current scheme name
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        Brush.horizontalGradient(previewColors),
-                        RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (isNoneScheme) {
-                            Icon(
-                                imageVector = Icons.Default.PowerSettingsNew,
-                                contentDescription = "LEDs Off",
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                        }
-                        Text(
-                            text = currentScheme.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(Spacing.medium))
-
-            // Slider for color selection
-            Slider(
-                value = selectedColorSchemeIndex.toFloat(),
-                onValueChange = { onColorSchemeChange(it.toInt()) },
-                valueRange = 0f..(colorSchemes.size - 1).toFloat(),
-                steps = colorSchemes.size - 2, // steps = divisions - 1
-                modifier = Modifier.fillMaxWidth(),
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.primary,
-                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            )
-
-            // Disco mode toggle (only visible when unlocked)
-            if (discoModeUnlocked) {
-                Spacer(modifier = Modifier.height(Spacing.medium))
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = Spacing.small),
-                    color = MaterialTheme.colorScheme.outlineVariant
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            "🕺",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.width(Spacing.small))
-                        Column {
-                            Text(
-                                "Disco Mode",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                if (!isConnected) "Connect to enable"
-                                else if (discoModeActive) "Party time!"
-                                else "Cycle through colors",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    Switch(
-                        checked = discoModeActive,
-                        onCheckedChange = { onDiscoModeToggle(it) },
-                        enabled = isConnected,
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
-                            checkedThumbColor = Color.White
-                        )
-                    )
-                }
-            }
-        }
-    }
-
-    // Data Management Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.medium)
-            ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.DeleteForever,
-                        contentDescription = "Clear workout history",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "DATA MANAGEMENT",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-                Spacer(modifier = Modifier.height(Spacing.small))
-
-                // Backup Button
-                OutlinedButton(
-                    onClick = { showBackupDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon(
-                        Icons.Default.CloudUpload,
-                        contentDescription = "Backup data",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.small))
-                    Text(
-                        "Backup All Data",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(Spacing.small))
-
-                // Restore Button
-                OutlinedButton(
-                    onClick = { showRestoreDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary)
-                ) {
-                    Icon(
-                        Icons.Default.CloudDownload,
-                        contentDescription = "Restore data",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.small))
-                    Text(
-                        "Restore from Backup",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
-                Button(
-                    onClick = { showDeleteAllDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Delete all workouts",
-                        modifier = Modifier.size(24.dp) // Material 3 Expressive: Larger icon
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.small))
-                    Text(
-                        "Delete All Workouts",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-    // Achievements Section (hidden when gamification is disabled)
-    if (gamificationEnabled) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.medium)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.MilitaryTech,
-                        contentDescription = "Achievements",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "ACHIEVEMENTS",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Spacer(modifier = Modifier.height(Spacing.small))
-
-            OutlinedButton(
-                onClick = onNavigateToBadges,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary
-                ),
-                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            ) {
-                Icon(
-                    Icons.Default.EmojiEvents,
-                    contentDescription = "View badges",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(Spacing.small))
-                Text(
-                    "View Badges & Streaks",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                "Track your progress, earn badges, and maintain your workout streak",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-    }
-
-    // TODO: Uncomment when Cloud Sync / Portal features are ready for public release
-    // Cloud Sync Section - Material 3 Expressive
-    // Card(
-    //     modifier = Modifier
-    //         .fillMaxWidth()
-    //         .shadow(8.dp, RoundedCornerShape(20.dp)),
-    //     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
-    //     shape = RoundedCornerShape(20.dp),
-    //     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-    //     border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-    // ) {
-    //     Column(
-    //         modifier = Modifier
-    //             .fillMaxWidth()
-    //             .padding(Spacing.medium)
-    //     ) {
-    //         Row(verticalAlignment = Alignment.CenterVertically) {
-    //             Box(
-    //                 modifier = Modifier
-    //                     .size(48.dp)
-    //                     .shadow(8.dp, RoundedCornerShape(20.dp))
-    //                     .background(
-    //                         Brush.linearGradient(
-    //                             colors = listOf(Color(0xFF06B6D4), Color(0xFF3B82F6))
-    //                         ),
-    //                         RoundedCornerShape(20.dp)
-    //                     ),
-    //                 contentAlignment = Alignment.Center
-    //             ) {
-    //                 Icon(
-    //                     Icons.Default.Cloud,
-    //                     contentDescription = "Cloud Sync",
-    //                     tint = MaterialTheme.colorScheme.onPrimary,
-    //                     modifier = Modifier.size(24.dp)
-    //                 )
-    //             }
-    //             Spacer(modifier = Modifier.width(Spacing.medium))
-    //             Text(
-    //                 "Cloud Sync",
-    //                 style = MaterialTheme.typography.titleLarge,
-    //                 fontWeight = FontWeight.Bold,
-    //                 color = MaterialTheme.colorScheme.onSurface
-    //             )
-    //         }
-    //         Spacer(modifier = Modifier.height(Spacing.small))
-    //
-    //         OutlinedButton(
-    //             onClick = onNavigateToLinkAccount,
-    //             modifier = Modifier
-    //                 .fillMaxWidth()
-    //                 .height(56.dp),
-    //             shape = RoundedCornerShape(20.dp),
-    //             colors = ButtonDefaults.outlinedButtonColors(
-    //                 contentColor = MaterialTheme.colorScheme.primary
-    //             ),
-    //             border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-    //         ) {
-    //             Icon(
-    //                 Icons.Default.Sync,
-    //                 contentDescription = "Link Portal Account",
-    //                 modifier = Modifier.size(24.dp)
-    //             )
-    //             Spacer(modifier = Modifier.width(Spacing.small))
-    //             Text(
-    //                 "Link Portal Account",
-    //                 style = MaterialTheme.typography.titleLarge,
-    //                 fontWeight = FontWeight.Bold
-    //             )
-    //         }
-    //
-    //         Spacer(modifier = Modifier.height(4.dp))
-    //         Text(
-    //             "Sync your workouts to the Phoenix Portal for cross-device access",
-    //             style = MaterialTheme.typography.bodySmall,
-    //             color = MaterialTheme.colorScheme.onSurfaceVariant
-    //         )
-    //     }
-    // }
-
-    // Developer Tools Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.medium)
-            ) {
-            // Easter egg: tap the header 7 times rapidly to unlock simulator mode
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    val currentTime = KmpUtils.currentTimeMillis()
-                    // Reset if more than 2 seconds since last tap
-                    if (currentTime - simulatorLastTapTime > 2000L) {
-                        simulatorEasterEggTapCount = 1
-                    } else {
-                        simulatorEasterEggTapCount++
-                    }
-                    simulatorLastTapTime = currentTime
-
-                    // Unlock simulator mode after 7 rapid taps
-                    if (simulatorEasterEggTapCount >= 7 && !simulatorModeUnlocked) {
-                        showSimulatorUnlockDialog = true
-                        onSimulatorModeUnlocked()
-                        simulatorEasterEggTapCount = 0
-                    }
-                }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        if (simulatorModeUnlocked) Icons.Default.Code else Icons.Default.BugReport,
-                        contentDescription = "Developer Tools",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "DEVELOPER TOOLS",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-                Spacer(modifier = Modifier.height(Spacing.small))
-
-                OutlinedButton(
-                    onClick = onNavigateToConnectionLogs,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-                ) {
-                    Icon(
-                        Icons.Default.Timeline,
-                        contentDescription = "Connection logs",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.small))
-                    Text(
-                        "Connection Logs",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    "View Bluetooth connection debug logs to diagnose connectivity issues",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
-                OutlinedButton(
-                    onClick = onTestSounds,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-                ) {
-                    Icon(
-                        Icons.Default.MusicNote,
-                        contentDescription = "Test sounds",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.small))
-                    Text(
-                        "Test Sounds",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    "Play workout sounds to test audio configuration and volume",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                // Simulator mode toggle (only visible when unlocked)
-                if (simulatorModeUnlocked) {
-                    Spacer(modifier = Modifier.height(Spacing.medium))
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = Spacing.small),
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                "🔧",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Spacer(modifier = Modifier.width(Spacing.small))
-                            Column {
-                                Text(
-                                    "BLE Simulator",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    "Use virtual machine for testing",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                        Switch(
-                            checked = simulatorModeEnabled,
-                            onCheckedChange = { onSimulatorModeToggle(it) },
-                            colors = SwitchDefaults.colors(
-                                checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                checkedThumbColor = Color.White
-                            )
-                        )
-                    }
-
-                    // Info text about restart
-                    Spacer(modifier = Modifier.height(Spacing.small))
-                    Text(
-                        if (simulatorModeEnabled) "Restart the app to connect to the virtual machine"
-                        else "Enable to use simulated BLE device instead of real hardware",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (simulatorModeEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-            }
-        }
-
-    // App Info Section
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing.medium)
-            ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Info,
-                        contentDescription = "App information",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(Spacing.medium))
-                Text(
-                    "APP INFO",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.5.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-                Spacer(modifier = Modifier.height(Spacing.small))
-                Text("Version: 0.5.0", color = MaterialTheme.colorScheme.onSurface)
-                Spacer(modifier = Modifier.height(Spacing.small))
-                Text(
-                    "Open source community project to control Vitruvian Trainer machines locally.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
