@@ -7,7 +7,7 @@ import com.russhwolf.settings.Settings
  * Reads device token from persistent settings (set during pairing).
  */
 class TalosConfig(private val settings: Settings) {
-    val vpsUrl: String = "https://vps.latentera.com"
+    val vpsUrl: String = "https://talos.muzidube.com"
 
     private companion object {
         const val KEY_DEVICE_TOKEN = "talos_vps_device_token"
