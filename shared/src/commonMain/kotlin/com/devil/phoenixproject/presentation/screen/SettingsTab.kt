@@ -749,7 +749,7 @@ fun SettingsTab(
         //     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         //     shape = RoundedCornerShape(20.dp),
         //     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        //     border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        //     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         // ) {
         //     Column(
         //         modifier = Modifier
