@@ -106,7 +106,12 @@ fun HomeScreen(
                         (now - sessionTime).inWholeDays < 7
                     }
                     val weeklyVolume = weekSessions.sumOf { (it.totalVolumeKg ?: 0f).toDouble() }.toInt()
-                    val lastExercise = recentSessions.firstOrNull()?.exerciseName ?: "None"
+                    // Count unique workout days (distinct dates)
+                    val uniqueWorkoutDays = weekSessions.map { session ->
+                        Instant.fromEpochMilliseconds(session.timestamp)
+                            .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    }.distinct().size
+                    val totalSets = weekSessions.size
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -138,16 +143,16 @@ fun HomeScreen(
                             icon = Icons.Default.CalendarMonth,
                             iconColor = MetricVelocity,
                             label = "Sessions",
-                            value = "${weekSessions.size}",
+                            value = "$uniqueWorkoutDays",
                             unit = "this week",
                             modifier = Modifier.weight(1f)
                         )
                         QuickStatCard(
                             icon = Icons.Outlined.FitnessCenter,
                             iconColor = MetricSleep,
-                            label = "Last Workout",
-                            value = lastExercise.take(12),
-                            unit = "",
+                            label = "Sets",
+                            value = "$totalSets",
+                            unit = "this week",
                             modifier = Modifier.weight(1f)
                         )
                     }
