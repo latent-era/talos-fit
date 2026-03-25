@@ -861,7 +861,7 @@ private fun ActiveCycleCard(
                         ) {
                             Icon(Icons.Default.SkipNext, contentDescription = null)
                             Spacer(Modifier.width(8.dp))
-                            Text("Jump to Day $displayedDayNumber")
+                            Text("Day $displayedDayNumber", maxLines = 1)
                         }
                     }
                 } else {
@@ -897,7 +897,7 @@ private fun ActiveCycleCard(
                             ) {
                                 Icon(Icons.Default.SkipNext, contentDescription = null)
                                 Spacer(Modifier.width(8.dp))
-                                Text("Jump to Day $displayedDayNumber")
+                                Text("Day $displayedDayNumber", maxLines = 1)
                             }
                             Button(
                                 onClick = { onStartWorkout(displayedCycleDay?.routineId, cycle.id, displayedDayNumber) },
@@ -916,7 +916,7 @@ private fun ActiveCycleCard(
                             ) {
                                 Icon(Icons.Default.SkipNext, contentDescription = null)
                                 Spacer(Modifier.width(8.dp))
-                                Text("Jump to Day $displayedDayNumber")
+                                Text("Day $displayedDayNumber", maxLines = 1)
                             }
                         }
                     }

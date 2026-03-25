@@ -170,7 +170,8 @@ fun RoutineEditorScreen(
     }
 
     // Handle configured exercise result from ExerciseConfigScreen
-    LaunchedEffect(configuredExerciseResult) {
+    // Key on all three inputs to ensure the effect re-runs for every edit
+    LaunchedEffect(configuredExerciseResult, editingIndexResult, isNewExerciseResult) {
         val configured = configuredExerciseResult ?: return@LaunchedEffect
         if (isNewExerciseResult) {
             // Correct the order index and superset assignment for new exercises
