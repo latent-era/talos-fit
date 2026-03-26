@@ -365,28 +365,32 @@ class ActiveSessionEngine(
         val avgEccentricB = if (activeEccentricMetrics.isNotEmpty())
             activeEccentricMetrics.map { it.loadB }.average().toFloat() else 0f
 
-        // Physics-based calorie estimation using work-energy theorem:
-        // W = sum(force_i * delta_distance_i) for each consecutive sample pair
-        // kcal = (W_joules / 4184) * 5 (metabolic efficiency multiplier ~20%)
+        // Calorie estimation: hybrid of time-based and physics-based approaches.
+        // Time-based: resistance training burns ~4.5 kcal/min (ACSM research average).
+        // Physics-based: mechanical work × metabolic multiplier (~20% efficiency → 5×).
+        // Uses the higher of the two, since the physics model undercounts when cable
+        // displacement is small relative to actual muscular effort.
         val estimatedCalories = run {
-            if (metrics.size < 2) {
-                // Fallback for insufficient samples
-                (totalVolumeKg * 0.5f * 9.81f / 4184f).coerceAtLeast(1f)
+            val durationMinutes = (durationMs / 1000f / 60f).coerceAtLeast(0.25f)
+            val timeBasedKcal = durationMinutes * 4.5f
+
+            val physicsKcal = if (metrics.size < 2) {
+                (totalVolumeKg * 0.5f * 9.81f / 4184f)
             } else {
                 var totalWorkJoules = 0.0
                 for (i in 1 until metrics.size) {
                     val prev = metrics[i - 1]
                     val curr = metrics[i]
-                    // Average force in N across both cables
                     val avgForceN = ((prev.totalLoad + curr.totalLoad) / 2f) * 9.81f
-                    // Distance in meters (position is in mm)
                     val deltaA = kotlin.math.abs(curr.positionA - prev.positionA) / 1000f
                     val deltaB = kotlin.math.abs(curr.positionB - prev.positionB) / 1000f
                     val avgDelta = if (isSingleCable) maxOf(deltaA, deltaB) else (deltaA + deltaB) / 2f
                     totalWorkJoules += avgForceN * avgDelta
                 }
-                ((totalWorkJoules / 4184.0) * 5.0).toFloat().coerceAtLeast(1f)
+                ((totalWorkJoules / 4184.0) * 5.0).toFloat()
             }
+
+            maxOf(timeBasedKcal, physicsKcal).coerceAtLeast(1f)
         }
 
         val peakPower = heaviestLiftKgPerCable

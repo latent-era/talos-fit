@@ -538,6 +538,13 @@ private fun WorkoutDayCard(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
+                    sessions.firstOrNull()?.routineName?.let { name ->
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                     Text(
                         text = "$exerciseCount exercises • ${sessions.size} sets",
                         style = MaterialTheme.typography.bodySmall,
