@@ -1881,8 +1881,11 @@ private fun normalizeGroup(raw: String): String = when (raw.trim().uppercase()) 
     else -> raw.trim().replaceFirstChar { it.uppercase() }
 }
 
-/** Filter categories — "All" plus broad groups that expand to show their sub-groups. */
-private val MUSCLE_FILTER_CATEGORIES = listOf("All", "Push", "Pull", "Legs", "Core")
+/** Filter categories for the muscle volume card. */
+private val MUSCLE_FILTER_CATEGORIES = listOf(
+    "All", "Push", "Pull", "Legs", "Core",
+    "Chest", "Back", "Shoulders", "Arms"
+)
 
 /** Which granular groups belong to each filter category. */
 private fun groupsForFilter(filter: String): Set<String>? = when (filter) {
@@ -1891,6 +1894,10 @@ private fun groupsForFilter(filter: String): Set<String>? = when (filter) {
     "Pull" -> setOf("Lats", "Upper Back", "Rear Delts", "Biceps", "Arms")
     "Legs" -> setOf("Quads", "Hamstrings", "Glutes", "Calves", "Legs")
     "Core" -> setOf("Core")
+    "Chest" -> setOf("Chest")
+    "Back" -> setOf("Lats", "Upper Back", "Rear Delts")
+    "Shoulders" -> setOf("Front Delts", "Side Delts", "Rear Delts", "Shoulders")
+    "Arms" -> setOf("Biceps", "Triceps", "Arms")
     else -> null
 }
 
