@@ -1702,20 +1702,18 @@ fun VolumeByExerciseCard(
     weightUnit: WeightUnit,
     modifier: Modifier = Modifier
 ) {
-    var selectedPeriod by remember { mutableStateOf(VolumePeriod.THIS_WEEK) }
+    var periodMode by remember { mutableStateOf("Week") }
+    var periodOffset by remember { mutableStateOf(0) }
+    val periodModes = listOf("Week", "Month", "Year")
 
-    val now = remember { KmpUtils.currentTimeMillis() }
-    val oneDayMs = 24L * 60 * 60 * 1000
+    // Reset offset when switching modes
+    val (periodStartMs, periodEndMs, periodLabel) = remember(periodMode, periodOffset) {
+        calculatePeriodWindow(periodMode, periodOffset)
+    }
 
-    val volumeByExercise = remember(workoutSessions, selectedPeriod, weightUnit) {
-        val cutoff = when (selectedPeriod) {
-            VolumePeriod.THIS_WEEK -> now - 7 * oneDayMs
-            VolumePeriod.THIS_MONTH -> now - 30 * oneDayMs
-            VolumePeriod.ALL_TIME -> 0L
-        }
-
+    val volumeByExercise = remember(workoutSessions, periodStartMs, periodEndMs, weightUnit) {
         workoutSessions
-            .filter { it.timestamp >= cutoff && it.exerciseId != null }
+            .filter { it.timestamp >= periodStartMs && it.timestamp < periodEndMs && it.exerciseId != null }
             .groupBy { it.exerciseId!! }
             .map { (_, sessions) ->
                 val name = sessions.firstNotNullOfOrNull { it.exerciseName } ?: "Unknown"
@@ -1724,7 +1722,7 @@ fun VolumeByExerciseCard(
                 name to displayVolume
             }
             .sortedByDescending { it.second }
-            .take(10) // Top 10 exercises
+            .take(10)
     }
 
     Card(
@@ -1748,26 +1746,52 @@ fun VolumeByExerciseCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Period selector chips
+            // Period mode chips
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                VolumePeriod.entries.forEach { period ->
+                periodModes.forEach { mode ->
                     FilterChip(
-                        selected = selectedPeriod == period,
-                        onClick = { selectedPeriod = period },
+                        selected = periodMode == mode,
+                        onClick = { periodMode = mode; periodOffset = 0 },
                         label = {
-                            Text(
-                                period.label,
-                                style = MaterialTheme.typography.labelMedium
-                            )
+                            Text(mode, style = MaterialTheme.typography.labelMedium)
                         }
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Back/forward navigation
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { periodOffset-- }) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Previous")
+                }
+                Text(
+                    text = periodLabel,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium
+                )
+                IconButton(
+                    onClick = { periodOffset++ },
+                    enabled = periodOffset < 0
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Next",
+                        tint = if (periodOffset < 0) MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (volumeByExercise.isEmpty()) {
                 Text(
