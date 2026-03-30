@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,7 +47,10 @@ import com.devil.phoenixproject.domain.model.effectiveTotalVolumeKg
 import com.devil.phoenixproject.presentation.components.charts.*
 import com.devil.phoenixproject.util.KmpLocalDate
 import com.devil.phoenixproject.util.KmpUtils
+import kotlinx.datetime.*
 import kotlin.math.roundToInt
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Insight card components for workout analytics
@@ -1890,12 +1895,83 @@ private data class MuscleGroupVolume(
 }
 
 /**
- * Muscle Volume Card -- per-muscle-group weekly set counts with
- * training-zone colour indicators and filter chips.
+ * Calculate the period time window (start and end epoch millis) based on
+ * [periodMode] and [periodOffset].
+ *
+ * - **Week**: ISO Monday-to-Sunday. offset 0 = week containing today.
+ * - **Month**: Calendar month. offset 0 = this month.
+ * - **Year**: Calendar year. offset 0 = this year.
+ *
+ * Returns a Triple of (startMillis, endMillis, displayLabel).
+ */
+private fun calculatePeriodWindow(
+    periodMode: String,
+    periodOffset: Int
+): Triple<Long, Long, String> {
+    val tz = TimeZone.currentSystemDefault()
+    val today = Clock.System.now().toLocalDateTime(tz).date
+
+    when (periodMode) {
+        "Week" -> {
+            // Find Monday of the current week
+            val daysSinceMonday = today.dayOfWeek.isoDayNumber - 1
+            val thisMonday = today.minus(daysSinceMonday, DateTimeUnit.DAY)
+            // Apply offset (each offset step = 7 days)
+            val targetMonday = thisMonday.plus(periodOffset * 7, DateTimeUnit.DAY)
+            val targetSunday = targetMonday.plus(6, DateTimeUnit.DAY)
+
+            val startMs = targetMonday.atStartOfDayIn(tz).toEpochMilliseconds()
+            val endMs = targetSunday.plus(1, DateTimeUnit.DAY)
+                .atStartOfDayIn(tz).toEpochMilliseconds()
+
+            val startLabel = "${targetMonday.dayOfMonth} ${getMonthShortName(targetMonday.monthNumber)}"
+            val endLabel = "${targetSunday.dayOfMonth} ${getMonthShortName(targetSunday.monthNumber)}"
+            return Triple(startMs, endMs, "$startLabel - $endLabel")
+        }
+        "Month" -> {
+            // Start of this month, then apply offset
+            val targetMonth = today.month.number + periodOffset
+            // Handle wrap-around
+            var adjustedYear = today.year
+            var adjustedMonth = targetMonth
+            while (adjustedMonth < 1) { adjustedMonth += 12; adjustedYear-- }
+            while (adjustedMonth > 12) { adjustedMonth -= 12; adjustedYear++ }
+
+            val firstDay = LocalDate(adjustedYear, adjustedMonth, 1)
+            val nextMonth = firstDay.plus(1, DateTimeUnit.MONTH)
+
+            val startMs = firstDay.atStartOfDayIn(tz).toEpochMilliseconds()
+            val endMs = nextMonth.atStartOfDayIn(tz).toEpochMilliseconds()
+
+            val monthName = firstDay.month.name.lowercase().replaceFirstChar { it.uppercase() }
+            return Triple(startMs, endMs, "$monthName $adjustedYear")
+        }
+        "Year" -> {
+            val targetYear = today.year + periodOffset
+            val firstDay = LocalDate(targetYear, 1, 1)
+            val nextYear = LocalDate(targetYear + 1, 1, 1)
+
+            val startMs = firstDay.atStartOfDayIn(tz).toEpochMilliseconds()
+            val endMs = nextYear.atStartOfDayIn(tz).toEpochMilliseconds()
+
+            return Triple(startMs, endMs, "$targetYear")
+        }
+        else -> {
+            // Fallback: last 7 days
+            val startMs = Clock.System.now().toEpochMilliseconds() - 7L * 24 * 60 * 60 * 1000
+            val endMs = Clock.System.now().toEpochMilliseconds()
+            return Triple(startMs, endMs, "Last 7 days")
+        }
+    }
+}
+
+/**
+ * Muscle Volume Card -- per-muscle-group set counts with
+ * training-zone colour indicators, period navigation, and filter chips.
  *
  * Uses [ExerciseRepository.getExerciseById] to resolve each session's
  * exerciseId to its muscleGroups field, then counts sets with workingReps > 0
- * in the last 7 days. Each set credits ALL of the exercise's muscle groups.
+ * in the selected time period. Each set credits ALL of the exercise's muscle groups.
  *
  * @param workoutSessions All available workout sessions
  * @param exerciseRepository Repository for exercise lookups
@@ -1907,13 +1983,21 @@ fun MuscleVolumeCard(
     exerciseRepository: ExerciseRepository,
     modifier: Modifier = Modifier
 ) {
-    val now = remember { KmpUtils.currentTimeMillis() }
-    val sevenDaysMs = 7L * 24 * 60 * 60 * 1000
+    // Period navigation state
+    var periodMode by remember { mutableStateOf("Week") }
+    var periodOffset by remember { mutableStateOf(0) }
+    val periodModes = listOf("Week", "Month", "Year")
 
-    // Last-7-day sessions with at least one working rep and a linked exercise
-    val recentSessions = remember(workoutSessions, now) {
+    // Calculate time window based on current period mode and offset
+    val (periodStartMs, periodEndMs, periodLabel) = remember(periodMode, periodOffset) {
+        calculatePeriodWindow(periodMode, periodOffset)
+    }
+
+    // Filter sessions to the selected period with at least one working rep and a linked exercise
+    val periodSessions = remember(workoutSessions, periodStartMs, periodEndMs) {
         workoutSessions.filter { session ->
-            session.timestamp >= (now - sevenDaysMs) &&
+            session.timestamp >= periodStartMs &&
+                session.timestamp < periodEndMs &&
                 session.workingReps > 0 &&
                 session.exerciseId != null
         }
@@ -1922,9 +2006,9 @@ fun MuscleVolumeCard(
     // Resolve exercise IDs -> muscle-group lists asynchronously
     val muscleGroupMap by produceState(
         initialValue = emptyMap<String, List<String>>(),
-        key1 = recentSessions
+        key1 = periodSessions
     ) {
-        val ids = recentSessions.mapNotNull { it.exerciseId }.distinct()
+        val ids = periodSessions.mapNotNull { it.exerciseId }.distinct()
         val result = mutableMapOf<String, List<String>>()
         ids.forEach { id ->
             val exercise = exerciseRepository.getExerciseById(id)
@@ -1939,9 +2023,9 @@ fun MuscleVolumeCard(
     }
 
     // Aggregate sets per canonical group
-    val groupVolumes = remember(recentSessions, muscleGroupMap) {
+    val groupVolumes = remember(periodSessions, muscleGroupMap) {
         val counts = mutableMapOf<String, Int>()
-        recentSessions.forEach { session ->
+        periodSessions.forEach { session ->
             val groups = muscleGroupMap[session.exerciseId] ?: return@forEach
             groups.forEach { group ->
                 counts[group] = (counts[group] ?: 0) + 1
@@ -1965,7 +2049,7 @@ fun MuscleVolumeCard(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                contentDescription = "Muscle volume: weekly sets per muscle group"
+                contentDescription = "Muscle volume: sets per muscle group for $periodLabel"
             },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(12.dp),
@@ -1979,14 +2063,82 @@ fun MuscleVolumeCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                "Weekly sets per muscle group",
+                periodLabel,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Filter chip row (scrollable)
+            // Period mode chips
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                periodModes.forEach { mode ->
+                    FilterChip(
+                        selected = periodMode == mode,
+                        onClick = {
+                            periodMode = mode
+                            periodOffset = 0
+                        },
+                        label = {
+                            Text(
+                                text = mode,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        },
+                        modifier = Modifier.height(28.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Back / Forward navigation row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { periodOffset-- },
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Previous period",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Text(
+                    text = periodLabel,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                IconButton(
+                    onClick = { periodOffset++ },
+                    enabled = periodOffset < 0,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Next period",
+                        tint = if (periodOffset < 0) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Muscle group filter chip row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -2008,9 +2160,9 @@ fun MuscleVolumeCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            if (recentSessions.isEmpty()) {
+            if (periodSessions.isEmpty()) {
                 Text(
-                    "Complete workouts this week to see muscle volume.",
+                    "No workouts in this period.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 24.dp)
