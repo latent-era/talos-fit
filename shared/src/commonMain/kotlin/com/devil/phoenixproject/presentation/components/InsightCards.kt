@@ -1857,22 +1857,42 @@ private fun formatVolumeCompact(volume: Float, unitLabel: String): String {
 // ---------------------------------------------------------------------------
 
 /**
- * Normalise raw muscle-group strings (e.g. "CHEST", "Biceps", "GLUTES")
- * into the six canonical display groups used by the volume card.
+ * Normalise raw muscle-group strings into granular display groups.
+ * Handles both new granular values (FRONT_DELTS, LATS, etc.) and legacy
+ * broad values (ARMS, BACK, LEGS, SHOULDERS) for unmapped exercises.
  */
 private fun normalizeGroup(raw: String): String = when (raw.trim().uppercase()) {
     "CHEST" -> "Chest"
-    "BACK" -> "Back"
-    "SHOULDERS" -> "Shoulders"
-    "BICEPS", "TRICEPS", "ARMS" -> "Arms"
-    "LEGS", "GLUTES", "QUADS", "HAMSTRINGS", "CALVES" -> "Legs"
+    "LATS" -> "Lats"
+    "UPPER_BACK", "BACK" -> "Upper Back"
+    "FRONT_DELTS" -> "Front Delts"
+    "SIDE_DELTS" -> "Side Delts"
+    "REAR_DELTS" -> "Rear Delts"
+    "BICEPS" -> "Biceps"
+    "TRICEPS" -> "Triceps"
+    "ARMS" -> "Arms" // legacy fallback
+    "SHOULDERS" -> "Shoulders" // legacy fallback
+    "QUADS" -> "Quads"
+    "HAMSTRINGS" -> "Hamstrings"
+    "GLUTES" -> "Glutes"
+    "CALVES" -> "Calves"
+    "LEGS" -> "Legs" // legacy fallback
     "CORE", "ABS" -> "Core"
-    "FULL_BODY", "FULL BODY" -> "Legs" // full-body counts toward the largest group
     else -> raw.trim().replaceFirstChar { it.uppercase() }
 }
 
-/** Canonical ordering for the six muscle groups. */
-private val MUSCLE_GROUP_ORDER = listOf("Chest", "Back", "Shoulders", "Arms", "Legs", "Core")
+/** Filter categories — "All" plus broad groups that expand to show their sub-groups. */
+private val MUSCLE_FILTER_CATEGORIES = listOf("All", "Push", "Pull", "Legs", "Core")
+
+/** Which granular groups belong to each filter category. */
+private fun groupsForFilter(filter: String): Set<String>? = when (filter) {
+    "All" -> null // show all
+    "Push" -> setOf("Chest", "Front Delts", "Side Delts", "Triceps", "Shoulders")
+    "Pull" -> setOf("Lats", "Upper Back", "Rear Delts", "Biceps", "Arms")
+    "Legs" -> setOf("Quads", "Hamstrings", "Glutes", "Calves", "Legs")
+    "Core" -> setOf("Core")
+    else -> null
+}
 
 /**
  * Data holder for per-muscle-group weekly set counts and zone classification.
@@ -2033,18 +2053,19 @@ fun MuscleVolumeCard(
                 counts[group] = (counts[group] ?: 0) + 1
             }
         }
-        MUSCLE_GROUP_ORDER.map { group ->
-            MuscleGroupVolume(name = group, sets = counts[group] ?: 0)
-        }
+        counts.entries
+            .map { (group, count) -> MuscleGroupVolume(name = group, sets = count) }
+            .sortedByDescending { it.sets }
     }
 
     // Filter state
     var selectedFilter by remember { mutableStateOf("All") }
-    val filters = listOf("All") + MUSCLE_GROUP_ORDER
+    val filters = MUSCLE_FILTER_CATEGORIES
 
     val displayedGroups = remember(groupVolumes, selectedFilter) {
-        if (selectedFilter == "All") groupVolumes
-        else groupVolumes.filter { it.name == selectedFilter }
+        val allowedGroups = groupsForFilter(selectedFilter)
+        if (allowedGroups == null) groupVolumes
+        else groupVolumes.filter { it.name in allowedGroups }
     }
 
     Card(
