@@ -20,7 +20,7 @@ object BlePacketFactory {
     }
 
     @Volatile
-    var defaultForceConfigVariant: ForceConfigVariant = ForceConfigVariant.NON_OVERLAP
+    var defaultForceConfigVariant: ForceConfigVariant = ForceConfigVariant.OVERLAP
 
     // ========== Little-Endian Byte Helpers ==========
 
@@ -134,8 +134,9 @@ object BlePacketFactory {
      *
      * Activation modes serialize a 32-byte mode profile at 0x30-0x4F, followed by
      * the force config block at 0x50-0x5F.
-     * - NON_OVERLAP keeps 0x48-0x4F untouched so profile bytes are preserved.
-     * - OVERLAP writes legacy softMax/increment at 0x48/0x4C when required.
+     * - OVERLAP (default, hardware-verified): writes softMax/increment at 0x48/0x4C
+     *   after the profile copy so firmware reads correct force config (Issue #262).
+     * - NON_OVERLAP: keeps 0x48-0x4F as profile bytes (not verified on hardware).
      */
     fun createProgramParams(
         params: WorkoutParameters,

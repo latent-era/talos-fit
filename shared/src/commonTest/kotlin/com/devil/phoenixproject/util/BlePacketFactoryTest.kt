@@ -481,6 +481,24 @@ class BlePacketFactoryTest {
         assertTrue(nonOverlapPacket.copyOfRange(0x48, 0x50).contentEquals(overlapPacket.copyOfRange(0x48, 0x50)).not())
     }
 
+    @Test
+    fun `createProgramParams default variant writes softMax and increment at firmware offsets`() {
+        // Regression test: the default variant must write softMax at 0x48 and increment
+        // at 0x4C so the firmware reads correct force config (Issue #262).
+        val params = WorkoutParameters(
+            programMode = ProgramMode.OldSchool,
+            reps = 10,
+            weightPerCableKg = 40f,
+            progressionRegressionKg = 3f
+        )
+
+        // Uses the default variant — no explicit variant parameter
+        val packet = BlePacketFactory.createProgramParams(params)
+
+        assertEquals(40.0f, readFloatLE(packet, BleConstants.ActivationPacket.OFFSET_SOFT_MAX))
+        assertEquals(3.0f, readFloatLE(packet, BleConstants.ActivationPacket.OFFSET_INCREMENT))
+    }
+
     // ========== Echo Mode Tests ==========
 
     @Test

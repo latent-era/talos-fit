@@ -26,7 +26,7 @@ actual val platformModule: Module = module {
     // Conditional BleRepository - use simulator when unlocked in preferences
     factory<BleRepository> {
         val prefs: PreferencesManager = get()
-        if (prefs.isSimulatorModeUnlocked()) {
+        if (prefs.isSimulatorModeEnabled()) {
             SimulatorBleRepository()
         } else {
             KableBleRepository()
