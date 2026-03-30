@@ -16,11 +16,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -1769,6 +1771,173 @@ fun OverloadLineChart(
             text = data.last().first,
             style = labelStyle.merge(TextStyle(color = labelColor)),
             topLeft = Offset(w - lastLayout.size.width, chartH + 4.dp.toPx())
+        )
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Workout Frequency Card
+// ---------------------------------------------------------------------------
+
+/**
+ * Workout Frequency Card -- bar chart of real workouts per week for the last
+ * 8 weeks with a dashed target line at 3 workouts/week.
+ */
+@Composable
+fun WorkoutFrequencyCard(
+    workoutSessions: List<WorkoutSession>,
+    modifier: Modifier = Modifier,
+    weeklyTarget: Int = 3
+) {
+    val now = remember { KmpUtils.currentTimeMillis() }
+    val oneDayMs = 24L * 60 * 60 * 1000
+    val oneWeekMs = 7 * oneDayMs
+
+    // Build per-week workout counts for the last 8 weeks
+    val weeklyData = remember(workoutSessions, now) {
+        (0 until 8).reversed().map { weeksAgo ->
+            val weekEnd = now - (weeksAgo * oneWeekMs)
+            val weekStart = weekEnd - oneWeekMs
+            val sessionsInWeek = workoutSessions.filter {
+                it.timestamp in weekStart until weekEnd
+            }
+            val label = if (weeksAgo == 0) "This" else "${weeksAgo}w"
+            label to countRealWorkouts(sessionsInWeek)
+        }
+    }
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                "Workout Frequency",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Real workouts per week (last 8 weeks)",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (weeklyData.any { it.second > 0 }) {
+                FrequencyBarChart(
+                    data = weeklyData,
+                    target = weeklyTarget,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            } else {
+                Text(
+                    "Complete workouts to see your weekly frequency.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 32.dp)
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Canvas-based bar chart with a dashed target line.
+ * Uses TextMeasurer for KMP-compatible text rendering.
+ */
+@Composable
+fun FrequencyBarChart(
+    data: List<Pair<String, Int>>,
+    target: Int,
+    modifier: Modifier = Modifier,
+    barColor: Color = MaterialTheme.colorScheme.primary,
+    targetColor: Color = MaterialTheme.colorScheme.error
+) {
+    if (data.isEmpty()) return
+
+    val textMeasurer = rememberTextMeasurer()
+    val labelStyle = MaterialTheme.typography.labelSmall
+    val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val gridColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+
+    val maxValue = (data.maxOf { it.second }).coerceAtLeast(target + 1)
+
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        val bottomPad = 22.dp.toPx()
+        val chartH = h - bottomPad
+        val barCount = data.size
+        val barTotalWidth = w / barCount
+        val barWidth = barTotalWidth * 0.6f
+        val gap = barTotalWidth * 0.2f
+
+        // Horizontal grid lines
+        for (i in 0..maxValue step (maxValue / 3).coerceAtLeast(1)) {
+            val y = chartH - (i.toFloat() / maxValue * chartH)
+            drawLine(gridColor, Offset(0f, y), Offset(w, y))
+        }
+
+        // Bars
+        data.forEachIndexed { idx, (label, count) ->
+            val barH = (count.toFloat() / maxValue) * chartH
+            val x = idx * barTotalWidth + gap
+            val y = chartH - barH
+
+            drawRoundRect(
+                color = if (count >= target) barColor else barColor.copy(alpha = 0.5f),
+                topLeft = Offset(x, y),
+                size = Size(barWidth, barH),
+                cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
+            )
+
+            // X-axis label
+            val textLayout = textMeasurer.measure(label, labelStyle)
+            val textX = x + barWidth / 2f - textLayout.size.width / 2f
+            drawText(
+                textMeasurer = textMeasurer,
+                text = label,
+                style = labelStyle.merge(TextStyle(color = labelColor)),
+                topLeft = Offset(textX, chartH + 4.dp.toPx())
+            )
+
+            // Count label above bar
+            if (count > 0) {
+                val countText = "$count"
+                val countLayout = textMeasurer.measure(countText, labelStyle)
+                val countX = x + barWidth / 2f - countLayout.size.width / 2f
+                drawText(
+                    textMeasurer = textMeasurer,
+                    text = countText,
+                    style = labelStyle.merge(TextStyle(color = labelColor)),
+                    topLeft = Offset(countX, y - countLayout.size.height - 2.dp.toPx())
+                )
+            }
+        }
+
+        // Dashed target line
+        val targetY = chartH - (target.toFloat() / maxValue * chartH)
+        drawLine(
+            color = targetColor,
+            start = Offset(0f, targetY),
+            end = Offset(w, targetY),
+            strokeWidth = 2.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(8.dp.toPx(), 6.dp.toPx()))
+        )
+
+        // Target label
+        val targetLabel = "Target: $target"
+        drawText(
+            textMeasurer = textMeasurer,
+            text = targetLabel,
+            style = labelStyle.merge(TextStyle(color = targetColor)),
+            topLeft = Offset(w - textMeasurer.measure(targetLabel, labelStyle).size.width - 4f, targetY - 16.dp.toPx())
         )
     }
 }
