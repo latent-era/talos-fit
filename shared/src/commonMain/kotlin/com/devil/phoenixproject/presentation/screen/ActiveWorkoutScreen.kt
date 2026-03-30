@@ -302,6 +302,7 @@ fun ActiveWorkoutScreen(
             onSkipCountdown = { viewModel.skipCountdown() },
             onProceedFromSummary = { viewModel.proceedFromSummary() },
             onRpeLogged = { rpe -> viewModel.logRpeForCurrentSet(rpe) },
+            onProgressionApplied = { suggestion -> viewModel.applyProgression(suggestion) },
             onResetForNewWorkout = { viewModel.resetForNewWorkout() },
             onStartNextExercise = { viewModel.advanceToNextExercise() },
             onJumpToExercise = { viewModel.jumpToExercise(it) },

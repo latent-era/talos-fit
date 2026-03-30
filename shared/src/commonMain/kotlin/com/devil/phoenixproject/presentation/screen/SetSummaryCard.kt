@@ -5,6 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
+import androidx.compose.material.icons.automirrored.filled.TrendingFlat
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -303,8 +306,9 @@ fun SetSummaryCard(
         }
 
         // Auto-Progression suggestion card
-        if (!isHistoryView && summary.progressionSuggestion != null) {
-            val suggestion = summary.progressionSuggestion!!
+        val progressionSuggestion = summary.progressionSuggestion
+        if (!isHistoryView && progressionSuggestion != null) {
+            val suggestion = progressionSuggestion
             var applyProgression by remember(suggestion) {
                 mutableStateOf(suggestion.direction == ProgressionDirection.INCREASE)
             }
@@ -331,9 +335,9 @@ fun SetSummaryCard(
                         modifier = Modifier.weight(1f)
                     ) {
                         val (icon, tint) = when (suggestion.direction) {
-                            ProgressionDirection.INCREASE -> Icons.Default.TrendingUp to Color(0xFF4CAF50)
-                            ProgressionDirection.HOLD -> Icons.Default.TrendingFlat to MaterialTheme.colorScheme.onSurfaceVariant
-                            ProgressionDirection.DECREASE -> Icons.Default.TrendingDown to Color(0xFFFFA726)
+                            ProgressionDirection.INCREASE -> Icons.AutoMirrored.Filled.TrendingUp to Color(0xFF4CAF50)
+                            ProgressionDirection.HOLD -> Icons.AutoMirrored.Filled.TrendingFlat to MaterialTheme.colorScheme.onSurfaceVariant
+                            ProgressionDirection.DECREASE -> Icons.AutoMirrored.Filled.TrendingDown to Color(0xFFFFA726)
                         }
                         Icon(
                             icon,

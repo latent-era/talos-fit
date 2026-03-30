@@ -90,6 +90,7 @@ fun WorkoutTab(
         onSkipCountdown = actions::onSkipCountdown,
         onProceedFromSummary = actions::onProceedFromSummary,
         onRpeLogged = actions::onRpeLogged,
+        onProgressionApplied = actions::onProgressionApplied,
         onResetForNewWorkout = actions::onResetForNewWorkout,
         onStartNextExercise = actions::onStartNextExercise,
         onUpdateParameters = actions::onUpdateParameters,
@@ -147,6 +148,7 @@ fun WorkoutTab(
     onSkipCountdown: () -> Unit,
     onProceedFromSummary: () -> Unit = {},
     onRpeLogged: ((Int) -> Unit)? = null,  // Optional RPE callback for set summary
+    onProgressionApplied: ((ProgressionSuggestion) -> Unit)? = null,  // Auto-progression callback
     onResetForNewWorkout: () -> Unit,
     onStartNextExercise: () -> Unit = {},
     onUpdateParameters: (WorkoutParameters) -> Unit,
@@ -403,7 +405,8 @@ fun WorkoutTab(
                             autoplayEnabled = autoplayEnabled,
                             summaryCountdownSeconds = summaryCountdownSeconds,
                             onRpeLogged = onRpeLogged,
-                            buttonLabel = buttonLabel
+                            buttonLabel = buttonLabel,
+                            onProgressionApplied = onProgressionApplied
                         )
                     }
                 }

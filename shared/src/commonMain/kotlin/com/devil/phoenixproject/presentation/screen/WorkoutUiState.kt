@@ -101,6 +101,9 @@ interface WorkoutActions {
     /** Log RPE (Rate of Perceived Exertion) for current set */
     fun onRpeLogged(rpe: Int)
 
+    /** Apply auto-progression suggestion to update routine exercise weight */
+    fun onProgressionApplied(suggestion: ProgressionSuggestion)
+
     /** Reset state to start a new workout */
     fun onResetForNewWorkout()
 
@@ -142,6 +145,7 @@ object PreviewWorkoutActions : WorkoutActions {
     override fun onSkipCountdown() {}
     override fun onProceedFromSummary() {}
     override fun onRpeLogged(rpe: Int) {}
+    override fun onProgressionApplied(suggestion: ProgressionSuggestion) {}
     override fun onResetForNewWorkout() {}
     override fun onStartNextExercise() {}
     override fun onJumpToExercise(index: Int) {}
@@ -167,6 +171,7 @@ fun workoutActions(
     onSkipCountdown: () -> Unit,
     onProceedFromSummary: () -> Unit,
     onRpeLogged: (Int) -> Unit,
+    onProgressionApplied: (ProgressionSuggestion) -> Unit,
     onResetForNewWorkout: () -> Unit,
     onStartNextExercise: () -> Unit,
     onJumpToExercise: (Int) -> Unit,
@@ -186,6 +191,7 @@ fun workoutActions(
     override fun onSkipCountdown() = onSkipCountdown()
     override fun onProceedFromSummary() = onProceedFromSummary()
     override fun onRpeLogged(rpe: Int) = onRpeLogged(rpe)
+    override fun onProgressionApplied(suggestion: ProgressionSuggestion) = onProgressionApplied(suggestion)
     override fun onResetForNewWorkout() = onResetForNewWorkout()
     override fun onStartNextExercise() = onStartNextExercise()
     override fun onJumpToExercise(index: Int) = onJumpToExercise(index)

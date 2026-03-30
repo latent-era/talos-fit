@@ -223,6 +223,7 @@ class MainViewModel constructor(
     fun updateRoutine(routine: Routine) = workoutSessionManager.updateRoutine(routine)
     fun deleteRoutine(routineId: String) = workoutSessionManager.deleteRoutine(routineId)
     fun deleteRoutines(routineIds: Set<String>) = workoutSessionManager.deleteRoutines(routineIds)
+    fun applyProgression(suggestion: ProgressionSuggestion) = workoutSessionManager.applyProgression(suggestion)
     fun loadRoutine(routine: Routine) = workoutSessionManager.loadRoutine(routine)
     /** Issue #2 Fix: Suspend version that completes after routine is fully loaded (including PR weight resolution) */
     suspend fun loadRoutineAsync(routine: Routine) = workoutSessionManager.loadRoutineAsync(routine)

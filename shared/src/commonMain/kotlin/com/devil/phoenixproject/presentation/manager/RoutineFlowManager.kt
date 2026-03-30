@@ -379,6 +379,32 @@ class RoutineFlowManager(
         scope.launch { workoutRepository.updateRoutine(routine) }
     }
 
+    /**
+     * Apply a progression suggestion to the current routine exercise's weight.
+     * Updates both the in-memory routine and persists to database.
+     * No-op for HOLD direction (weight stays the same).
+     */
+    fun applyProgression(suggestion: ProgressionSuggestion) {
+        val routine = coordinator._loadedRoutine.value ?: return
+        val exerciseIndex = coordinator._currentExerciseIndex.value
+        val exercise = routine.exercises.getOrNull(exerciseIndex) ?: return
+        val delta = when (suggestion.direction) {
+            ProgressionDirection.INCREASE -> suggestion.deltaKg
+            ProgressionDirection.DECREASE -> -suggestion.deltaKg
+            ProgressionDirection.HOLD -> return
+        }
+        val newWeight = (exercise.weightPerCableKg + delta).coerceAtLeast(0f)
+        val updatedExercises = routine.exercises.toMutableList()
+        updatedExercises[exerciseIndex] = exercise.copy(weightPerCableKg = newWeight)
+        val updatedRoutine = routine.copy(exercises = updatedExercises)
+        coordinator._loadedRoutine.value = updatedRoutine
+
+        scope.launch {
+            workoutRepository.updateRoutine(updatedRoutine)
+        }
+        Logger.d { "Auto-progression: ${suggestion.direction} ${suggestion.deltaKg}kg -> new weight=${newWeight}kg for exercise=${exercise.exercise.name}" }
+    }
+
     fun deleteRoutine(routineId: String) {
         scope.launch { workoutRepository.deleteRoutine(routineId) }
     }
