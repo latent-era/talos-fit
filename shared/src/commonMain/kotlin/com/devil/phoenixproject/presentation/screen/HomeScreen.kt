@@ -509,7 +509,14 @@ private fun WorkoutDayCard(
     val totalVolume = sessions.sumOf { (it.totalVolumeKg ?: 0f).toDouble() }.toInt()
     val displayVolume = if (weightUnit == WeightUnit.LB) (totalVolume * 2.20462).toInt() else totalVolume
     val volumeUnit = if (weightUnit == WeightUnit.LB) "lbs" else "kg"
-    val totalDurationMin = sessions.sumOf { it.duration } / 60000
+    val totalDurationMin = if (sessions.size >= 2) {
+        val firstTimestamp = sessions.minOf { it.timestamp }
+        val lastSession = sessions.maxByOrNull { it.timestamp }!!
+        val wallClockMs = (lastSession.timestamp + lastSession.duration) - firstTimestamp
+        (wallClockMs / 60000).toInt()
+    } else {
+        (sessions.sumOf { it.duration } / 60000).toInt()
+    }
     val exerciseCount = sessions.map { it.exerciseName ?: "Unknown" }.distinct().size
     val uniqueExercises = sessions.map { it.exerciseName ?: "Unknown" }.distinct()
 
